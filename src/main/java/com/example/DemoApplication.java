@@ -21,7 +21,5 @@ public class DemoApplication {
 		plant.setPrice(BigDecimal.valueOf(100));
 
 		repository.save(plant);
-
-		System.out.println(repository.findAll());
 	}
 }
