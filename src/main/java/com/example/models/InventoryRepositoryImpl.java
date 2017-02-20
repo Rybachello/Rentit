@@ -15,5 +15,6 @@ public class InventoryRepositoryImpl {
 
     public List<PlantInventoryEntry> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
         // BLAH BLAH IN THE PRINTOUT
+        return
     }
 }
