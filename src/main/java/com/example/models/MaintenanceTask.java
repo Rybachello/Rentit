@@ -25,4 +25,7 @@ public class MaintenanceTask {
 
     @ManyToOne
     PlantReservation reservation;
+
+    @Embedded
+    BusinessPeriod period;
 }
