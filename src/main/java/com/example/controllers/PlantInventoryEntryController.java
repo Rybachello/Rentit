@@ -18,6 +18,6 @@ public class PlantInventoryEntryController {
 
     @GetMapping("/plants")
     public List<PlantInventoryEntry> findAll() {
-        return repo.findAll();
+        return repo.findByNameContaining("ex");
     }
 }
