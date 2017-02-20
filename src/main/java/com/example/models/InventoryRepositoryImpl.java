@@ -14,7 +14,8 @@ public class InventoryRepositoryImpl {
     EntityManager em;
 
     public List<PlantInventoryEntry> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
-        // BLAH BLAH IN THE PRINTOUT
-        return
+        return em.createQuery("select p from PlantInventoryEntry where LOWER(p.name) like ?1", PlantInventoryEntry.class)
+                .setParameter(1, name)
+                .getResultList();
     }
 }
