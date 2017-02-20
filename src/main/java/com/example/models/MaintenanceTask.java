@@ -17,6 +17,7 @@ public class MaintenanceTask {
 
     String description;
 
+    @Column(precision=8,scale=2)
     BigDecimal price;
 
     @Enumerated(EnumType.STRING)
