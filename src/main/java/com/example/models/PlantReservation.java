@@ -16,4 +16,10 @@ public class PlantReservation {
 
     @ManyToOne
     PlantInventoryItem plant;
+
+    @ManyToOne
+    MaintenancePlan maintenancePlan;
+
+    @ManyToOne
+    PurchaseOrder rental;
 }
