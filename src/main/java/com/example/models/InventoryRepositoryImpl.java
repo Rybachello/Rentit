@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by stepan on 17/02/2017.
  */
-public class InventoryRepositoryImpl {
+public class InventoryRepositoryImpl implements CustomInventoryRepository {
     @Autowired
     EntityManager em;
 
