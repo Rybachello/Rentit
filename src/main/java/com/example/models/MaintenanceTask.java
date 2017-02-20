@@ -2,10 +2,7 @@ package com.example.models;
 
 import lombok.Data;
 
-import javax.persistence.Embedded;
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
@@ -16,12 +13,15 @@ import java.math.BigDecimal;
 @Data
 public class MaintenanceTask {
     @Id @GeneratedValue
-    Long Id;
+    Long id;
 
-    String Description;
+    String description;
 
-    BigDecimal Price;
+    BigDecimal price;
 
-    @Embedded
-    BusinessPeriod Period;
+    @Enumerated(EnumType.STRING)
+    TypeOfWork typeOfWork;
+
+    @ManyToOne
+    PlantReservation reservation;
 }
