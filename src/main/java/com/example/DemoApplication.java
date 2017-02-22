@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.models.CustomInventoryRepository;
+import com.example.models.InventoryRepositoryImpl;
 import com.example.models.PlantInventoryEntry;
 import com.example.models.PlantInventoryEntryRepository;
 import org.springframework.boot.SpringApplication;
@@ -13,13 +15,14 @@ public class DemoApplication {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext ctx = SpringApplication.run(DemoApplication.class, args);
-		PlantInventoryEntryRepository repository = ctx.getBean(PlantInventoryEntryRepository.class);
+//		PlantInventoryEntryRepository repository = ctx.getBean(PlantInventoryEntryRepository.class);
+//
+//		PlantInventoryEntry plant = new PlantInventoryEntry();
+//		plant.setName("Bike");
+//		plant.setDescription("Nice and shiny");
+//		plant.setPrice(BigDecimal.valueOf(100));
+//
+//		repository.save(plant);
 
-		PlantInventoryEntry plant = new PlantInventoryEntry();
-		plant.setName("Bike");
-		plant.setDescription("Nice and shiny");
-		plant.setPrice(BigDecimal.valueOf(100));
-
-		repository.save(plant);
 	}
 }

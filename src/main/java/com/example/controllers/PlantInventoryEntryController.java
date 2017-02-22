@@ -15,7 +15,7 @@ import java.util.List;
 public class PlantInventoryEntryController {
     @Autowired
     PlantInventoryEntryRepository repo;
-    
+
     @GetMapping("/plants")
     public List<PlantInventoryEntry> findAll() {
         return repo.findByNameContaining("ex");
