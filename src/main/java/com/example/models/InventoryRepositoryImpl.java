@@ -13,9 +13,14 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
     @Autowired
     EntityManager em;
 
-    public List<PlantInventoryEntry> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
-        return em.createQuery("select p from PlantInventoryEntry where LOWER(p.name) like ?1", PlantInventoryEntry.class)
-                .setParameter(1, name)
+    public List<AvaliablePlantReport> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
+        return em.createQuery("select NEW com.example.models.AvaliablePlantReport(e.name, e.description, COUNT(e.id)) " +
+                "FROM PlantInventoryEntry e, PlantReservation r, PlantInventoryItem i " +
+                "WHERE (e.name) LIKE ?1 AND r.schedule.endDate = ?2 AND i.equipmentCondition = ?3 " +
+                "GROUP BY e.name,e.description", AvaliablePlantReport.class)
+                .setParameter(1, "%"+name+"%")
+                .setParameter(2, startDate)
+                .setParameter(3, EquipmentCondition.SERVICEABLE)
                 .getResultList();
     }
 

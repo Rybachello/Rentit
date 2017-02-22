@@ -184,5 +184,10 @@ public class InventoryRepositoryTests {
                 BusinessPeriod.of(monthFromNow, twoMonthFromNow));
         assert(!a);
     }
+
+    @Test
+    public void queryFindAvaliablePlants(){
+        assertThat((inventoryRepo.findAvailablePlants("Mini excavator", LocalDate.parse("2017-03-24"), LocalDate.parse("2017-03-25"))).size()).isEqualTo(2);
+    }
 }
 
