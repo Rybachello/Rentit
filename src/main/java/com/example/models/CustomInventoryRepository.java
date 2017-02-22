@@ -8,4 +8,6 @@ import java.util.List;
  */
 public interface CustomInventoryRepository {
     List<PlantInventoryEntry> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate);
+
+    List<PlantInventoryItem> findUnhired();
 }

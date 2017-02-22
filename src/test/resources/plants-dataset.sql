@@ -19,3 +19,4 @@ insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_co
 
 
 insert into plant_reservation (id, plant_id, start_date, end_date) values (1, 1, '2017-03-22', '2017-03-24');
+insert into plant_reservation (id, plant_id, start_date, end_date) values (2, 2, '2015-12-01', '2015-12-10'); /* for inventory entry booked in last 6 months */

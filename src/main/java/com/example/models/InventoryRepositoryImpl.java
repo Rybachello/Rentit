@@ -18,4 +18,10 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
                 .setParameter(1, name)
                 .getResultList();
     }
+
+    public List<PlantInventoryItem> findUnhired() {
+        return em.createQuery(
+                "select distinct p from PlantInventoryItem p, PlantReservation r where (r.plant.id = p.id and r.schedule.startDate < sysdate-30*6 and r.schedule.endDate < sysdate-30*6) or (p.id not in (select q.plant.id from PlantReservation q))")
+                .getResultList();
+    }
 }
