@@ -11,4 +11,7 @@ public interface CustomInventoryRepository {
 
     List<PlantInventoryItem> findUnhired();
 
+    List<CorrectiveRepairsNumberPerYear> findCorrectiveRepairsNumberForLastFiveYears();
+    List<CorrectiveRepairsCostPerYear> findCorrectiveRepairsCostsForLastFiveYears();
+
 }
