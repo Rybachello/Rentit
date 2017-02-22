@@ -8,6 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -30,4 +33,12 @@ public class InventoryRepositoryTests {
     public void queryUnhiredPlants() {
         assertThat(inventoryRepo.findUnhired().size()).isEqualTo(2);
     }
+
+
+    @Test
+    public void queryFindAvaliablePlants(){
+        assertThat((inventoryRepo.findAvailablePlants("Mini excavator", LocalDate.parse("2017-03-24"), LocalDate.parse("2017-03-25"))).size()).isEqualTo(2);
+    }
+
+
 }
