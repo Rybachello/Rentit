@@ -35,6 +35,8 @@ public class InventoryRepositoryTests {
     InventoryRepositoryImpl inventoryRepoImpl;
     @Autowired
     MaintenanceTaskRepository maintenanceTaskRepo;
+    @Autowired
+    MaintenancePlanRepository maintenancePlanRepo;
 
     @Test
     public void queryUnhiredPlants() {
@@ -144,8 +146,9 @@ public class InventoryRepositoryTests {
         LocalDate monthFromNow = LocalDate.now().plusMonths(1);
         LocalDate twoMonthFromNow = LocalDate.now().plusMonths(2);
 
-       // maintenanceTaskRepo.deleteAll();
-       // plantReservationRepo.deleteAll();
+        maintenancePlanRepo.deleteAll();
+        maintenanceTaskRepo.deleteAll();
+        plantReservationRepo.deleteAll();
 
         PlantInventoryItem item = plantInventoryItemRepo.findOne(1L);
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
@@ -159,7 +162,7 @@ public class InventoryRepositoryTests {
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
                 plantInventoryEntryRepo.findOne(1L),
                 BusinessPeriod.of(monthFromNow, twoMonthFromNow));
-        assertThat(a).isFalse();
+        assert (a);
     }
 
     @Test
@@ -170,8 +173,9 @@ public class InventoryRepositoryTests {
         LocalDate monthFromNow = LocalDate.now().plusMonths(1);
         LocalDate twoMonthFromNow = LocalDate.now().plusMonths(2);
 
-       // maintenanceTaskRepo.deleteAll();
-        //plantReservationRepo.deleteAll();
+        maintenancePlanRepo.deleteAll();
+        maintenanceTaskRepo.deleteAll();
+        plantReservationRepo.deleteAll();
 
         PlantInventoryItem item = plantInventoryItemRepo.findOne(1L);
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
@@ -185,7 +189,7 @@ public class InventoryRepositoryTests {
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
                 plantInventoryEntryRepo.findOne(1L),
                 BusinessPeriod.of(monthFromNow, twoMonthFromNow));
-        assertThat(a).isFalse();
+        assert(!a);
     }
 
     @Test
@@ -228,6 +232,5 @@ public class InventoryRepositoryTests {
     {
         assertThat(inventoryRepo.findCorrectiveRepairsNumberForLastFiveYears().get(0).number).isEqualTo(2);
     }
-
 }
 
