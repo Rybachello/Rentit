@@ -13,8 +13,7 @@ public class CorrectiveRepairsCostPerYear {
     Integer year;
     BigDecimal cost;
 
-    public CorrectiveRepairsCostPerYear(Integer year, BigDecimal cost )
-    {
+    public CorrectiveRepairsCostPerYear(Integer year, BigDecimal cost) {
         this.year = year;
         this.cost = cost;
     }

@@ -9,6 +9,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +38,7 @@ public class InventoryRepositoryTests {
 
     @Test
     public void queryUnhiredPlants() {
-        assertThat(inventoryRepo.findUnhired().size()).isEqualTo(2);
+        assertThat(inventoryRepo.findUnhired().size()).isEqualTo(3);
     }
 
     @Test
@@ -141,8 +144,8 @@ public class InventoryRepositoryTests {
         LocalDate monthFromNow = LocalDate.now().plusMonths(1);
         LocalDate twoMonthFromNow = LocalDate.now().plusMonths(2);
 
-        maintenanceTaskRepo.deleteAll();
-        plantReservationRepo.deleteAll();
+       // maintenanceTaskRepo.deleteAll();
+       // plantReservationRepo.deleteAll();
 
         PlantInventoryItem item = plantInventoryItemRepo.findOne(1L);
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
@@ -156,7 +159,7 @@ public class InventoryRepositoryTests {
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
                 plantInventoryEntryRepo.findOne(1L),
                 BusinessPeriod.of(monthFromNow, twoMonthFromNow));
-        assert(a);
+        assertThat(a).isFalse();
     }
 
     @Test
@@ -167,8 +170,8 @@ public class InventoryRepositoryTests {
         LocalDate monthFromNow = LocalDate.now().plusMonths(1);
         LocalDate twoMonthFromNow = LocalDate.now().plusMonths(2);
 
-        maintenanceTaskRepo.deleteAll();
-        plantReservationRepo.deleteAll();
+       // maintenanceTaskRepo.deleteAll();
+        //plantReservationRepo.deleteAll();
 
         PlantInventoryItem item = plantInventoryItemRepo.findOne(1L);
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
@@ -182,12 +185,49 @@ public class InventoryRepositoryTests {
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
                 plantInventoryEntryRepo.findOne(1L),
                 BusinessPeriod.of(monthFromNow, twoMonthFromNow));
-        assert(!a);
+        assertThat(a).isFalse();
     }
 
     @Test
     public void queryFindAvaliablePlants(){
         assertThat((inventoryRepo.findAvailablePlants("Mini excavator", LocalDate.parse("2017-03-24"), LocalDate.parse("2017-03-25"))).size()).isEqualTo(2);
     }
+
+    @Test
+    public void queryFindForCorrectiveRepairsCostsForLastFiveYearIsNotNull()
+    {
+        assertThat(inventoryRepo.findCorrectiveRepairsCostsForLastFiveYears()).isNotNull();
+    }
+    @Test
+    public void queryFindForCorrectiveRepairsCostsForLastFiveYears()
+    {
+        assertThat(inventoryRepo.findCorrectiveRepairsCostsForLastFiveYears().size()).isLessThan(5);
+    }
+
+    @Test
+    public void queryFindForCorrectiveRepairsCostsFor2017()
+    {
+        int  costsFor2017 = (inventoryRepo.findCorrectiveRepairsCostsForLastFiveYears().get(0).cost).intValue();
+        assertThat(costsFor2017).isEqualTo(800);
+    }
+
+    @Test
+    public void queryFindForCorrectiveRepairsNumberForLastFiveYearIsNotNull()
+    {
+        assertThat(inventoryRepo.findCorrectiveRepairsNumberForLastFiveYears()).isNotNull();
+    }
+
+    @Test
+    public void queryFindForCorrectiveRepairsNumberForLastFiveYears()
+    {
+        assertThat(inventoryRepo.findCorrectiveRepairsNumberForLastFiveYears().size()).isLessThan(5);
+    }
+
+    @Test
+    public void queryFindForCorrectiveRepairsNumberFor2017()
+    {
+        assertThat(inventoryRepo.findCorrectiveRepairsNumberForLastFiveYears().get(0).number).isEqualTo(2);
+    }
+
 }
 

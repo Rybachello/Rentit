@@ -62,9 +62,10 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
     public List<CorrectiveRepairsNumberPerYear> findCorrectiveRepairsNumberForLastFiveYears() {
         return em.createQuery("select NEW com.example.models.CorrectiveRepairsNumberPerYear(m.yearOfAction, count(task)) " +
                 " from MaintenancePlan m JOIN m.tasks task" +
-                " where m.yearOfAction >= ?1-4 and task.typeOfWork = com.example.models.TypeOfWork.CORRECTIVE" +
+                " where m.yearOfAction >= ?1-4 and task.typeOfWork = ?2" +
                 " group by m.yearOfAction")
                 .setParameter(1,LocalDate.now().getYear())
+                .setParameter(2,TypeOfWork.CORRECTIVE)
                 .getResultList();
     }
 
