@@ -2,12 +2,12 @@ package com.example.models;
 import lombok.Data;
 
 @Data
-public class AvaliablePlantReport {
+public class AvailablePlantReport {
    String name;
    String description;
    Long amount;
 
-    public AvaliablePlantReport (java.lang.String name, java.lang.String description, long amount ){
+    public AvailablePlantReport(java.lang.String name, java.lang.String description, long amount ){
         this.name = name;
         this.description = description;
         this.amount = amount;
