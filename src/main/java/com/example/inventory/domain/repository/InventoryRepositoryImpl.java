@@ -24,7 +24,7 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
     EntityManager em;
 
     public List<AvailablePlantReport> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
-        return em.createQuery("select NEW com.example.models.AvailablePlantReport(e.name, e.description, COUNT(e.id)) " +
+        return em.createQuery("select NEW com.example.inventory.domain.model.AvailablePlantReport(e.name, e.description, COUNT(e.id)) " +
                 "FROM PlantInventoryEntry e, PlantReservation r, PlantInventoryItem i " +
                 "WHERE (e.name) LIKE ?1 AND r.schedule.endDate = ?2 AND i.equipmentCondition = ?3 " +
                 "GROUP BY e.name,e.description", AvailablePlantReport.class)
@@ -41,7 +41,7 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
     }
     public boolean isAPlantAvailableStrict(PlantInventoryEntry entry, BusinessPeriod period) {
         Long count = (Long) em.createQuery(
-                "select count(pi) from PlantInventoryItem pi where (pi.plantInfo.id = ?1 and pi.equipmentCondition = com.example.models.EquipmentCondition.SERVICEABLE and pi.id not in (select pr.plant.id from PlantReservation pr where pr.schedule.startDate < ?3 and pr.schedule.endDate > ?2))")
+                "select count(pi) from PlantInventoryItem pi where (pi.plantInfo.id = ?1 and pi.equipmentCondition = com.example.inventory.domain.model.EquipmentCondition.SERVICEABLE and pi.id not in (select pr.plant.id from PlantReservation pr where pr.schedule.startDate < ?3 and pr.schedule.endDate > ?2))")
                 .setParameter(1, entry.id)
                 .setParameter(2, period.getStartDate())
                 .setParameter(3, period.getEndDate())
@@ -70,19 +70,19 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
         return count > 0;
     }
     public List<CorrectiveRepairsNumberPerYear> findCorrectiveRepairsNumberForLastFiveYears() {
-        return em.createQuery("select NEW com.example.models.CorrectiveRepairsNumberPerYear(m.yearOfAction, count(task)) " +
+        return em.createQuery("select NEW com.example.maintenance.domain.model.CorrectiveRepairsNumberPerYear(m.yearOfAction, count(task)) " +
                 " from MaintenancePlan m JOIN m.tasks task" +
                 " where m.yearOfAction >= ?1-4 and task.typeOfWork = ?2" +
                 " group by m.yearOfAction")
                 .setParameter(1,LocalDate.now().getYear())
-                .setParameter(2, TypeOfWork.CORRECTIVE)
+                .setParameter(2, com.example.maintenance.domain.model.TypeOfWork.CORRECTIVE)
                 .getResultList();
     }
 
     public List<CorrectiveRepairsCostPerYear> findCorrectiveRepairsCostsForLastFiveYears(){
-        return em.createQuery("select NEW com.example.models.CorrectiveRepairsCostPerYear(m.yearOfAction, sum(task.price)) " +
+        return em.createQuery("select NEW com.example.maintenance.domain.model.CorrectiveRepairsCostPerYear(m.yearOfAction, sum(task.price)) " +
                 " from MaintenancePlan m JOIN m.tasks task" +
-                " where m.yearOfAction >= ?1-4 and task.typeOfWork = com.example.models.TypeOfWork.CORRECTIVE" +
+                " where m.yearOfAction >= ?1-4 and task.typeOfWork = com.example.maintenance.domain.model.TypeOfWork.CORRECTIVE" +
                 " group by m.yearOfAction")
                 .setParameter(1,LocalDate.now().getYear())
                 .getResultList();

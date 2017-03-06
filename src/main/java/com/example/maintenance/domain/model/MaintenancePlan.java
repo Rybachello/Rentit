@@ -12,8 +12,8 @@ import java.util.List;
 @Entity
 @Data
 public class MaintenancePlan {
-    @Id @GeneratedValue
-    Long id;
+    @Id
+    String id;
 
     Integer yearOfAction;
 

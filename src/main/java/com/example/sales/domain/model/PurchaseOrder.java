@@ -1,6 +1,7 @@
 package com.example.sales.domain.model;
 
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.common.infrastructure.IdentifierFactory;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantReservation;
 import lombok.Data;
@@ -17,8 +18,7 @@ import java.util.List;
 @Data
 public class PurchaseOrder {
     @Id
-    @GeneratedValue
-    Long id;
+    String id;
 
     @OneToMany
     List<PlantReservation> reservations;

@@ -2,6 +2,7 @@ package com.example.models;
 
 import com.example.DemoApplication;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.common.infrastructure.IdentifierFactory;
 import com.example.inventory.domain.model.EquipmentCondition;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.model.PlantReservation;
@@ -55,27 +56,27 @@ public class InventoryRepositoryTests {
     public void checkIfPlantAvailableStrict()
     {
         boolean a = inventoryRepoImpl.isAPlantAvailableStrict(
-                plantInventoryEntryRepo.findOne(1L),
+                plantInventoryEntryRepo.findOne("1"),
                             BusinessPeriod.of(LocalDate.of(2012, 12, 12), LocalDate.of(2012, 12, 13)));
         assert(a);
     }
 
     private void addReservationAndCheckAvailability(BusinessPeriod of) {
-        PlantReservation reserve = new PlantReservation();
+        PlantReservation reserve = PlantReservation.of(IdentifierFactory.nextID());
         reserve.setSchedule(of);
-        reserve.setPlant(plantInventoryItemRepo.findOne(1L));
+        reserve.setPlant(plantInventoryItemRepo.findOne("1"));
         plantReservationRepo.save(reserve);
     }
 
     private boolean IsAPlantAvailableStrict() {
         return inventoryRepoImpl.isAPlantAvailableStrict(
-                plantInventoryEntryRepo.findOne(1L),
+                plantInventoryEntryRepo.findOne("1"),
                 BusinessPeriod.of(LocalDate.of(2012, 12, 12), LocalDate.of(2012, 12, 22)));
     }
 
     private boolean IsAPlantAvailableRelaxed() {
         return inventoryRepoImpl.isAPlantAvailableRelaxed(
-                plantInventoryEntryRepo.findOne(1L),
+                plantInventoryEntryRepo.findOne("1"),
                 BusinessPeriod.of(LocalDate.of(2012, 12, 12), LocalDate.of(2012, 12, 22)));
     }
 
@@ -123,7 +124,7 @@ public class InventoryRepositoryTests {
     public void checkIfPlantAvailableRelaxed()
     {
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
-                plantInventoryEntryRepo.findOne(1L),
+                plantInventoryEntryRepo.findOne("1"),
                 BusinessPeriod.of(LocalDate.of(2012, 12, 12), LocalDate.of(2012, 12, 13)));
         assert(a);
     }
@@ -131,7 +132,7 @@ public class InventoryRepositoryTests {
     @Test
     public void checkIfPlantAvailableUnserviceable()
     {
-        PlantInventoryItem item = plantInventoryItemRepo.findOne(1L);
+        PlantInventoryItem item = plantInventoryItemRepo.findOne("1");
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
         plantInventoryItemRepo.save(item);
         assert(!IsAPlantAvailableStrict());
@@ -158,7 +159,7 @@ public class InventoryRepositoryTests {
         maintenanceTaskRepo.deleteAll();
         plantReservationRepo.deleteAll();
 
-        PlantInventoryItem item = plantInventoryItemRepo.findOne(1L);
+        PlantInventoryItem item = plantInventoryItemRepo.findOne("1");
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
         plantInventoryItemRepo.save(item);
 
@@ -168,7 +169,7 @@ public class InventoryRepositoryTests {
         maintenanceTaskRepo.save(mt);
 
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
-                plantInventoryEntryRepo.findOne(1L),
+                plantInventoryEntryRepo.findOne("1"),
                 BusinessPeriod.of(monthFromNow, twoMonthFromNow));
         assert (a);
     }
@@ -185,7 +186,7 @@ public class InventoryRepositoryTests {
         maintenanceTaskRepo.deleteAll();
         plantReservationRepo.deleteAll();
 
-        PlantInventoryItem item = plantInventoryItemRepo.findOne(1L);
+        PlantInventoryItem item = plantInventoryItemRepo.findOne("1");
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
         plantInventoryItemRepo.save(item);
 
@@ -195,7 +196,7 @@ public class InventoryRepositoryTests {
         maintenanceTaskRepo.save(mt);
 
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
-                plantInventoryEntryRepo.findOne(1L),
+                plantInventoryEntryRepo.findOne("1"),
                 BusinessPeriod.of(monthFromNow, twoMonthFromNow));
         assert(!a);
     }

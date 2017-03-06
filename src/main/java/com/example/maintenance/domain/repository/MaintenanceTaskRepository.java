@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * Created by stepan on 17/02/2017.
  */
 @Repository
-public interface MaintenanceTaskRepository extends JpaRepository<MaintenanceTask, Long> {
+public interface MaintenanceTaskRepository extends JpaRepository<MaintenanceTask, String> {
 }

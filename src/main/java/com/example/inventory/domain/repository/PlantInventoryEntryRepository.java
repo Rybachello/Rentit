@@ -11,7 +11,7 @@ import java.util.List;
  * Created by lgarcia on 2/10/2017.
  */
 @Repository
-public interface PlantInventoryEntryRepository extends JpaRepository<PlantInventoryEntry, Long> {
+public interface PlantInventoryEntryRepository extends JpaRepository<PlantInventoryEntry, String> {
 
     List<PlantInventoryEntry> findByNameContaining(String str);
 

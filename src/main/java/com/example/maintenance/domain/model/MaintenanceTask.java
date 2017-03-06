@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 @Entity
 @Data
 public class MaintenanceTask {
-    @Id @GeneratedValue
-    Long id;
+    @Id
+    String id;
 
     String description;
 

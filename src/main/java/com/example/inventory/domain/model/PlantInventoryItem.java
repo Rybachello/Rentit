@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Entity
 @Data
 public class PlantInventoryItem {
-    @Id @GeneratedValue
-    Long id;
+    @Id
+    String id;
     String serialNumber;
 
     @Enumerated(EnumType.STRING)

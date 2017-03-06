@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Entity
 @Data
 public class PlantReservation {
-    @Id @GeneratedValue
-    Long id;
+    @Id
+    String id;
 
     @Embedded
     BusinessPeriod schedule;

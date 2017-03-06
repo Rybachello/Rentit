@@ -14,9 +14,9 @@ import java.math.BigDecimal;
 @Entity
 @Data
 public class PlantInventoryEntry {
-    @Id @GeneratedValue
+    @Id
     public
-    Long id;
+    String id;
 
     String name;
     String description;
