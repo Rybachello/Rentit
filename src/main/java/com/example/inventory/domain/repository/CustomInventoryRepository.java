@@ -1,4 +1,7 @@
-package com.example.models;
+package com.example.inventory.domain.repository;
+
+import com.example.inventory.domain.model.AvaliablePlantReport;
+import com.example.inventory.domain.model.PlantInventoryItem;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,6 +1,10 @@
 package com.example.models;
 
 import com.example.DemoApplication;
+import com.example.inventory.domain.repository.InventoryRepository;
+import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
+import com.example.inventory.domain.repository.PlantInventoryItemRepository;
+import com.example.inventory.domain.repository.PlantReservationRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

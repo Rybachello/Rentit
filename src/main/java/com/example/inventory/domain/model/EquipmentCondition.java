@@ -1,4 +1,4 @@
-package com.example.models;
+package com.example.inventory.domain.model;
 
 /**
  * Created by lgarcia on 2/17/2017.

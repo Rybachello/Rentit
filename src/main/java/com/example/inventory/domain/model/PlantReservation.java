@@ -1,9 +1,11 @@
-package com.example.models;
+package com.example.inventory.domain.model;
 
+import com.example.common.domain.model.BusinessPeriod;
+import com.example.maintenance.domain.model.MaintenancePlan;
+import com.example.sales.domain.model.PurchaseOrder;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Data

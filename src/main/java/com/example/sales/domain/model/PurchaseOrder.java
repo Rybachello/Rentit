@@ -1,5 +1,8 @@
-package com.example.models;
+package com.example.sales.domain.model;
 
+import com.example.common.domain.model.BusinessPeriod;
+import com.example.inventory.domain.model.PlantInventoryEntry;
+import com.example.inventory.domain.model.PlantReservation;
 import lombok.Data;
 
 import javax.persistence.*;

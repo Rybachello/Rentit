@@ -1,4 +1,4 @@
-package com.example.models;
+package com.example.maintenance.domain.model;
 
 /**
  * Created by Vasiliy on 2017.02.20.

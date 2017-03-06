@@ -1,7 +1,7 @@
-package com.example.models;
+package com.example.maintenance.domain.model;
 
+import com.example.inventory.domain.model.PlantInventoryItem;
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;

@@ -1,5 +1,8 @@
-package com.example.models;
+package com.example.inventory.domain.repository;
 
+import com.example.inventory.domain.model.AvaliablePlantReport;
+import com.example.inventory.domain.model.EquipmentCondition;
+import com.example.inventory.domain.model.PlantInventoryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
