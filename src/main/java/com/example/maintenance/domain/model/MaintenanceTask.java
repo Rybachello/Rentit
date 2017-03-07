@@ -25,9 +25,7 @@ public class MaintenanceTask {
     @Enumerated(EnumType.STRING)
     TypeOfWork typeOfWork;
 
-    @ManyToOne
-    PlantReservation reservation;
+    String reservationId;
 
-    @Embedded
-    BusinessPeriod period;
+    String maintenancePlanId;
 }

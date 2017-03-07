@@ -62,9 +62,9 @@ public class InventoryRepositoryTests {
     }
 
     private void addReservationAndCheckAvailability(BusinessPeriod of) {
-        PlantReservation reserve = PlantReservation.of(IdentifierFactory.nextID());
-        reserve.setSchedule(of);
-        reserve.setPlant(plantInventoryItemRepo.findOne("1"));
+        PlantReservation reserve = PlantReservation.of(IdentifierFactory.nextID(), of, "1", null);
+        //reserve.setSchedule(of);
+//      //reserve.setPlant(plantInventoryItemRepo.findOne("1"));
         plantReservationRepo.save(reserve);
     }
 
@@ -139,10 +139,8 @@ public class InventoryRepositoryTests {
         assert(!IsAPlantAvailableRelaxed());
     }
 
-    private PlantReservation addReservation(PlantInventoryItem item, MaintenanceTask mt) {
-        PlantReservation reservation = new PlantReservation();
-        reservation.setSchedule(mt.getPeriod());
-        reservation.setPlant(item);
+    private PlantReservation addReservation(String itemId, BusinessPeriod period) {
+        PlantReservation reservation = PlantReservation.of(IdentifierFactory.nextID(), period, itemId, null);
         plantReservationRepo.save(reservation);
         return reservation;
     }
@@ -164,8 +162,15 @@ public class InventoryRepositoryTests {
         plantInventoryItemRepo.save(item);
 
         MaintenanceTask mt = new MaintenanceTask();
-        mt.setPeriod(BusinessPeriod.of(weekFromNow, tenDaysFromNow));
-        mt.setReservation(addReservation(item, mt));
+        PlantReservation pr = PlantReservation.of(
+                IdentifierFactory.nextID(),
+                BusinessPeriod.of(weekFromNow, tenDaysFromNow),
+                item.getId(),
+                null);
+        plantReservationRepo.save(pr);
+
+        mt.setId(IdentifierFactory.nextID());
+        mt.setReservationId(pr.getId());
         maintenanceTaskRepo.save(mt);
 
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
@@ -191,8 +196,13 @@ public class InventoryRepositoryTests {
         plantInventoryItemRepo.save(item);
 
         MaintenanceTask mt = new MaintenanceTask();
-        mt.setPeriod(BusinessPeriod.of(weekFromNow, almostMonthFromNow));
-        mt.setReservation(addReservation(item, mt));
+        PlantReservation pr = PlantReservation.of(
+                IdentifierFactory.nextID(),
+                BusinessPeriod.of(weekFromNow, almostMonthFromNow),
+                item.getId(),
+                null);
+        plantReservationRepo.save(pr);
+        mt.setId(IdentifierFactory.nextID());
         maintenanceTaskRepo.save(mt);
 
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(

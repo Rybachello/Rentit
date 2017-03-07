@@ -20,12 +20,6 @@ public class PurchaseOrder {
     @Id
     String id;
 
-    @OneToMany
-    List<PlantReservation> reservations;
-
-    @ManyToOne
-    PlantInventoryEntry plant;
-
     LocalDate issueDate;
 
     LocalDate paymentSchedule;
@@ -35,7 +29,4 @@ public class PurchaseOrder {
 
     @Enumerated(EnumType.STRING)
     POStatus status;
-
-    @Embedded
-    BusinessPeriod period;
 }

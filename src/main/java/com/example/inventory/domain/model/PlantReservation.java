@@ -3,12 +3,16 @@ package com.example.inventory.domain.model;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.maintenance.domain.model.MaintenancePlan;
 import com.example.sales.domain.model.PurchaseOrder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor(staticName = "of")
 public class PlantReservation {
     @Id
     String id;
@@ -16,12 +20,7 @@ public class PlantReservation {
     @Embedded
     BusinessPeriod schedule;
 
-    @ManyToOne
-    PlantInventoryItem plant;
+    String plantId;
 
-    @ManyToOne
-    MaintenancePlan maintenancePlan;
-
-    @ManyToOne
-    PurchaseOrder rental;
+    String purchaseOrderId;
 }

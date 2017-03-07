@@ -17,9 +17,5 @@ public class MaintenancePlan {
 
     Integer yearOfAction;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    List<MaintenanceTask> tasks;
-
-    @ManyToOne
-    PlantInventoryItem inventoryItem;
+    String inventoryItemId;
 }

@@ -15,10 +15,10 @@ import java.math.BigDecimal;
 @Data
 public class PlantInventoryEntry {
     @Id
-    public
     String id;
 
     String name;
+
     String description;
 
     @Column(precision=8,scale=2)
