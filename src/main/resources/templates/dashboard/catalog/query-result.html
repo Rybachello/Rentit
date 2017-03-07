@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>List all Plants</title>
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"></link>
+</head>
+<body>
+
+<div class="container">
+<div class="panel panel-default">
+  <div class="panel-heading">List of Plants</div>
+  <div class="panel-body">
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-row" th:each="p : ${plants}">
+                <td th:text="${p.name}"></td>
+                <td th:text="${p.description}"></td>
+                <td th:text="${p.price}"></td>
+                <td>
+                <form style='float:left; padding:5px; height:0px' th:object="${po}" th:method="post" th:action="@{'/dashboard/orders'}">
+                  	<input type="hidden" name="plant.id" th:value="${p.id}"></input>
+                    <input type="hidden" name="plant.name" th:value="${p.name}"></input>
+                    <input type="hidden" th:field="*{rentalPeriod.startDate}"></input>
+                	<input type="hidden" th:field="*{rentalPeriod.endDate}"></input>
+                	<button class="btn btn-default btn-xs" type="submit">Create PO</button>
+                </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Document</title>
+ 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"></link>
+</head>
+<body>
+	<h1>Hello</h1>
+  <div class="container">
+	<div class="panel panel-default">
+		<div class="panel-heading">Query plant catalog</div>
+		<div class="panel-body">
+			<form class="form-horizontal" th:object="${catalogQuery}" th:method="post" th:action="@{/dashboard/catalog/query}">
+				<div class="form-group">
+					<label for="name" class="col-sm-2 control-label">Name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="name" th:field="*{name}"></input>
+					</div>
+				</div>
+ 				<div class="form-group">
+					<label for="rental-start-date" class="col-sm-2 control-label">Start date</label>
+					<div class="col-sm-10">
+						<input type="date" class="form-control" id="rental-start-date" th:field="*{rentalPeriod.startDate}"></input>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="rental-end-date" class="col-sm-2 control-label">End date</label>
+					<div class="col-sm-10">
+						<input type="date" class="form-control" id="rental-end-date" th:field="*{rentalPeriod.endDate}"></input>
+					</div>
+				</div>
+ 				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button id="submit-button" type="submit" class="btn btn-default">Submit query</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>
