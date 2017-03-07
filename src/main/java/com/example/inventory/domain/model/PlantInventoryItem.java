@@ -2,12 +2,14 @@ package com.example.inventory.domain.model;
 
 import com.example.inventory.domain.model.EquipmentCondition;
 import com.example.inventory.domain.model.PlantInventoryEntry;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@NoArgsConstructor(force=true, access= AccessLevel.PRIVATE)
+@AllArgsConstructor(staticName = "of")
 public class PlantInventoryItem {
     @Id
     String id;
@@ -18,4 +20,8 @@ public class PlantInventoryItem {
     EquipmentCondition equipmentCondition;
 
     String plantInfoId;
+
+    public void setEquipmentCondition(EquipmentCondition equipmentCondition) {
+        this.equipmentCondition = equipmentCondition;
+    }
 }

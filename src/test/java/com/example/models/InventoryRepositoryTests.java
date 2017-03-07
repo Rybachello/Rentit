@@ -161,16 +161,16 @@ public class InventoryRepositoryTests {
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
         plantInventoryItemRepo.save(item);
 
-        MaintenanceTask mt = new MaintenanceTask();
         PlantReservation pr = PlantReservation.of(
                 IdentifierFactory.nextID(),
                 BusinessPeriod.of(weekFromNow, tenDaysFromNow),
                 item.getId(),
                 null);
+
+
+        MaintenanceTask mt = MaintenanceTask.of(IdentifierFactory.nextID(), null, null, null, pr.getId(), null);
         plantReservationRepo.save(pr);
 
-        mt.setId(IdentifierFactory.nextID());
-        mt.setReservationId(pr.getId());
         maintenanceTaskRepo.save(mt);
 
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(
@@ -195,14 +195,13 @@ public class InventoryRepositoryTests {
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
         plantInventoryItemRepo.save(item);
 
-        MaintenanceTask mt = new MaintenanceTask();
+        MaintenanceTask mt = MaintenanceTask.of(IdentifierFactory.nextID(), null, null, null, null, null);
         PlantReservation pr = PlantReservation.of(
                 IdentifierFactory.nextID(),
                 BusinessPeriod.of(weekFromNow, almostMonthFromNow),
                 item.getId(),
                 null);
         plantReservationRepo.save(pr);
-        mt.setId(IdentifierFactory.nextID());
         maintenanceTaskRepo.save(mt);
 
         boolean a = inventoryRepoImpl.isAPlantAvailableRelaxed(

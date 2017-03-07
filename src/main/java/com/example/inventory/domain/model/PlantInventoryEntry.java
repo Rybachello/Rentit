@@ -1,6 +1,6 @@
 package com.example.inventory.domain.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +12,9 @@ import java.math.BigDecimal;
  * Created by lgarcia on 2/10/2017.
  */
 @Entity
-@Data
+@Getter
+@NoArgsConstructor(force=true, access= AccessLevel.PRIVATE)
+@AllArgsConstructor(staticName = "of")
 public class PlantInventoryEntry {
     @Id
     String id;

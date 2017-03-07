@@ -4,7 +4,7 @@ import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.infrastructure.IdentifierFactory;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantReservation;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +15,9 @@ import java.util.List;
  * Created by Vasiliy on 2017.02.20.
  */
 @Entity
-@Data
+@Getter
+@NoArgsConstructor(force=true, access= AccessLevel.PRIVATE)
+@AllArgsConstructor(staticName = "of")
 public class PurchaseOrder {
     @Id
     String id;
