@@ -8,30 +8,30 @@
     <div class="panel panel-default">
         <div class="panel-heading"> Purchase Order Details</div>
         <div class="panel-body">
-            <table class="table table-stripped table-hover " th:object="${purchaseOrderDetails}">
+            <table class="table table-stripped table-hover " >  <!-- th:object="${purchaseOrderDetails}">
                 <tr class="table-row">
                     <td>Plant Name</td>
-                    <td th:text="${purchaseOrderDetails.plant.name}"></td>
+                    <!-- <td th:text="${purchaseOrderDetails.plant.name}"></td>  -->
                 </tr>
                 <tr class="table-row">
                     <td>Plant Description</td>
-                    <td th:text="${purchaseOrderDetails.plant.description}"></td>
+                    <!-- <td th:text="${purchaseOrderDetails.plant.description}"></td> -->
                 </tr>
                 <tr class="table-row">
                     <td>Start Date</td>
-                    <td th:text="${purchaseOrderDetails.period.startDate}"></td>
+                    <!--<td th:text="${purchaseOrderDetails.period.startDate}"></td> -->
                 </tr>
                 <tr class="table-row">
                     <td>End Date</td>
-                    <td th:text="${purchaseOrderDetails.period.endDate}"></td>
+                    <!--<td th:text="${purchaseOrderDetails.period.endDate}"></td>-->
                 </tr>
                 <tr class="table-row">
                     <td>Cost</td>
-                    <td th:text="${purchaseOrderDetails.total}"></td>
+                    <!--<td th:text="${purchaseOrderDetails.total}"></td>-->
                 </tr>
                 <tr class="table-row">
                     <td>Status</td>
-                    <td th:text="${purchaseOrderDetails.status}"></td>
+                    <!--<td th:text="${purchaseOrderDetails.status}"></td> -->
                 </tr>
             </table>
         </div>
