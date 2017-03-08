@@ -83,8 +83,6 @@ public class CreationOfPurchaseOrderSteps {
     @Given("^a customer is in the \"([^\"]*)\" web page$")
     public void a_customer_is_in_the_web_page(String arg1) throws Throwable {
         customerPage = customerBrowser.getPage("http://localhost/dashboard/catalog/form");
-        WebRequest a = new WebRequest(new URL("asd"));
-        a.getCharset();
 
     }
 
@@ -96,9 +94,9 @@ public class CreationOfPurchaseOrderSteps {
     @When("^the customer queries the plant catalog for an \"([^\"]*)\" available from \"([^\"]*)\" to \"([^\"]*)\"$")
     public void the_customer_queries_the_plant_catalog_for_an_available_from_to(String plantName, String startDate, String endDate) throws Throwable {
         HtmlTextInput nameInput = (HtmlTextInput)customerPage.getElementById("name");
-        HtmlTextInput startInput = (HtmlTextInput)customerPage.getElementById("rental-start-date");
-        HtmlTextInput endInput = (HtmlTextInput)customerPage.getElementById("rental-end-date");
-        HtmlSubmitInput submit = (HtmlSubmitInput)customerPage.getElementById("submit-button");
+        HtmlDateInput startInput = (HtmlDateInput)customerPage.getElementById("rental-start-date");
+        HtmlDateInput endInput = (HtmlDateInput) customerPage.getElementById("rental-end-date");
+        HtmlButton submit = (HtmlButton)customerPage.getElementById("submit-button");
 
         nameInput.setValueAttribute(plantName);
         startInput.setValueAttribute(startDate);
