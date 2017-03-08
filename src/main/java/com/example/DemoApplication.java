@@ -1,9 +1,5 @@
 package com.example;
 
-import com.example.models.CustomInventoryRepository;
-import com.example.models.InventoryRepositoryImpl;
-import com.example.models.PlantInventoryEntry;
-import com.example.models.PlantInventoryEntryRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
