@@ -1,15 +1,19 @@
 package com.example.sales.domain.web.controller;
 
 import com.example.inventory.application.PurchaseOrderDTO;
+import com.example.inventory.application.services.InventoryService;
+import com.example.inventory.application.services.PlantInventoryEntryAssembler;
+import com.example.inventory.domain.model.PlantInventoryEntry;
+import com.example.sales.application.services.SalesService;
 import com.example.sales.domain.web.controller.dto.CatalogQueryDTO;
-import com.example.services.PlantCatalogService;
-import com.example.services.SalesService;
+import com.example.sales.domain.web.controller.dto.CreatePurchaseOrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 /**
  * Created by Rybachello on 3/3/2017.
@@ -17,10 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/dashboard")
 public class	DashboardController	{
-    //@Autowired
-    //PlantCatalogService plantCatalog;
-    //@Autowired
-    //SalesService salesService;
+    @Autowired
+    InventoryService inventoryService;
+    @Autowired
+    SalesService salesService;
+    @Autowired
+    PlantInventoryEntryAssembler plantInvAssembler;
 
     @GetMapping("/catalog/form")
     public String getQueryForm(Model model)	{
@@ -30,13 +36,16 @@ public class	DashboardController	{
     @RequestMapping("/catalog/query")
     public String executeQuery(CatalogQueryDTO query,Model model)
     {
-        //todo: fix here
-        return "dashboard/catalog/query-result";
+       List<PlantInventoryEntry> p =  inventoryService.createListOfAvailablePlants(query);
+        model.addAttribute("plants", plantInvAssembler.toResources(p));
+        model.addAttribute("q", query);
+       model.addAttribute("po", new CreatePurchaseOrderDTO());
+       return "dashboard/catalog/query-result";
     }
     @RequestMapping("/orders")
-    String	createPO(PurchaseOrderDTO toDTO, Model	model)	{
-        //todo: convert to DTO show the result
-        model.addAttribute("purchaseOrderDetails", toDTO);
+    public String	createPO(CreatePurchaseOrderDTO toDTO, Model	model)	{
+        PurchaseOrderDTO po = salesService.getPurchaseOrder(toDTO);
+        model.addAttribute("purchaseOrderDetails", po);
         return	"dashboard/catalog/purchase-order-details";
     }
  // ...

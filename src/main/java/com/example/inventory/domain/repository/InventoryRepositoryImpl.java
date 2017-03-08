@@ -1,6 +1,7 @@
 package com.example.inventory.domain.repository;
 
 
+import com.example.common.application.BusinessPeriodDTO;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.domain.model.AvailablePlantReport;
 import com.example.inventory.domain.model.EquipmentCondition;
@@ -31,6 +32,15 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
                 .setParameter(1, "%"+name+"%")
                 .setParameter(2, startDate)
                 .setParameter(3, EquipmentCondition.SERVICEABLE)
+                .getResultList();
+    }
+
+    public List<PlantInventoryEntry> findInfoAvailablePlants(String name, LocalDate startDate, LocalDate endDate){
+        return em.createQuery("select distinct p FROM PlantInventoryEntry p, PlantReservation r, PlantInventoryItem i WHERE (p.name) LIKE ?1 AND i.equipmentCondition = ?4 AND (r.schedule.startDate > ?3 OR r.schedule.endDate < ?2)")
+                .setParameter(1,"%"+name+"%")
+                .setParameter(2, startDate)
+                .setParameter(3, endDate)
+                .setParameter(4, EquipmentCondition.SERVICEABLE)
                 .getResultList();
     }
 
