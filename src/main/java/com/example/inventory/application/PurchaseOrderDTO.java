@@ -16,4 +16,5 @@ public class PurchaseOrderDTO {
     private String name;
     private BusinessPeriodDTO rentalPeriod;
     private BigDecimal total;
+    private String description;
 }

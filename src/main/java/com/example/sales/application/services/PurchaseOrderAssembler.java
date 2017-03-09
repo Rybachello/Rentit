@@ -16,6 +16,7 @@ public class PurchaseOrderAssembler {
         dto.setName(plant.getName());
         dto.setTotal(plant.getPrice());
         dto.setRentalPeriod(period);
+        dto.setDescription(plant.getDescription());
         return dto;
     }
 }
