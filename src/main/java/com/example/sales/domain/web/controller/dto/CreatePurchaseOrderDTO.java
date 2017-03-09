@@ -4,6 +4,7 @@ import com.example.common.application.BusinessPeriodDTO;
 import com.example.sales.domain.model.POStatus;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Data
 public class CreatePurchaseOrderDTO {
     private String plantId;
+    private BigDecimal price;
     private BusinessPeriodDTO rentalPeriod;
     private POStatus status;
 }

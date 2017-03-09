@@ -114,10 +114,10 @@ public class CreationOfPurchaseOrderSteps {
 
     @When("^the customer selects a \"([^\"]*)\"$")
     public void the_customer_selects_a(String plantDescription) throws Throwable {
-        List<?> descriptionCellsList = customerPage.getByXPath("//td[text()[contains(.,'" + plantDescription + "']");
+        List<?> descriptionCellsList = customerPage.getByXPath("//td[text()[contains(.,'" + plantDescription + "')]]");
         HtmlTableDataCell firstDescriptionCell = (HtmlTableDataCell)descriptionCellsList.get(0);
         HtmlTableRow plantRow = (HtmlTableRow)firstDescriptionCell.getParentNode();
-        HtmlButton submit = (HtmlButton)plantRow.getByXPath("//button");
+        HtmlButton submit = (HtmlButton)plantRow.getChildNodes().get(7).getChildNodes().get(1).getChildNodes().get(7);//(HtmlButton)plantRow.getByXPath("//button");
 
         customerPage = submit.click();
     }

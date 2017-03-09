@@ -15,6 +15,7 @@ import com.example.sales.domain.web.controller.dto.CreatePurchaseOrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -36,7 +37,10 @@ public class SalesService {
 
     public PurchaseOrderDTO getPurchaseOrder(CreatePurchaseOrderDTO dto){
         PlantInventoryEntry plant = repo.findOne(dto.getPlantId());
-        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(),null,null, POStatus.PENDING);
+        BigDecimal total = plant.getPrice();
+        BigDecimal days = BigDecimal.valueOf(dto.getRentalPeriod().getDurationDays());
+        total = total.multiply(days);
+        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(),null, total, POStatus.PENDING);
 
         try {
             PlantReservation plantReservation = inventoryService.reserveItem(dto.getPlantId(), dto.getRentalPeriod(),po.getId());
@@ -45,7 +49,7 @@ public class SalesService {
         }
 
         purchaseOrderRepository.save(po);
-        PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(plant,dto.getRentalPeriod(), po.getStatus().toString());
+        PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(plant,dto.getRentalPeriod(), po);
         return poDto;
     }
 }

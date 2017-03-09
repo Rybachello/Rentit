@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Created by Rybachello on 3/3/2017.
@@ -18,5 +19,9 @@ public class BusinessPeriodDTO {
     LocalDate startDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     LocalDate endDate;
+
+    public long getDurationDays() {
+        return ChronoUnit.DAYS.between(startDate, endDate)+1;
+    }
 }
 

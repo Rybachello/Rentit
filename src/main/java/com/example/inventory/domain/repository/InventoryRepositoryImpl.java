@@ -36,7 +36,7 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
     }
 
     public List<PlantInventoryEntry> findInfoAvailablePlants(String name, LocalDate startDate, LocalDate endDate){
-        return em.createQuery("select distinct p FROM PlantInventoryEntry p, PlantReservation r, PlantInventoryItem i WHERE (p.name) LIKE ?1 AND i.equipmentCondition = ?4 AND (r.schedule.startDate > ?3 OR r.schedule.endDate < ?2)")
+        return em.createQuery("select distinct p FROM PlantInventoryEntry p, PlantInventoryItem i WHERE i.plantInfoId = p.id and (p.name) LIKE ?1 AND i.equipmentCondition = ?4 AND i.id not in (select r.plantId from PlantReservation r where r.schedule.startDate < ?3 and r.schedule.endDate > ?2)")
                 .setParameter(1,"%"+name+"%")
                 .setParameter(2, startDate)
                 .setParameter(3, endDate)
