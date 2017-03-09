@@ -101,4 +101,16 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
                 .setParameter(1,LocalDate.now().getYear())
                 .getResultList();
     }
+    @Override
+    public List<PlantInventoryItem> findAvailablePlantItemsInBusinessPeriod(String entryId, BusinessPeriod period) {
+        //noinspection unchecked
+        return em.createQuery(
+                "select p from PlantInventoryItem p where p.plantInfoId = ?1 and " +
+                        "p.equipmentCondition = com.example.inventory.domain.model.EquipmentCondition.SERVICEABLE and p.id not in " +
+                        "(select r.plantId from PlantReservation r where ?2 < r.schedule.endDate and ?3 > r.schedule.startDate)")
+                .setParameter(1, entryId)
+                .setParameter(2, period.getStartDate())
+                .setParameter(3, period.getEndDate())
+                .getResultList();
+    }
 }

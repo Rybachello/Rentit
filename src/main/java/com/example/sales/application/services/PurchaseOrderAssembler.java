@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PurchaseOrderAssembler {
-    public PurchaseOrderDTO toResource(PlantInventoryEntry plant, BusinessPeriodDTO period){
+    public PurchaseOrderDTO toResource(PlantInventoryEntry plant, BusinessPeriodDTO period, String status){
         PurchaseOrderDTO dto = new PurchaseOrderDTO();
         dto.setId(plant.getId());
         dto.setName(plant.getName());
         dto.setTotal(plant.getPrice());
         dto.setRentalPeriod(period);
+        dto.setDescription(plant.getDescription());
+        dto.setStatus(status);
         return dto;
     }
 }

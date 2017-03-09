@@ -36,14 +36,14 @@ public class	DashboardController	{
     @RequestMapping("/catalog/query")
     public String executeQuery(CatalogQueryDTO query,Model model)
     {
-       List<PlantInventoryEntry> p =  inventoryService.createListOfAvailablePlants(query);
-        model.addAttribute("plants", plantInvAssembler.toResources(p));
-        model.addAttribute("q", query);
+       List<PlantInventoryEntry> availablePlants =  inventoryService.createListOfAvailablePlants(query);
+       model.addAttribute("plants", plantInvAssembler.toResources(availablePlants));
+       model.addAttribute("q", query);
        model.addAttribute("po", new CreatePurchaseOrderDTO());
        return "dashboard/catalog/query-result";
     }
     @RequestMapping("/orders")
-    public String	createPO(CreatePurchaseOrderDTO toDTO, Model	model)	{
+    public String createPO(CreatePurchaseOrderDTO toDTO, Model	model)	{
         PurchaseOrderDTO po = salesService.getPurchaseOrder(toDTO);
         model.addAttribute("purchaseOrderDetails", po);
         return	"dashboard/catalog/purchase-order-details";

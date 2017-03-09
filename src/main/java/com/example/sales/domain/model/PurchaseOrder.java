@@ -31,4 +31,9 @@ public class PurchaseOrder {
 
     @Enumerated(EnumType.STRING)
     POStatus status;
+
+    public void rejectPo() {
+        this.status = POStatus.REJECTED;
+    }
+
 }

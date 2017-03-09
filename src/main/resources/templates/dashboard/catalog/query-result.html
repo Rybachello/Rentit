@@ -28,9 +28,6 @@
                 <td>
                <form style='float:left; padding:5px; height:0px' th:object="${po}" th:method="post" th:action="@{'/dashboard/orders'}">
                   	<input type="hidden" name="plantId" th:value="${p.id}"></input>
-<!--
-                    <input type="hidden" name="plant.name" th:value="${p.name}"></input>
--->
                     <input type="hidden" name="rentalPeriod.startDate" th:value="${q.rentalPeriod.startDate}"></input>
                 	<input type="hidden" name="rentalPeriod.endDate" th:value="${q.rentalPeriod.endDate}"></input>
                 	<button class="btn btn-default btn-xs" type="submit">Create PO</button>

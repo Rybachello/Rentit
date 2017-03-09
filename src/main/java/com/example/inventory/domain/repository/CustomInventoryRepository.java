@@ -1,5 +1,6 @@
 package com.example.inventory.domain.repository;
 
+import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.domain.model.AvailablePlantReport;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.maintenance.domain.model.CorrectiveRepairsCostPerYear;
@@ -18,5 +19,7 @@ public interface CustomInventoryRepository {
 
     List<CorrectiveRepairsNumberPerYear> findCorrectiveRepairsNumberForLastFiveYears();
     List<CorrectiveRepairsCostPerYear> findCorrectiveRepairsCostsForLastFiveYears();
+
+    List<PlantInventoryItem> findAvailablePlantItemsInBusinessPeriod(String entryId, BusinessPeriod period);
 
 }

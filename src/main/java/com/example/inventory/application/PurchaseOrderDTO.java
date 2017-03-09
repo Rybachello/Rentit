@@ -14,6 +14,8 @@ import java.time.LocalDate;
 public class PurchaseOrderDTO {
     private String id;
     private String name;
+    private String status;
+    private String description;
     private BusinessPeriodDTO rentalPeriod;
     private BigDecimal total;
 }
