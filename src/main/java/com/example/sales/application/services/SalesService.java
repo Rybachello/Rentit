@@ -1,7 +1,6 @@
 package com.example.sales.application.services;
 
 import com.example.inventory.application.PurchaseOrderDTO;
-import com.example.inventory.application.services.PlantInventoryEntryAssembler;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.domain.web.controller.dto.CreatePurchaseOrderDTO;
@@ -16,7 +15,7 @@ public class SalesService {
     @Autowired
     PlantInventoryEntryRepository repo;
     @Autowired
-    PlantInventoryEntryAssembler ass;
+    PurchaseOrderAssembler ass;
     public PurchaseOrderDTO getPurchaseOrder(CreatePurchaseOrderDTO dto){
         PlantInventoryEntry plant = repo.findOne(dto.getPlantId());
         PurchaseOrderDTO poDto = ass.toResource(plant, dto.getRentalPeriod());
