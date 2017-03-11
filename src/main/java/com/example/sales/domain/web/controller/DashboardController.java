@@ -1,12 +1,12 @@
 package com.example.sales.domain.web.controller;
 
-import com.example.inventory.application.PurchaseOrderDTO;
+import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.application.services.PlantInventoryEntryAssembler;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.sales.application.services.SalesService;
-import com.example.sales.domain.web.controller.dto.CatalogQueryDTO;
-import com.example.sales.domain.web.controller.dto.CreatePurchaseOrderDTO;
+import com.example.sales.domain.web.dto.CatalogQueryDTO;
+import com.example.sales.domain.web.dto.CreatePurchaseOrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

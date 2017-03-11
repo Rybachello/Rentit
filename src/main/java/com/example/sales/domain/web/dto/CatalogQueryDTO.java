@@ -1,6 +1,6 @@
-package com.example.sales.domain.web.controller.dto;
+package com.example.sales.domain.web.dto;
 
-import com.example.common.application.BusinessPeriodDTO;
+import com.example.common.application.dto.BusinessPeriodDTO;
 import lombok.Data;
 
 /**

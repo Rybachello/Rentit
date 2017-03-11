@@ -1,4 +1,4 @@
-package com.example.inventory.application;
+package com.example.inventory.application.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

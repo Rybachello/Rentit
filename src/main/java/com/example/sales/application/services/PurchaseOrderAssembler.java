@@ -1,7 +1,7 @@
 package com.example.sales.application.services;
 
-import com.example.common.application.BusinessPeriodDTO;
-import com.example.inventory.application.PurchaseOrderDTO;
+import com.example.common.application.dto.BusinessPeriodDTO;
+import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.sales.domain.model.PurchaseOrder;
 import org.springframework.stereotype.Service;

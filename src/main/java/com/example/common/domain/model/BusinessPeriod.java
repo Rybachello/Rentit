@@ -15,4 +15,5 @@ import java.time.LocalDate;
 public class BusinessPeriod {
     LocalDate startDate;
     LocalDate endDate;
+
 }

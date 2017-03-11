@@ -2,6 +2,7 @@ package com.example.inventory.domain.repository;
 
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.domain.model.AvailablePlantReport;
+import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.maintenance.domain.model.CorrectiveRepairsCostPerYear;
 import com.example.maintenance.domain.model.CorrectiveRepairsNumberPerYear;
@@ -16,6 +17,8 @@ public interface CustomInventoryRepository {
     List<AvailablePlantReport> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate);
 
     List<PlantInventoryItem> findUnhired();
+
+    List<PlantInventoryEntry> findInfoAvailablePlants(String name, LocalDate startDate, LocalDate endDate);
 
     List<CorrectiveRepairsNumberPerYear> findCorrectiveRepairsNumberForLastFiveYears();
     List<CorrectiveRepairsCostPerYear> findCorrectiveRepairsCostsForLastFiveYears();

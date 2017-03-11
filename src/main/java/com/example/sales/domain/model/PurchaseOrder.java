@@ -1,15 +1,10 @@
 package com.example.sales.domain.model;
 
-import com.example.common.domain.model.BusinessPeriod;
-import com.example.common.infrastructure.IdentifierFactory;
-import com.example.inventory.domain.model.PlantInventoryEntry;
-import com.example.inventory.domain.model.PlantReservation;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Created by Vasiliy on 2017.02.20.
@@ -21,6 +16,9 @@ import java.util.List;
 public class PurchaseOrder {
     @Id
     String id;
+
+    //todo: convert here to businessPeriod
+    //businessPeriod rentalPeriod
 
     LocalDate issueDate;
 
