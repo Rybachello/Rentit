@@ -19,8 +19,7 @@ public class PlantInventoryItem {
     @Enumerated(EnumType.STRING)
     EquipmentCondition equipmentCondition;
 
-    // PlantInventoryEntry id
-    String plantInfoId;
+    String plantInfoId; // PlantInventoryEntry id
 
     public void setEquipmentCondition(EquipmentCondition equipmentCondition) {
         this.equipmentCondition = equipmentCondition;

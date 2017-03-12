@@ -15,14 +15,10 @@ import java.util.List;
  */
 public interface CustomInventoryRepository {
     List<AvailablePlantReport> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate);
-
     List<PlantInventoryItem> findUnhired();
-
     List<PlantInventoryEntry> findInfoAvailablePlants(String name, LocalDate startDate, LocalDate endDate);
-
     List<CorrectiveRepairsNumberPerYear> findCorrectiveRepairsNumberForLastFiveYears();
     List<CorrectiveRepairsCostPerYear> findCorrectiveRepairsCostsForLastFiveYears();
-
     List<PlantInventoryItem> findAvailablePlantItemsInBusinessPeriod(String entryId, BusinessPeriod period);
 
 }

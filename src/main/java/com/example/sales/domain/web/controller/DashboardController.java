@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/dashboard")
-public class	DashboardController	{
+public class DashboardController	{
     @Autowired
     InventoryService inventoryService;
     @Autowired

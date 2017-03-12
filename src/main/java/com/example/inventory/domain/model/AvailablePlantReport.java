@@ -7,7 +7,7 @@ public class AvailablePlantReport {
    String description;
    Long amount;
 
-    public AvailablePlantReport(java.lang.String name, java.lang.String description, long amount ){
+    public AvailablePlantReport(String name, String description, long amount ){
         this.name = name;
         this.description = description;
         this.amount = amount;
