@@ -24,7 +24,7 @@ public class PlantInventoryEntryAssembler {
         dto.setPrice(plant.getPrice());
         return dto;
     }
-
+    //todo:remove this method
     public List<PlantInventoryEntryDTO> toResources(List<PlantInventoryEntry> plants){
         return plants.stream().map(p -> toResource(p)).collect(Collectors.toList());
     }

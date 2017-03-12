@@ -1,5 +1,7 @@
 package com.example.sales.domain.web.controller;
 
+import com.example.common.application.exсeptions.PlantNotFoundException;
+import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.application.services.PlantInventoryEntryAssembler;
@@ -36,14 +38,14 @@ public class	DashboardController	{
     @RequestMapping("/catalog/query")
     public String executeQuery(CatalogQueryDTO query,Model model)
     {
-       List<PlantInventoryEntry> availablePlants =  inventoryService.createListOfAvailablePlants(query);
-       model.addAttribute("plants", plantInvAssembler.toResources(availablePlants));
+       List<PlantInventoryEntryDTO> availablePlants =  inventoryService.createListOfAvailablePlants(query);
+       model.addAttribute("plants", availablePlants);
        model.addAttribute("q", query);
        model.addAttribute("po", new CreatePurchaseOrderDTO());
        return "dashboard/catalog/query-result";
     }
     @RequestMapping("/orders")
-    public String createPO(CreatePurchaseOrderDTO toDTO, Model	model)	{
+    public String createPO(CreatePurchaseOrderDTO toDTO, Model	model) throws PlantNotFoundException {
         PurchaseOrderDTO po = salesService.getPurchaseOrder(toDTO);
         model.addAttribute("purchaseOrderDetails", po);
         return	"dashboard/catalog/purchase-order-details";

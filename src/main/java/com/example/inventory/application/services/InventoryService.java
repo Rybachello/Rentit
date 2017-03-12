@@ -1,8 +1,10 @@
 package com.example.inventory.application.services;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
+import com.example.common.application.exсeptions.PlantNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
@@ -21,31 +23,29 @@ import java.util.List;
 @Service
 public class InventoryService {
     @Autowired
-    InventoryRepositoryImpl repo;
+    InventoryRepositoryImpl inventoryRepository;
     @Autowired
     PlantReservationRepository plantReservationRepository;
-    //todo: add PlantInventoryEntryAssembler
+    @Autowired
+    PlantInventoryEntryAssembler plantInventoryEntryAssembler;
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
-    public List<PlantInventoryEntry> createListOfAvailablePlants(CatalogQueryDTO query) {
-        return repo.findInfoAvailablePlants(query.getName(), query.getRentalPeriod().getStartDate(), query.getRentalPeriod().getStartDate());
-    }
 
-    public PlantReservation reserveItem(String plantId, BusinessPeriodDTO rentalPeriod,String poId) throws NoPlantAvailableException {
-        //todo: refactor here covert businessDTO to
-        BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(rentalPeriod);
-        List<PlantInventoryItem> itemList = repo.findAvailablePlantItemsInBusinessPeriod(plantId, businessPeriod);
-        if (itemList.size() < 1) {
-            throw new NoPlantAvailableException();
+    public List<PlantInventoryEntryDTO> createListOfAvailablePlants(CatalogQueryDTO query) {
+        return plantInventoryEntryAssembler.toResources(inventoryRepository.findInfoAvailablePlants(query.getName(), query.getRentalPeriod().getStartDate(), query.getRentalPeriod().getStartDate()));
+    }
+    //todo: remove poID here
+    public PlantReservation createPlantReservation(String plantId, BusinessPeriod  rentalPeriod, String poId) throws PlantNotFoundException {
+        List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(plantId, rentalPeriod);
+        if (itemList.size() == 0) {
+            throw new PlantNotFoundException("Requested plant is unavailable") ;
         }
         PlantInventoryItem item = itemList.get(0);//find first
-
-        PlantReservation pr = PlantReservation.of(IdentifierFactory.nextID(), businessPeriod, item.getId(), poId);
-        plantReservationRepository.save(pr);
-        return pr;
+        //create new plantReservation
+        PlantReservation plantReservation = PlantReservation.of(IdentifierFactory.nextID(), rentalPeriod, item.getId(), poId);
+        //save to the database
+        plantReservationRepository.save(plantReservation);
+        return plantReservation;
     }
 
-    public static class NoPlantAvailableException extends Exception {
-
-    }
 }

@@ -1,5 +1,7 @@
 package com.example.sales.domain.model;
 
+import com.example.common.domain.model.BusinessPeriod;
+import com.example.inventory.domain.model.PlantReservation;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +14,6 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(force=true, access= AccessLevel.PRIVATE)
-@AllArgsConstructor(staticName = "of")
 public class PurchaseOrder {
     @Id
     String id;
@@ -30,8 +31,25 @@ public class PurchaseOrder {
     @Enumerated(EnumType.STRING)
     POStatus status;
 
-    public void rejectPo() {
+    public static PurchaseOrder of(String id, LocalDate issueDate)
+    {
+        PurchaseOrder po = new PurchaseOrder();
+        po.id = id;
+        po.issueDate = issueDate;
+        po.status = POStatus.PENDING;
+        return po;
+    }
+
+    public void confirmReservation(PlantReservation plantReservation, BigDecimal price) {
+        //get period
+        BusinessPeriod businessPeriod = plantReservation.getSchedule();
+        total = price.multiply(BigDecimal.valueOf(businessPeriod.numberOfWorkingDays()));
+        status = POStatus.OPEN;
+    }
+
+    public void rejectPuchaseOrder() {
         this.status = POStatus.REJECTED;
     }
+
 
 }
