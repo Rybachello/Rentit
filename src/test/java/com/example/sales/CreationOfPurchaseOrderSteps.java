@@ -25,6 +25,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.htmlunit.MockMvcWebClientBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.text.NumberFormat;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -128,7 +129,8 @@ public class CreationOfPurchaseOrderSteps {
     @Then("^a purchase order should be created with a total price of (\\d+)\\.(\\d+)$")
     public void a_purchase_order_should_be_created_with_a_total_price_of(int priceFull, int priceDecimals) throws Throwable {
         HtmlTableDataCell priceElement = (HtmlTableDataCell)customerPage.getElementById("price-element");
+        NumberFormat numberFormat = NumberFormat.getInstance();
 
-        Assert.assertEquals(NumberFormat.getInstance().parse(priceFull+"."+priceDecimals),NumberFormat.getInstance().parse(priceElement.getTextContent()));
+        Assert.assertEquals(numberFormat.parse(priceFull + "." + priceDecimals), numberFormat.parse(priceElement.getTextContent()));
     }
 }
