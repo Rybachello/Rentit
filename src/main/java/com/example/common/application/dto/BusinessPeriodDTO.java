@@ -20,8 +20,5 @@ public class BusinessPeriodDTO {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     LocalDate endDate;
 
-    public long getDurationDays() {
-        return ChronoUnit.DAYS.between(startDate, endDate)+1;
-    }
 }
 

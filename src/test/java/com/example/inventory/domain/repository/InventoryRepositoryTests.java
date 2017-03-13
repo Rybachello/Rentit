@@ -6,7 +6,6 @@ import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.inventory.domain.model.EquipmentCondition;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.model.PlantReservation;
-import com.example.inventory.domain.repository.*;
 import com.example.maintenance.domain.model.MaintenanceTask;
 import com.example.maintenance.domain.repository.MaintenancePlanRepository;
 import com.example.maintenance.domain.repository.MaintenanceTaskRepository;
@@ -226,7 +225,7 @@ public class InventoryRepositoryTests {
     @Test
     public void queryFindForCorrectiveRepairsCostsFor2017()
     {
-        int  costsFor2017 = (inventoryRepo.findCorrectiveRepairsCostsForLastFiveYears().get(0).getCost()).intValue();
+        int costsFor2017 = (inventoryRepo.findCorrectiveRepairsCostsForLastFiveYears().get(0).getCost()).intValue();
         assertThat(costsFor2017).isEqualTo(800);
     }
 
