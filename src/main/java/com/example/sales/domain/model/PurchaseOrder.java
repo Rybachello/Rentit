@@ -18,9 +18,6 @@ public class PurchaseOrder {
     @Id
     String id;
 
-    //todo: convert here to businessPeriod
-    //businessPeriod rentalPeriod
-
     LocalDate issueDate;
 
     LocalDate paymentSchedule;

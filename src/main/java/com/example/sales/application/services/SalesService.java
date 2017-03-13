@@ -63,7 +63,6 @@ public class SalesService {
                 po.rejectPuchaseOrder();
         }
         purchaseOrderRepository.save(po);
-        //todo: refactor here
         PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(plantInventoryEntry,dto.getRentalPeriod(), po);
         return poDto;
     }

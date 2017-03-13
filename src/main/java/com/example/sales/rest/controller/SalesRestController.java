@@ -1,9 +1,11 @@
 package com.example.sales.rest.controller;
 
+import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.application.exсeptions.PlantNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.domain.web.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -32,9 +34,8 @@ public class SalesRestController {
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
-        //todo: fixed query name
-        return null;
-        //return inventoryService.createListOfAvailablePlants(plantName,startDate,endDate);
+        CatalogQueryDTO catalogQueryDTO = CatalogQueryDTO.of(plantName,BusinessPeriodDTO.of(startDate,endDate));
+        return inventoryService.createListOfAvailablePlants(catalogQueryDTO);
     }
 
     @GetMapping("/orders/{id}")

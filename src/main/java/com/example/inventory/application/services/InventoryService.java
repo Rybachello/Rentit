@@ -32,7 +32,6 @@ public class InventoryService {
     public List<PlantInventoryEntryDTO> createListOfAvailablePlants(CatalogQueryDTO query) {
         return plantInventoryEntryAssembler.toResources(inventoryRepository.findInfoAvailablePlants(query.getName(), query.getRentalPeriod().getStartDate(), query.getRentalPeriod().getStartDate()));
     }
-    //todo: remove poID here
     public PlantReservation createPlantReservation(String plantId, BusinessPeriod  rentalPeriod, String poId) throws PlantNotFoundException {
         List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(plantId, rentalPeriod);
         if (itemList.size() == 0) {
