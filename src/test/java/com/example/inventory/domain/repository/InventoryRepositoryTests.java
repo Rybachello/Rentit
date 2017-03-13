@@ -1,12 +1,11 @@
-package com.example.models;
+package com.example.inventory.domain.repository;
 
 import com.example.DemoApplication;
 import com.example.common.domain.model.BusinessPeriod;
-import com.example.common.infrastructure.IdentifierFactory;
+import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.inventory.domain.model.EquipmentCondition;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.model.PlantReservation;
-import com.example.inventory.domain.repository.*;
 import com.example.maintenance.domain.model.MaintenanceTask;
 import com.example.maintenance.domain.repository.MaintenancePlanRepository;
 import com.example.maintenance.domain.repository.MaintenanceTaskRepository;
@@ -18,9 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -229,7 +225,7 @@ public class InventoryRepositoryTests {
     @Test
     public void queryFindForCorrectiveRepairsCostsFor2017()
     {
-        int  costsFor2017 = (inventoryRepo.findCorrectiveRepairsCostsForLastFiveYears().get(0).getCost()).intValue();
+        int costsFor2017 = (inventoryRepo.findCorrectiveRepairsCostsForLastFiveYears().get(0).getCost()).intValue();
         assertThat(costsFor2017).isEqualTo(800);
     }
 

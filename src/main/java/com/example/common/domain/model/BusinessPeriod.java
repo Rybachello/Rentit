@@ -7,6 +7,7 @@ import lombok.Value;
 
 import javax.persistence.Embeddable;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Embeddable
 @Value
@@ -15,4 +16,8 @@ import java.time.LocalDate;
 public class BusinessPeriod {
     LocalDate startDate;
     LocalDate endDate;
+
+    public long numberOfWorkingDays() {
+        return ChronoUnit.DAYS.between(startDate, endDate) + 1;
+    }
 }

@@ -14,10 +14,10 @@ import java.util.List;
 @RestController
 public class PlantInventoryEntryController {
     @Autowired
-    PlantInventoryEntryRepository repo;
+    PlantInventoryEntryRepository plantInventoryEntryRepository;
     
     @GetMapping("/plants")
     public List<PlantInventoryEntry> findAll() {
-        return repo.findByNameContaining("ex");
+        return plantInventoryEntryRepository.findByNameContaining("ex");
     }
 }

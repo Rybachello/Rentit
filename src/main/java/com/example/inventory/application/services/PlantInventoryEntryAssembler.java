@@ -1,6 +1,6 @@
 package com.example.inventory.application.services;
 
-import com.example.inventory.application.PlantInventoryEntryDTO;
+import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Created by minhi_000 on 08.03.2017.
  */
+
 @Service
 public class PlantInventoryEntryAssembler {
     public PlantInventoryEntryDTO toResource(PlantInventoryEntry plant){
@@ -21,7 +22,7 @@ public class PlantInventoryEntryAssembler {
         dto.setPrice(plant.getPrice());
         return dto;
     }
-
+    //todo:remove this method
     public List<PlantInventoryEntryDTO> toResources(List<PlantInventoryEntry> plants){
         return plants.stream().map(p -> toResource(p)).collect(Collectors.toList());
     }

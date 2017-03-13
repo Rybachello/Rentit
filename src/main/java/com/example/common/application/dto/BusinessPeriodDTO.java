@@ -1,4 +1,4 @@
-package com.example.common.application;
+package com.example.common.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +20,5 @@ public class BusinessPeriodDTO {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     LocalDate endDate;
 
-    public long getDurationDays() {
-        return ChronoUnit.DAYS.between(startDate, endDate)+1;
-    }
 }
 

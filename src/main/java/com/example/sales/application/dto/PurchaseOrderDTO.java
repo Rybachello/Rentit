@@ -1,11 +1,9 @@
-package com.example.inventory.application;
+package com.example.sales.application.dto;
 
-import com.example.common.application.BusinessPeriodDTO;
-import com.example.sales.domain.model.POStatus;
+import com.example.common.application.dto.BusinessPeriodDTO;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 /**
  * Created by Rybachello on 3/7/2017.

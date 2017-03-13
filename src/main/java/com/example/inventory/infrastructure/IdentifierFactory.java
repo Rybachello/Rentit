@@ -1,4 +1,4 @@
-package com.example.common.infrastructure;
+package com.example.inventory.infrastructure;
 
 import org.springframework.stereotype.Service;
 

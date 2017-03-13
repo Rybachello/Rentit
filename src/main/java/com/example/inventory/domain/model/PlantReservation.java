@@ -18,8 +18,7 @@ public class PlantReservation {
     @Embedded
     BusinessPeriod schedule;
 
-    // PlantInventoryItem id
-    String plantId;
+    String plantId;// PlantInventoryItem id
 
     String purchaseOrderId;
 }

@@ -38,13 +38,13 @@
 -- insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('1',2017,'1');
 -- insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('2',2016,'2');
 -- insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('3',2015,'3');
---
--- -- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','1');
--- -- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','4');
--- -- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','5');
--- -- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('3','3');
--- -- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('2','2');
---
---
---
---
+
+-- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','1');
+-- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','4');
+-- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','5');
+-- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('3','3');
+-- insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('2','2');
+
+
+
+
