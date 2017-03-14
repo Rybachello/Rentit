@@ -27,7 +27,11 @@ public class MaintenanceTask {
     @Enumerated(EnumType.STRING)
     TypeOfWork typeOfWork;
 
-    String reservationId;
+    @ManyToOne
+    @JoinColumn(name = "reservationId")
+    PlantReservation reservation;
 
-    String maintenancePlanId;
+    @ManyToOne
+    @JoinColumn(name = "maintenancePlanId")
+    MaintenancePlan maintenancePlan;
 }

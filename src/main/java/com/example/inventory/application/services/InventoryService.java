@@ -1,6 +1,6 @@
 package com.example.inventory.application.services;
 
-import com.example.common.application.exсeptions.PlantNotFoundException;
+import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
@@ -9,6 +9,7 @@ import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.InventoryRepositoryImpl;
 import com.example.inventory.domain.repository.PlantReservationRepository;
+import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.web.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class InventoryService {
     public List<PlantInventoryEntryDTO> createListOfAvailablePlants(CatalogQueryDTO query) {
         return plantInventoryEntryAssembler.toResources(inventoryRepository.findInfoAvailablePlants(query.getName(), query.getRentalPeriod().getStartDate(), query.getRentalPeriod().getStartDate()));
     }
-    public PlantReservation createPlantReservation(String plantId, BusinessPeriod  rentalPeriod, String poId) throws PlantNotFoundException {
+    public PlantReservation createPlantReservation(String plantId, BusinessPeriod  rentalPeriod, PurchaseOrder po) throws PlantNotFoundException {
         List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(plantId, rentalPeriod);
         if (itemList.size() == 0) {
             throw new PlantNotFoundException("Requested plant is unavailable") ;
@@ -40,7 +41,7 @@ public class InventoryService {
         //find first
         PlantInventoryItem item = itemList.get(0);
         //create new plantReservation
-        PlantReservation plantReservation = PlantReservation.of(IdentifierFactory.nextID(), rentalPeriod, item.getId(), poId);
+        PlantReservation plantReservation = PlantReservation.of(IdentifierFactory.nextID(), rentalPeriod, item, po);
         return plantReservation;
     }
 

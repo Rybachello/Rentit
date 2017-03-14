@@ -79,7 +79,7 @@ public class CreationOfPurchaseOrderSteps {
                             row.get("id"),
                             row.get("serialNumber"),
                             EquipmentCondition.valueOf(row.get("equipmentCondition")),
-                            plantInventoryEntryRepository.findOne(row.get("plantInfo")).getId()
+                            plantInventoryEntryRepository.findOne(row.get("plantInfo"))
                     )
             );
     }

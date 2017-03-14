@@ -19,7 +19,9 @@ public class PlantInventoryItem {
     @Enumerated(EnumType.STRING)
     EquipmentCondition equipmentCondition;
 
-    String plantInfoId; // PlantInventoryEntry id
+    @ManyToOne
+    @JoinColumn(name = "plantInfoId")
+    PlantInventoryEntry plantInfo; // PlantInventoryEntry id
 
     public void setEquipmentCondition(EquipmentCondition equipmentCondition) {
         this.equipmentCondition = equipmentCondition;

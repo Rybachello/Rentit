@@ -20,15 +20,16 @@ public class BusinessPeriodValidator implements Validator {
         LocalDate now = LocalDate.now();
         LocalDate far = LocalDate.ofYearDay(2222, 1);
 
-        if (period.getStartDate().isAfter(period.getEndDate())){
+        if (period.getStartDate()==null || period.getEndDate()==null)
+            errors.reject("Dates should not be null");
+
+        if (period.getStartDate().isAfter(period.getEndDate()))
             errors.reject("End date should be after the start date");
-        }
 
         if (period.getStartDate().isBefore(now)||
                 period.getEndDate().isBefore(now)||
                 period.getStartDate().isAfter(far)||
-                period.getEndDate().isAfter(far)){
+                period.getEndDate().isAfter(far))
             errors.reject("Dates should be between now and year 2222");
-        }
     }
 }

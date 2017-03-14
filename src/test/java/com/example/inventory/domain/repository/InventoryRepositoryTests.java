@@ -58,7 +58,8 @@ public class InventoryRepositoryTests {
     }
 
     private void addReservationAndCheckAvailability(BusinessPeriod of) {
-        PlantReservation reserve = PlantReservation.of(IdentifierFactory.nextID(), of, "1", null);
+        PlantInventoryItem item = plantInventoryItemRepo.findOne("1");
+        PlantReservation reserve = PlantReservation.of(IdentifierFactory.nextID(), of, item, null);
         //reserve.setSchedule(of);
 //      //reserve.setPlant(plantInventoryItemRepo.findOne("1"));
         plantReservationRepo.save(reserve);
@@ -135,8 +136,8 @@ public class InventoryRepositoryTests {
         assert(!IsAPlantAvailableRelaxed());
     }
 
-    private PlantReservation addReservation(String itemId, BusinessPeriod period) {
-        PlantReservation reservation = PlantReservation.of(IdentifierFactory.nextID(), period, itemId, null);
+    private PlantReservation addReservation(PlantInventoryItem item, BusinessPeriod period) {
+        PlantReservation reservation = PlantReservation.of(IdentifierFactory.nextID(), period, item, null);
         plantReservationRepo.save(reservation);
         return reservation;
     }
@@ -161,11 +162,11 @@ public class InventoryRepositoryTests {
         PlantReservation pr = PlantReservation.of(
                 IdentifierFactory.nextID(),
                 BusinessPeriod.of(weekFromNow, tenDaysFromNow),
-                item.getId(),
+                item,
                 null);
 
 
-        MaintenanceTask mt = MaintenanceTask.of(IdentifierFactory.nextID(), null, null, null, pr.getId(), null);
+        MaintenanceTask mt = MaintenanceTask.of(IdentifierFactory.nextID(), null, null, null, pr, null);
         plantReservationRepo.save(pr);
 
         maintenanceTaskRepo.save(mt);
@@ -196,7 +197,7 @@ public class InventoryRepositoryTests {
         PlantReservation pr = PlantReservation.of(
                 IdentifierFactory.nextID(),
                 BusinessPeriod.of(weekFromNow, almostMonthFromNow),
-                item.getId(),
+                item,
                 null);
         plantReservationRepo.save(pr);
         maintenanceTaskRepo.save(mt);

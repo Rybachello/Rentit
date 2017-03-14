@@ -1,5 +1,6 @@
 package com.example.maintenance.domain.model;
 
+import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import lombok.*;
 
@@ -19,5 +20,7 @@ public class MaintenancePlan {
 
     Integer yearOfAction;
 
-    String inventoryItemId;
+    @ManyToOne
+    @JoinColumn(name = "inventoryItemId")
+    PlantInventoryEntry inventoryItem;
 }

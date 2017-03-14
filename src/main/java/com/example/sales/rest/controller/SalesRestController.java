@@ -1,7 +1,7 @@
 package com.example.sales.rest.controller;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
-import com.example.common.application.exсeptions.PlantNotFoundException;
+import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.sales.application.dto.PurchaseOrderDTO;

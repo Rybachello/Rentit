@@ -1,6 +1,7 @@
 package com.example.sales.application.services;
 
-import com.example.common.application.exсeptions.PlantNotFoundException;
+import com.example.common.application.exceptions.PlantNotFoundException;
+import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.domain.repository.PlantReservationRepository;
@@ -59,7 +60,7 @@ public class SalesService {
 //            throw new BindException(binder.getBindingResult());
 
         try {
-            PlantReservation plantReservation = inventoryService.createPlantReservation(dto.getPlantId(),businessPeriod,po.getId());
+            PlantReservation plantReservation = inventoryService.createPlantReservation(dto.getPlantId(),businessPeriod,po);
             po.confirmReservation(plantReservation,plantInventoryEntry.getPrice());
             //save to the database
             purchaseOrderRepository.save(po);

@@ -18,7 +18,11 @@ public class PlantReservation {
     @Embedded
     BusinessPeriod schedule;
 
-    String plantId;// PlantInventoryItem id
+    @ManyToOne
+    @JoinColumn(name = "plantId")
+    PlantInventoryItem plant;// PlantInventoryItem id
 
-    String purchaseOrderId;
+    @ManyToOne
+    @JoinColumn(name = "purchaseOrderId")
+    PurchaseOrder purchaseOrder;
 }
