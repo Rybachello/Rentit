@@ -37,7 +37,7 @@ public class PurchaseOrderValidator implements Validator {
         if (order.getId() == null)
             errors.reject("id", "Purchase Order id cannot be null");
 
-        if ()
+        if (true){}
 
 
         errors.pushNestedPath("rentalPeriod");
