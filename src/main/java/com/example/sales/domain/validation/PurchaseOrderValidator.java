@@ -2,6 +2,7 @@ package com.example.sales.domain.validation;
 
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.domain.validation.BusinessPeriodValidator;
+import com.example.sales.domain.model.POStatus;
 import com.example.sales.domain.model.PurchaseOrder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -32,12 +33,15 @@ public class PurchaseOrderValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        PurchaseOrder order = (PurchaseOrder)o;
+        PurchaseOrder order = (PurchaseOrder) o;
         if (order.getId() == null)
             errors.reject("id", "Purchase Order id cannot be null");
 
+        if ()
+
+
         errors.pushNestedPath("rentalPeriod");
-        //ValidationUtils.invokeValidator(periodValidator, order.getRentalPeriod(), errors);
+        ValidationUtils.invokeValidator(periodValidator, order.getRentalPeriod(), errors);
         errors.popNestedPath();
     }
 }

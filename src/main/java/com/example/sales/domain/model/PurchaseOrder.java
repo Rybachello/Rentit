@@ -24,7 +24,7 @@ public class PurchaseOrder {
 
     // to store reservation dates in case of PO rejection (plant reservation in this case will not be saved)
     @Embedded
-    BusinessPeriod schedule;
+    BusinessPeriod rentalPeriod;
 
     @Column(precision=8,scale=2)
     BigDecimal total;
@@ -44,7 +44,7 @@ public class PurchaseOrder {
     public void confirmReservation(PlantReservation plantReservation, BigDecimal price) {
         //get period
         BusinessPeriod businessPeriod = plantReservation.getSchedule();
-        this.schedule = businessPeriod;
+        this.rentalPeriod = businessPeriod;
         total = price.multiply(BigDecimal.valueOf(businessPeriod.numberOfWorkingDays()));
         status = POStatus.OPEN;
     }
