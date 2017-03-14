@@ -2,9 +2,11 @@ package com.example.sales.rest.controller;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.application.exceptions.PlantNotFoundException;
+import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.application.services.SalesService;
 import com.example.sales.domain.web.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,7 +28,7 @@ public class SalesRestController {
     @Autowired
     InventoryService inventoryService;
     @Autowired
-    InventoryService salesService;
+    SalesService salesService;
 
     @GetMapping("/plants")
     public List<PlantInventoryEntryDTO> findAvailablePlants(
@@ -34,20 +36,31 @@ public class SalesRestController {
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
-        CatalogQueryDTO catalogQueryDTO = CatalogQueryDTO.of(plantName,BusinessPeriodDTO.of(startDate,endDate));
+        CatalogQueryDTO catalogQueryDTO = CatalogQueryDTO.of(plantName, BusinessPeriodDTO.of(startDate, endDate));
         return inventoryService.createListOfAvailablePlants(catalogQueryDTO);
+    }
+
+    @GetMapping("/orders")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PurchaseOrderDTO> fetchAllPurchaseOrders() throws PlantNotFoundException {
+        //todo: do we need PlantNotFoundException here?
+        return salesService.getAllPurchaseOrders();
     }
 
     @GetMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PurchaseOrderDTO fetchPurchaseOrder(@PathVariable("id") String id) {
-        // TODO: Complete this part
-        return null;
+    public PurchaseOrderDTO fetchPurchaseOrder(@PathVariable("id") String id) throws PurchaseOrderNotFoundException {
+        return salesService.getPurchaseOrderById(id);
     }
 
     @ExceptionHandler(PlantNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handPlantNotFoundException(PlantNotFoundException ex) {
+    }
+
+    @ExceptionHandler(PurchaseOrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handPurchaseOrderNotFoundException(PurchaseOrderNotFoundException ex) {
     }
 
     @PostMapping("/orders")

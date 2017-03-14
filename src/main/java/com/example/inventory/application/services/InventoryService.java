@@ -4,6 +4,7 @@ import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
+import com.example.inventory.domain.repository.CustomInventoryRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.model.PlantReservation;
@@ -22,7 +23,7 @@ import java.util.List;
 @Service
 public class InventoryService {
     @Autowired
-    InventoryRepositoryImpl inventoryRepository;
+    CustomInventoryRepository inventoryRepository;
     @Autowired
     PlantReservationRepository plantReservationRepository;
     @Autowired
