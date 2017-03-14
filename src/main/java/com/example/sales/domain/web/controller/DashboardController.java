@@ -5,7 +5,6 @@ import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.application.services.PlantInventoryEntryAssembler;
-import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.sales.application.services.SalesService;
 import com.example.sales.domain.web.dto.CatalogQueryDTO;
 import com.example.sales.domain.web.dto.CreatePurchaseOrderDTO;
