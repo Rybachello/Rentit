@@ -1,4 +1,4 @@
-package com.example.common.application.exсeptions;
+package com.example.common.application.exceptions;
 
 /**
  * Created by Rybachello on 3/11/2017.
