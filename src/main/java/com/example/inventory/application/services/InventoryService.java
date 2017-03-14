@@ -41,8 +41,6 @@ public class InventoryService {
         PlantInventoryItem item = itemList.get(0);
         //create new plantReservation
         PlantReservation plantReservation = PlantReservation.of(IdentifierFactory.nextID(), rentalPeriod, item.getId(), poId);
-        //save to the database
-        plantReservationRepository.save(plantReservation);
         return plantReservation;
     }
 

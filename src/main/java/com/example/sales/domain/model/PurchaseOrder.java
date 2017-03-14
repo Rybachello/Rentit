@@ -22,6 +22,10 @@ public class PurchaseOrder {
 
     LocalDate paymentSchedule;
 
+    // to store reservation dates in case of PO rejection (plant reservation in this case will not be saved)
+    @Embedded
+    BusinessPeriod schedule;
+
     @Column(precision=8,scale=2)
     BigDecimal total;
 
@@ -40,6 +44,7 @@ public class PurchaseOrder {
     public void confirmReservation(PlantReservation plantReservation, BigDecimal price) {
         //get period
         BusinessPeriod businessPeriod = plantReservation.getSchedule();
+        this.schedule = businessPeriod;
         total = price.multiply(BigDecimal.valueOf(businessPeriod.numberOfWorkingDays()));
         status = POStatus.OPEN;
     }

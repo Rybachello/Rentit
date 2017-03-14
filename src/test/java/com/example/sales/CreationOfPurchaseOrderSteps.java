@@ -60,8 +60,8 @@ public class CreationOfPurchaseOrderSteps {
 
     @After  // Use `After` from Cucumber library
     public void tearOff() {
-        purchaseOrderRepository.deleteAll();
         plantReservationRepository.deleteAll();
+        purchaseOrderRepository.deleteAll();
         plantInventoryItemRepository.deleteAll();
         plantInventoryEntryRepository.deleteAll();
     }

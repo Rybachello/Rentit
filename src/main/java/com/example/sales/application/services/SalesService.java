@@ -3,6 +3,7 @@ package com.example.sales.application.services;
 import com.example.common.application.exсeptions.PlantNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.inventory.domain.repository.PlantReservationRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.application.services.InventoryService;
@@ -27,6 +28,8 @@ import java.time.LocalDate;
 public class SalesService {
     @Autowired
     PlantInventoryEntryRepository plantInventoryEntryRepository;
+    @Autowired
+    PlantReservationRepository plantReservationRepository;
     @Autowired
     PurchaseOrderAssembler purchaseOrderAssembler;
     @Autowired
@@ -58,11 +61,15 @@ public class SalesService {
         try {
             PlantReservation plantReservation = inventoryService.createPlantReservation(dto.getPlantId(),businessPeriod,po.getId());
             po.confirmReservation(plantReservation,plantInventoryEntry.getPrice());
-
+            //save to the database
+            purchaseOrderRepository.save(po);
+            plantReservationRepository.save(plantReservation);
         } catch (PlantNotFoundException e) {
-                po.rejectPuchaseOrder();
+            po.rejectPuchaseOrder();
+            purchaseOrderRepository.save(po);
         }
-        purchaseOrderRepository.save(po);
+
+
         PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(plantInventoryEntry,dto.getRentalPeriod(), po);
         return poDto;
     }

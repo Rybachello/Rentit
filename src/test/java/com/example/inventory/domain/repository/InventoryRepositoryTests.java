@@ -149,9 +149,10 @@ public class InventoryRepositoryTests {
         LocalDate monthFromNow = LocalDate.now().plusMonths(1);
         LocalDate twoMonthFromNow = LocalDate.now().plusMonths(2);
 
-        maintenancePlanRepo.deleteAll();
         maintenanceTaskRepo.deleteAll();
         plantReservationRepo.deleteAll();
+        maintenancePlanRepo.deleteAll();
+
 
         PlantInventoryItem item = plantInventoryItemRepo.findOne("1");
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);
@@ -183,9 +184,9 @@ public class InventoryRepositoryTests {
         LocalDate monthFromNow = LocalDate.now().plusMonths(1);
         LocalDate twoMonthFromNow = LocalDate.now().plusMonths(2);
 
-        maintenancePlanRepo.deleteAll();
         maintenanceTaskRepo.deleteAll();
         plantReservationRepo.deleteAll();
+        maintenancePlanRepo.deleteAll();
 
         PlantInventoryItem item = plantInventoryItemRepo.findOne("1");
         item.setEquipmentCondition(EquipmentCondition.UNSERVICEABLEREPAIRABLE);

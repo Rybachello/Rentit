@@ -25,6 +25,10 @@ insert into plant_reservation (id, plant_id, start_date, end_date) values ('4', 
 insert into plant_reservation (id, plant_id, start_date, end_date) values ('5', '2', '2013-02-02', '2013-12-10');
 insert into plant_reservation (id, plant_id, start_date, end_date) values ('6', '3', '2012-02-01', '2012-12-10');
 
+insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('1',2017,'1');
+insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('2',2016,'2');
+insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('3',2015,'3');
+
 insert into maintenance_task (id, description, price, type_of_work, reservation_id, maintenance_plan_id) values ('1', '15 Tonne Articulating Dump Truck', 400,'CORRECTIVE',1,'1');
 insert into maintenance_task (id, description, price, type_of_work, reservation_id, maintenance_plan_id) values ('2', '2 Tonne Front Tip Dumper', 250,'CORRECTIVE',2,'2');
 insert into maintenance_task (id, description, price, type_of_work, reservation_id, maintenance_plan_id) values ('3', '3 Tonne Mini excavator', 150,'CORRECTIVE',3,'3');
@@ -34,17 +38,6 @@ insert into maintenance_task (id, description, price, type_of_work, reservation_
 insert into maintenance_task (id, description, price, type_of_work, reservation_id) values ('6', 'Nice and shiny', 200,'PREVENTIVE',5);
 insert into maintenance_task (id, description, price, type_of_work, reservation_id) values ('7', 'Nice and shiny', 300,'PREVENTIVE',2);
 insert into maintenance_task (id, description, price, type_of_work, reservation_id) values ('8', 'Nice and shiny', 400,'PREVENTIVE',3);
-
-insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('1',2017,'1');
-insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('2',2016,'2');
-insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('3',2015,'3');
-
-insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','1');
-insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','4');
-insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('1','5');
-insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('3','3');
-insert into maintenance_plan_tasks(maintenance_plan_id,tasks_id) values ('2','2');
-
 
 
 
