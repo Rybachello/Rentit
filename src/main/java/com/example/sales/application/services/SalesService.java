@@ -1,7 +1,6 @@
 package com.example.sales.application.services;
 
 import com.example.common.application.exceptions.PlantNotAvailableException;
-import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
@@ -13,13 +12,10 @@ import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.domain.model.PurchaseOrder;
-import com.example.sales.domain.repository.CustomPurchaseOrderRepository;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
-import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,10 +36,6 @@ public class SalesService {
     InventoryService inventoryService;
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
-
-    @Autowired
-    CustomPurchaseOrderRepository purchaseOrderRepositoryImp;
-
 
     public PurchaseOrderDTO getPurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException {
 
@@ -75,25 +67,20 @@ public class SalesService {
             throw e;
         }
 
-
         PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(po);
         return poDto;
     }
 
-    public List<PurchaseOrderDTO> getAllPurchaseOrders() throws PlantNotFoundException {
-        List<PurchaseOrderDTO> purchaseOrderDTOs = purchaseOrderRepositoryImp.findAllPO();
-
-        if (purchaseOrderDTOs.size() == 0) {
-            throw new PlantNotFoundException("PurchaseOrder list is empty");
-        }
-        return purchaseOrderDTOs;
+    public List<PurchaseOrderDTO> getAllPurchaseOrders() {
+        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll();
+        return purchaseOrderAssembler.toResources(purchaseOrders);
     }
 
     public PurchaseOrderDTO getPurchaseOrderById(String id) throws PurchaseOrderNotFoundException {
-        try {
-            return purchaseOrderRepositoryImp.findPurchaseOrderById(id);
-        } catch (NoResultException e) {
-            throw new PurchaseOrderNotFoundException("Purchase Order not found");
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(id);
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
         }
+        return purchaseOrderAssembler.toResource(purchaseOrder);
     }
 }

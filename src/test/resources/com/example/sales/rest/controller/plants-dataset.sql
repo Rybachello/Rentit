@@ -13,9 +13,13 @@ insert into plant_inventory_entry (id, name, description, price) values ('12', '
 insert into plant_inventory_entry (id, name, description, price) values ('13', 'D-Truck', '15 Tonne Articulating Dump Truck', 250);
 insert into plant_inventory_entry (id, name, description, price) values ('14', 'D-Truck', '30 Tonne Articulating Dump Truck', 300);
 
+
 insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_condition) values ('1', '1', 'A01', 'SERVICEABLE');
 insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_condition) values ('2', '2', 'A02', 'SERVICEABLE');
 insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_condition) values ('3', '3', 'A03', 'UNSERVICEABLEREPAIRABLE');
+
+INSERT into purchase_order (id,ISSUE_DATE,PAYMENT_SCHEDULE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID) values ('123','2017-03-15','2017-04-15','2017-05-15','2017-04-15','PENDING',1300,'1');
+INSERT into purchase_order (id,ISSUE_DATE,PAYMENT_SCHEDULE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID) values ('124','2017-04-15','2017-05-15','2017-05-25','2017-05-15','PENDING',1325,'2');
 
 
 insert into plant_reservation (id, plant_id, start_date, end_date) values ('1', '1', '2017-03-22', '2017-03-24');

@@ -43,8 +43,7 @@ public class SalesRestController {
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
-    public List<PurchaseOrderDTO> fetchAllPurchaseOrders() throws PlantNotFoundException {
-        //todo: do we need PlantNotFoundException here?
+    public List<PurchaseOrderDTO> fetchAllPurchaseOrders(){
         return salesService.getAllPurchaseOrders();
     }
 

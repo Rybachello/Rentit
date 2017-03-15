@@ -6,6 +6,7 @@ import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.domain.model.PurchaseOrder;
+import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -34,8 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = DemoApplication.class)
 @WebAppConfiguration
-@Sql(scripts="plants-dataset.sql")
-@DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Sql(scripts = "plants-dataset.sql")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SalesRestControllerTests {
     @Autowired
     PlantInventoryEntryRepository repo;
@@ -52,6 +53,7 @@ public class SalesRestControllerTests {
 
     @Test
     public void testGetAllPlants() throws Exception {
+
         MvcResult result = mockMvc.perform(get("/api/sales/plants?name=exc&startDate=2016-09-22&endDate=2016-09-24"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Location", isEmptyOrNullString()))
@@ -77,5 +79,37 @@ public class SalesRestControllerTests {
 
         mockMvc.perform(post("/api/sales/orders").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void testGetAllPurchaseOrders() throws Exception {
+        MvcResult result = mockMvc.perform(get("/api/sales/orders"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<PurchaseOrderDTO> orders = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<PurchaseOrderDTO>>() {
+        });
+
+        assertThat(orders.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void testGetPurchaseOrdersById() throws Exception {
+        String id = "123";
+        MvcResult result = mockMvc.perform(get("/api/sales/orders/" + id))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        PurchaseOrderDTO orders = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<PurchaseOrderDTO>() {
+        });
+        assertThat(orders.get_id()).isEqualTo(id);
+    }
+
+    @Test
+    public void testGetPurchaseOrdersByIdNotFound() throws Exception {
+        String id = "777";
+        MvcResult result = mockMvc.perform(get("/api/sales/orders/" + id))
+                .andExpect(status().isNotFound())
+                .andReturn();
     }
 }
