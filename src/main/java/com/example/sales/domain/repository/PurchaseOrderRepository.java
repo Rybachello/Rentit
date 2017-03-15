@@ -12,5 +12,4 @@ import java.util.List;
  */
 @Repository
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, String> {
-    public List<PurchaseOrderDTO> findAllPO();
 }
