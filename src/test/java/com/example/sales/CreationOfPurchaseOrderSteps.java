@@ -1,6 +1,6 @@
 package com.example.sales;
 
-import com.example.DemoApplication;
+import com.example.RentIt;
 import com.example.inventory.domain.model.EquipmentCondition;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
@@ -9,10 +9,8 @@ import com.example.inventory.domain.repository.PlantInventoryItemRepository;
 import com.example.inventory.domain.repository.PlantReservationRepository;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.*;
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -26,14 +24,10 @@ import org.springframework.test.web.servlet.htmlunit.MockMvcWebClientBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.text.NumberFormat;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
-@ContextConfiguration(classes = DemoApplication.class)
+@ContextConfiguration(classes = RentIt.class)
 @WebAppConfiguration
 public class CreationOfPurchaseOrderSteps {
 

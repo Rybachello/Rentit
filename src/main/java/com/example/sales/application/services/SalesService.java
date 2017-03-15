@@ -4,6 +4,7 @@ import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.common.domain.validation.BusinessPeriodValidator;
 import com.example.inventory.domain.repository.PlantReservationRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.sales.application.dto.PurchaseOrderDTO;
@@ -13,8 +14,10 @@ import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
+import com.example.sales.domain.validation.PurchaseOrderValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.DataBinder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,23 +49,25 @@ public class SalesService {
         //create the purchase order with PENDING STATUS
         PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod, plantInventoryEntry);
 
-//todo: uncomment here
-//        DataBinder binder = new DataBinder(po);
-//        binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
-//        binder.validate();
-//
-//        if (binder.getBindingResult().hasErrors())
-//            throw new BindException(binder.getBindingResult());
 
         try {
             PlantReservation plantReservation = inventoryService.createPlantReservation(dto.getPlant().get_id(), businessPeriod, po);
             po.confirmReservation(plantReservation, plantInventoryEntry.getPrice());
             //save to the database
-            purchaseOrderRepository.save(po);
-            plantReservationRepository.save(plantReservation);
+            DataBinder binder = new DataBinder(po);
+            binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
+            binder.validate();
+            if (!binder.getBindingResult().hasErrors()) {
+                purchaseOrderRepository.save(po);
+                plantReservationRepository.save(plantReservation);
+            }
         } catch (PlantNotAvailableException e) {
             po.rejectPuchaseOrder();
-            purchaseOrderRepository.save(po);
+            DataBinder binder = new DataBinder(po);
+            binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
+            binder.validate();
+            if (!binder.getBindingResult().hasErrors())
+                purchaseOrderRepository.save(po);
 
             throw e;
         }

@@ -1,12 +1,9 @@
 package com.example.sales.rest.controller;
 
-import com.example.DemoApplication;
-import com.example.common.application.dto.BusinessPeriodDTO;
+import com.example.RentIt;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.application.dto.PurchaseOrderDTO;
-import com.example.sales.domain.model.PurchaseOrder;
-import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -24,7 +21,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -33,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = DemoApplication.class)
+@SpringBootTest(classes = RentIt.class)
 @WebAppConfiguration
 @Sql(scripts = "plants-dataset.sql")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -67,7 +63,7 @@ public class SalesRestControllerTests {
 
     @Test
     public void testCreatePurchaseOrderReturnsHttpCreated() throws Exception {
-        String jsonString = "{\"plant\":{\"_id\":\"1\"}, \"rentalPeriod\": {\"startDate\": \"2016-09-22\", \"endDate\": \"2016-09-24\"}}";
+        String jsonString = "{\"plant\":{\"_id\":\"1\"}, \"rentalPeriod\": {\"startDate\": \"2116-09-22\", \"endDate\": \"2116-09-24\"}}";
 
         mockMvc.perform(post("/api/sales/orders").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());

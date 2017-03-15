@@ -1,6 +1,6 @@
 package com.example.inventory.domain.repository;
 
-import com.example.DemoApplication;
+import com.example.RentIt;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.inventory.domain.model.EquipmentCondition;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = DemoApplication.class)
+@SpringBootTest(classes = RentIt.class)
 @Sql(scripts="plants-dataset.sql")
 @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class InventoryRepositoryTests {
