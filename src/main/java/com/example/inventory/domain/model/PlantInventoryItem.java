@@ -26,13 +26,17 @@ public class PlantInventoryItem {
     @JoinColumn(name = "plantInfoId")
     PlantInventoryEntry plantInfo; // PlantInventoryEntry id
 
-//    @OneToMany(mappedBy="plant")
-//    private List<PlantReservation> reservations;
+    @OneToMany(mappedBy="plant")
+    private List<PlantReservation> reservations;
 
-//    @OneToMany(mappedBy="inventoryItem")
-//    private List<MaintenancePlan> maintenancePlans;
+    @OneToMany(mappedBy="inventoryItem")
+    private List<MaintenancePlan> maintenancePlans;
 
     public void setEquipmentCondition(EquipmentCondition equipmentCondition) {
         this.equipmentCondition = equipmentCondition;
+    }
+
+    public static PlantInventoryItem of(String id, String serialNumber, EquipmentCondition equipmentCondition, PlantInventoryEntry plantInfo){
+        return PlantInventoryItem.of(id, serialNumber, equipmentCondition, plantInfo, null, null);
     }
 }

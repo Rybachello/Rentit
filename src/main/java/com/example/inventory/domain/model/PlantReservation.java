@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(force=true, access= AccessLevel.PRIVATE)
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor(staticName = "of")
 public class PlantReservation {
     @Id
@@ -28,6 +28,11 @@ public class PlantReservation {
     @JoinColumn(name = "purchaseOrderId")
     PurchaseOrder purchaseOrder;
 
-//    @OneToMany(mappedBy="plantReservation")
-//    private List<MaintenanceTask> maintenance;
+    @OneToMany(mappedBy = "reservation")
+    private List<MaintenanceTask> maintenance;
+
+    public static PlantReservation of(String id, BusinessPeriod rentalPeriod, PlantInventoryItem item, PurchaseOrder po) {
+        return PlantReservation.of(id, rentalPeriod, item, po, null);
+    }
+
 }
