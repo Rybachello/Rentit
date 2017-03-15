@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by Vasiliy on 2017.02.20.
@@ -31,6 +32,9 @@ public class PurchaseOrder {
 
     @Enumerated(EnumType.STRING)
     POStatus status;
+
+    @OneToMany(mappedBy="purchaseOrder")
+    private List<PlantReservation> reservations;
 
     public static PurchaseOrder of(String id, LocalDate issueDate)
     {
