@@ -14,7 +14,6 @@ import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.CustomPurchaseOrderRepository;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
-import com.example.sales.domain.web.dto.CreatePurchaseOrderDTO;
 import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class SalesService {
     CustomPurchaseOrderRepository purchaseOrderRepositoryImp;
 
 
-    public PurchaseOrderDTO getPurchaseOrder(CreatePurchaseOrderDTO dto) throws PlantNotFoundException {
+    public PurchaseOrderDTO getPurchaseOrder(PurchaseOrderDTO dto) throws PlantNotFoundException{
 
         //find first purchase order
         PlantInventoryEntry plantInventoryEntry = plantInventoryEntryRepository.findOne(dto.getPlantId());

@@ -7,7 +7,6 @@ import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.application.services.PlantInventoryEntryAssembler;
 import com.example.sales.application.services.SalesService;
 import com.example.sales.domain.web.dto.CatalogQueryDTO;
-import com.example.sales.domain.web.dto.CreatePurchaseOrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,11 +39,11 @@ public class DashboardController	{
        List<PlantInventoryEntryDTO> availablePlants =  inventoryService.createListOfAvailablePlants(query);
        model.addAttribute("plants", availablePlants);
        model.addAttribute("q", query);
-       model.addAttribute("po", new CreatePurchaseOrderDTO());
+       model.addAttribute("po", new PurchaseOrderDTO());
        return "dashboard/catalog/query-result";
     }
     @RequestMapping("/orders")
-    public String createPO(CreatePurchaseOrderDTO toDTO, Model	model) throws PlantNotFoundException {
+    public String createPO(PurchaseOrderDTO toDTO, Model model) throws PlantNotFoundException {
         PurchaseOrderDTO po = salesService.getPurchaseOrder(toDTO);
         model.addAttribute("purchaseOrderDetails", po);
         return	"dashboard/catalog/purchase-order-details";
