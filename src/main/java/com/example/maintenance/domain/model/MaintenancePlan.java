@@ -2,6 +2,7 @@ package com.example.maintenance.domain.model;
 
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
+import com.example.inventory.domain.model.PlantReservation;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,5 +23,8 @@ public class MaintenancePlan {
 
     @ManyToOne
     @JoinColumn(name = "inventoryItemId")
-    PlantInventoryEntry inventoryItem;
+    PlantInventoryItem inventoryItem;
+
+    @OneToMany(mappedBy="maintenancePlan")
+    private List<MaintenanceTask> tasks;
 }

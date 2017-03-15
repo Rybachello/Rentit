@@ -2,10 +2,12 @@ package com.example.inventory.domain.model;
 
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.maintenance.domain.model.MaintenancePlan;
+import com.example.maintenance.domain.model.MaintenanceTask;
 import com.example.sales.domain.model.PurchaseOrder;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,4 +27,7 @@ public class PlantReservation {
     @ManyToOne
     @JoinColumn(name = "purchaseOrderId")
     PurchaseOrder purchaseOrder;
+
+//    @OneToMany(mappedBy="plantReservation")
+//    private List<MaintenanceTask> maintenance;
 }
