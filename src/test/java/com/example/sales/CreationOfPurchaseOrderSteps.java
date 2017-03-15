@@ -121,7 +121,7 @@ public class CreationOfPurchaseOrderSteps {
         List<?> descriptionCellsList = customerPage.getByXPath("//td[text()[contains(.,'" + plantDescription + "')]]");
         HtmlTableDataCell firstDescriptionCell = (HtmlTableDataCell)descriptionCellsList.get(0);
         HtmlTableRow plantRow = (HtmlTableRow)firstDescriptionCell.getParentNode();
-        HtmlButton submit = (HtmlButton)plantRow.getChildNodes().get(7).getChildNodes().get(1).getChildNodes().get(7);//(HtmlButton)plantRow.getByXPath("//button");
+        HtmlButton submit = (HtmlButton)plantRow.querySelector("button");
 
         customerPage = submit.click();
     }

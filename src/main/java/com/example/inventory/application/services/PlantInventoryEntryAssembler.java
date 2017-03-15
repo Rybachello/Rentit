@@ -2,6 +2,7 @@ package com.example.inventory.application.services;
 
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Service;
 
 
@@ -13,10 +14,14 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class PlantInventoryEntryAssembler {
+public class PlantInventoryEntryAssembler extends ResourceAssemblerSupport<PlantInventoryEntry, PlantInventoryEntryDTO> {
+    public PlantInventoryEntryAssembler() {
+        super(PlantInventoryEntry.class, PlantInventoryEntryDTO.class);
+    }
+
     public PlantInventoryEntryDTO toResource(PlantInventoryEntry plant){
-        PlantInventoryEntryDTO dto = new PlantInventoryEntryDTO();
-        dto.setId(plant.getId());
+        PlantInventoryEntryDTO dto = createResourceWithId(plant.getId(), plant);
+        dto.set_id(plant.getId());
         dto.setDescription(plant.getDescription());
         dto.setName(plant.getName());
         dto.setPrice(plant.getPrice());

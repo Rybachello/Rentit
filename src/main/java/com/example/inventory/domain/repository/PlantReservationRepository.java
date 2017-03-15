@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PlantReservationRepository extends JpaRepository<PlantReservation, String> {
+    PlantReservation findByPurchaseOrderId(String id);
 }

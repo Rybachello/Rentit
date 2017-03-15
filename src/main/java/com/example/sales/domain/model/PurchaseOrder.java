@@ -1,6 +1,7 @@
 package com.example.sales.domain.model;
 
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantReservation;
 import lombok.*;
 
@@ -23,6 +24,9 @@ public class PurchaseOrder {
 
     LocalDate paymentSchedule;
 
+    @ManyToOne
+    PlantInventoryEntry plant;
+
     // to store reservation dates in case of PO rejection (plant reservation in this case will not be saved)
     @Embedded
     BusinessPeriod rentalPeriod;
@@ -36,11 +40,13 @@ public class PurchaseOrder {
     @OneToMany(mappedBy="purchaseOrder")
     private List<PlantReservation> reservations;
 
-    public static PurchaseOrder of(String id, LocalDate issueDate)
+    public static PurchaseOrder of(String id, LocalDate issueDate, BusinessPeriod businessPeriod, PlantInventoryEntry plant)
     {
         PurchaseOrder po = new PurchaseOrder();
         po.id = id;
         po.issueDate = issueDate;
+        po.rentalPeriod = businessPeriod;
+        po.plant = plant;
         po.status = POStatus.PENDING;
         return po;
     }

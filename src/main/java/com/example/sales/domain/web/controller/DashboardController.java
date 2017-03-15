@@ -1,5 +1,6 @@
 package com.example.sales.domain.web.controller;
 
+import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
@@ -43,7 +44,7 @@ public class DashboardController	{
        return "dashboard/catalog/query-result";
     }
     @RequestMapping("/orders")
-    public String createPO(PurchaseOrderDTO toDTO, Model model) throws PlantNotFoundException {
+    public String createPO(PurchaseOrderDTO toDTO, Model model) throws PlantNotAvailableException {
         PurchaseOrderDTO po = salesService.getPurchaseOrder(toDTO);
         model.addAttribute("purchaseOrderDetails", po);
         return	"dashboard/catalog/purchase-order-details";

@@ -2,10 +2,7 @@ package com.example.inventory.domain.repository;
 
 
 import com.example.common.domain.model.BusinessPeriod;
-import com.example.inventory.domain.model.AvailablePlantReport;
-import com.example.inventory.domain.model.EquipmentCondition;
-import com.example.inventory.domain.model.PlantInventoryEntry;
-import com.example.inventory.domain.model.PlantInventoryItem;
+import com.example.inventory.domain.model.*;
 import com.example.maintenance.domain.model.CorrectiveRepairsCostPerYear;
 import com.example.maintenance.domain.model.CorrectiveRepairsNumberPerYear;
 import org.springframework.beans.factory.annotation.Autowired;

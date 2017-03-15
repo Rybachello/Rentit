@@ -11,11 +11,11 @@
             <table class="table table-stripped table-hover " th:object="${purchaseOrderDetails}">
                 <tr class="table-row">
                     <td>Plant Name</td>
-                     <td th:text="${purchaseOrderDetails.name}"></td>
+                     <td th:text="${purchaseOrderDetails.plant.name}"></td>
                 </tr>
                 <tr class="table-row">
                     <td>Plant Description</td>
-                     <td th:text="${purchaseOrderDetails.description}"></td>
+                     <td th:text="${purchaseOrderDetails.plant.description}"></td>
                 </tr>
                 <tr class="table-row">
                     <td>Start Date</td>

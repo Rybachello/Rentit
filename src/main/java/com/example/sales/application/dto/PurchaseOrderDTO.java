@@ -2,6 +2,7 @@ package com.example.sales.application.dto;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.sales.domain.model.POStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class PurchaseOrderDTO extends ResourceSupport {
     public PurchaseOrderDTO(String id, String name, POStatus status, LocalDate startDate, LocalDate endDate, BigDecimal price, String description){
         this._id = id;
         this.name = name;
-        this.status = status==null?"unknown":status.toString();
+        this.status = status==null?POStatus.PENDING:status;
         this.description = description;
         this.rentalPeriod = BusinessPeriodDTO.of(startDate, endDate);
         this.total = BigDecimal.valueOf(ChronoUnit.DAYS.between(startDate, endDate) + 1).multiply(price);
@@ -29,9 +30,9 @@ public class PurchaseOrderDTO extends ResourceSupport {
 
     private String _id;
     private String name;
-    private String status;
+    private POStatus status;
     private BusinessPeriodDTO rentalPeriod;
     private BigDecimal total;
     private String description;
-    private String plantId;
+    private PlantInventoryEntryDTO plant;
 }

@@ -1,6 +1,7 @@
 package com.example.sales.rest.controller;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
+import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
@@ -63,16 +64,20 @@ public class SalesRestController {
     public void handPurchaseOrderNotFoundException(PurchaseOrderNotFoundException ex) {
     }
 
+    @ExceptionHandler(PlantNotAvailableException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public void handPlantNotAvailableException(PlantNotAvailableException ex) {}
+
     @PostMapping("/orders")
-    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) {
+    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) throws PlantNotAvailableException {
+        PurchaseOrderDTO newPO = salesService.getPurchaseOrder(partialPODTO);
         //PurchaseOrderDTO newlyCreatePODTO = ...
         // TODO: Complete this part
 
         HttpHeaders headers = new HttpHeaders();
-        //headers.setLocation(new URI(newlyCreatePODTO.getId().getHref()));
+        headers.setLocation(URI.create(newPO.getId().getHref()));
         // The above line won't working until you update PurchaseOrderDTO to extend ResourceSupport
 
-        //return new ResponseEntity<PurchaseOrderDTO>(newlyCreatePODTO, headers, HttpStatus.CREATED);
-        return null;
+        return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
     }
 }

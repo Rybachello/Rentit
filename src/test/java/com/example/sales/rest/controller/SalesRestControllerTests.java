@@ -5,6 +5,7 @@ import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.domain.model.PurchaseOrder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -33,7 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = DemoApplication.class)
 @WebAppConfiguration
-@DirtiesContext
+@Sql(scripts="plants-dataset.sql")
+@DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SalesRestControllerTests {
     @Autowired
     PlantInventoryEntryRepository repo;
@@ -49,7 +51,6 @@ public class SalesRestControllerTests {
     }
 
     @Test
-    @Sql("plants-dataset.sql")
     public void testGetAllPlants() throws Exception {
         MvcResult result = mockMvc.perform(get("/api/sales/plants?name=exc&startDate=2016-09-22&endDate=2016-09-24"))
                 .andExpect(status().isOk())
@@ -60,5 +61,21 @@ public class SalesRestControllerTests {
         });
 
         assertThat(plants.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testCreatePurchaseOrderReturnsHttpCreated() throws Exception {
+        String jsonString = "{\"plant\":{\"_id\":\"1\"}, \"rentalPeriod\": {\"startDate\": \"2016-09-22\", \"endDate\": \"2016-09-24\"}}";
+
+        mockMvc.perform(post("/api/sales/orders").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void testCreatePurchaseOrderWithTakenPlantReturnsHttpConflict() throws Exception {
+        String jsonString = "{\"plant\":{\"_id\":\"2\"}, \"rentalPeriod\": {\"startDate\": \"2016-09-22\", \"endDate\": \"2016-09-24\"}}";
+
+        mockMvc.perform(post("/api/sales/orders").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
     }
 }

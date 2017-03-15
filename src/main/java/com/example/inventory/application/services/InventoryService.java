@@ -1,5 +1,6 @@
 package com.example.inventory.application.services;
 
+import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
@@ -34,10 +35,10 @@ public class InventoryService {
     public List<PlantInventoryEntryDTO> createListOfAvailablePlants(CatalogQueryDTO query) {
         return plantInventoryEntryAssembler.toResources(inventoryRepository.findInfoAvailablePlants(query.getName(), query.getRentalPeriod().getStartDate(), query.getRentalPeriod().getStartDate()));
     }
-    public PlantReservation createPlantReservation(String plantId, BusinessPeriod  rentalPeriod, PurchaseOrder po) throws PlantNotFoundException {
+    public PlantReservation createPlantReservation(String plantId, BusinessPeriod  rentalPeriod, PurchaseOrder po) throws PlantNotAvailableException {
         List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(plantId, rentalPeriod);
         if (itemList.size() == 0) {
-            throw new PlantNotFoundException("Requested plant is unavailable") ;
+            throw new PlantNotAvailableException("Requested plant is unavailable") ;
         }
         //find first
         PlantInventoryItem item = itemList.get(0);

@@ -1,5 +1,6 @@
 package com.example.sales.application.services;
 
+import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
@@ -44,14 +45,14 @@ public class SalesService {
     CustomPurchaseOrderRepository purchaseOrderRepositoryImp;
 
 
-    public PurchaseOrderDTO getPurchaseOrder(PurchaseOrderDTO dto) throws PlantNotFoundException{
+    public PurchaseOrderDTO getPurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException {
 
         //find first purchase order
-        PlantInventoryEntry plantInventoryEntry = plantInventoryEntryRepository.findOne(dto.getPlantId());
+        PlantInventoryEntry plantInventoryEntry = plantInventoryEntryRepository.findOne(dto.getPlant().get_id());
         //convert to dto
         BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
         //create the purchase order with PENDING STATUS
-        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now());
+        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod, plantInventoryEntry);
 
 //todo: uncomment here
 //        DataBinder binder = new DataBinder(po);
@@ -62,18 +63,20 @@ public class SalesService {
 //            throw new BindException(binder.getBindingResult());
 
         try {
-            PlantReservation plantReservation = inventoryService.createPlantReservation(dto.getPlantId(), businessPeriod, po);
+            PlantReservation plantReservation = inventoryService.createPlantReservation(dto.getPlant().get_id(), businessPeriod, po);
             po.confirmReservation(plantReservation, plantInventoryEntry.getPrice());
             //save to the database
             purchaseOrderRepository.save(po);
             plantReservationRepository.save(plantReservation);
-        } catch (PlantNotFoundException e) {
+        } catch (PlantNotAvailableException e) {
             po.rejectPuchaseOrder();
             purchaseOrderRepository.save(po);
+
+            throw e;
         }
 
 
-        PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(plantInventoryEntry, dto.getRentalPeriod(), po);
+        PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(po);
         return poDto;
     }
 
