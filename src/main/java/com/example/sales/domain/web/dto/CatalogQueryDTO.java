@@ -2,6 +2,7 @@ package com.example.sales.domain.web.dto;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.common.rest.ResourceSupport;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor(staticName = "of")
-public class CatalogQueryDTO {
+public class CatalogQueryDTO extends ResourceSupport{
     String name;
     BusinessPeriodDTO rentalPeriod;
 

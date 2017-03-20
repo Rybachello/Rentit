@@ -1,6 +1,7 @@
 package com.example.sales.rest.controller;
 
 import com.example.RentIt;
+import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.application.dto.PurchaseOrderDTO;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -21,12 +23,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.text.IsEmptyString.isEmptyOrNullString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = RentIt.class)
@@ -39,7 +43,9 @@ public class SalesRestControllerTests {
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
-    @Autowired
+    //@Autowired
+    //ObjectMapper mapper;
+    @Autowired @Qualifier("_halObjectMapper")
     ObjectMapper mapper;
 
     @Before
@@ -106,6 +112,36 @@ public class SalesRestControllerTests {
         String id = "777";
         MvcResult result = mockMvc.perform(get("/api/sales/orders/" + id))
                 .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    @Sql("plants-dataset.sql")
+    public void testPurchaseOrderAcceptance() throws Exception {
+        MvcResult result = mockMvc.perform(
+                get("/api/inventory/plants?name=Exc&startDate=2016-03-14&endDate=2016-03-25"))
+                .andReturn();
+        List<PlantInventoryEntryDTO> plants =
+                mapper.readValue(result.getResponse().getContentAsString(),
+                        new TypeReference<List<PlantInventoryEntryDTO>>() { });
+
+        PurchaseOrderDTO order = new PurchaseOrderDTO();
+        order.setPlant(plants.get(2));
+        order.setRentalPeriod(BusinessPeriodDTO.of(LocalDate.now(), LocalDate.now()));
+
+        result = mockMvc.perform(post("/api/sales/orders")
+                .content(mapper.writeValueAsString(order))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                //todo: find out what to import
+//                .andExpect(header().string("Location", not(isEmptyOrNullString())))
+                .andReturn();
+
+        order = mapper.readValue(result.getResponse().getContentAsString(), PurchaseOrderDTO.class);
+        //todo: find out what to import
+//        assertThat(order.get_xlink("accept"), is(notNullValue()));
+
+        mockMvc.perform(post(order.get_xlink("accept").getHref()))
                 .andReturn();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.common.application.dto;
 
+import com.example.common.rest.ResourceSupport;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.time.temporal.ChronoUnit;
 @Data
 @NoArgsConstructor(force = true)
 @AllArgsConstructor(staticName = "of")
-public class BusinessPeriodDTO {
+public class BusinessPeriodDTO extends ResourceSupport{
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     LocalDate startDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

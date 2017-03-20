@@ -2,11 +2,11 @@ package com.example.sales.application.dto;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.common.rest.ResourceSupport;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.sales.domain.model.POStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.hateoas.ResourceSupport;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

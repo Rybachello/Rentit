@@ -79,4 +79,22 @@ public class SalesRestController {
 
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
     }
+
+    @PostMapping("/{id}/accept")
+    public PurchaseOrderDTO acceptPurchaseOrder(@PathVariable String id) throws Exception {
+        //todo: implement
+        return null;
+    }
+
+    @DeleteMapping("/{id}/accept")
+    public PurchaseOrderDTO rejectPurchaseOrder(@PathVariable String id) throws Exception {
+        //todo: implement
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public PurchaseOrderDTO closePurchaseOrder(@PathVariable String id) throws Exception {
+        //todo:implement
+        return null;
+    }
 }

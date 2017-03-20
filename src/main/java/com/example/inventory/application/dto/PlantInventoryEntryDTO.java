@@ -2,8 +2,7 @@ package com.example.inventory.application.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.hateoas.ResourceSupport;
-
+import com.example.common.rest.ResourceSupport;
 import java.math.BigDecimal;
 
 /**
