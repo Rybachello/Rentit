@@ -22,10 +22,11 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
     public List<AvailablePlantReport> findAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
         return em.createQuery("select NEW com.example.inventory.domain.model.AvailablePlantReport(e.name, e.description, COUNT(e.id)) " +
                 "FROM PlantInventoryEntry e, PlantReservation r, PlantInventoryItem i " +
-                "WHERE (e.name) LIKE ?1 AND r.schedule.endDate = ?2 AND i.equipmentCondition = ?3 " +
+                "WHERE (e.name) LIKE ?1 AND (r.schedule.endDate < ?2 OR r.scedule.startDate > ?4) AND i.equipmentCondition = ?3 " +
                 "GROUP BY e.name,e.description", AvailablePlantReport.class)
                 .setParameter(1, "%"+name+"%")
                 .setParameter(2, startDate)
+                .setParameter(4, endDate)
                 .setParameter(3, EquipmentCondition.SERVICEABLE)
                 .getResultList();
     }
