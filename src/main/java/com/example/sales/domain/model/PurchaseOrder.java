@@ -1,5 +1,6 @@
 package com.example.sales.domain.model;
 
+import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantReservation;
@@ -56,11 +57,30 @@ public class PurchaseOrder {
         BusinessPeriod businessPeriod = plantReservation.getSchedule();
         this.rentalPeriod = businessPeriod;
         total = price.multiply(BigDecimal.valueOf(businessPeriod.numberOfWorkingDays()));
-        status = POStatus.OPEN;
     }
 
-    public void rejectPuchaseOrder() {
-        this.status = POStatus.REJECTED;
+    public void rejectPuchaseOrder() throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.PENDING) {
+            this.status = POStatus.REJECTED;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be PENDING to reject it");
+        }
+    }
+
+    public void acceptPurchaseOrder() throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.PENDING) {
+            this.status = POStatus.OPEN;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be PENDING to accept it.");
+        }
+    }
+
+    public void closePurchaseOrder() throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.OPEN) {
+            this.status = POStatus.CLOSED;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be OPEN to close it.");
+        }
     }
 
 

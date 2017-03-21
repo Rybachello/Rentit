@@ -1,13 +1,14 @@
 package com.example.sales.rest.controller;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
+import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
-import com.example.inventory.application.services.InventoryService;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.services.SalesService;
+import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.web.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,19 +28,7 @@ import java.util.List;
 @RequestMapping("/api/sales")
 public class SalesRestController {
     @Autowired
-    InventoryService inventoryService;
-    @Autowired
     SalesService salesService;
-
-    @GetMapping("/plants")
-    public List<PlantInventoryEntryDTO> findAvailablePlants(
-            @RequestParam(name = "name") String plantName,
-            @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
-    ) {
-        CatalogQueryDTO catalogQueryDTO = CatalogQueryDTO.of(plantName, BusinessPeriodDTO.of(startDate, endDate));
-        return inventoryService.createListOfAvailablePlants(catalogQueryDTO);
-    }
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
@@ -67,9 +56,13 @@ public class SalesRestController {
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handPlantNotAvailableException(PlantNotAvailableException ex) {}
 
+    @ExceptionHandler(InvalidPurchaseOrderStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handInvalidPurchaseOrderStatusException(InvalidPurchaseOrderStatusException ex) {}
+
     @PostMapping("/orders")
-    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) throws PlantNotAvailableException {
-        PurchaseOrderDTO newPO = salesService.getPurchaseOrder(partialPODTO);
+    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO newPO = salesService.createPurchaseOrder(partialPODTO);
         //PurchaseOrderDTO newlyCreatePODTO = ...
         // TODO: Complete this part
 
@@ -80,21 +73,39 @@ public class SalesRestController {
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}/accept")
-    public PurchaseOrderDTO acceptPurchaseOrder(@PathVariable String id) throws Exception {
-        //todo: implement
-        return null;
+    @PostMapping("/orders/{id}/accept")
+    public ResponseEntity<PurchaseOrderDTO> acceptPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
+
+        PurchaseOrderDTO updatedDTO = salesService.acceptPurchaseOrder(purchaseOrder);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
+
+        return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/accept")
-    public PurchaseOrderDTO rejectPurchaseOrder(@PathVariable String id) throws Exception {
-        //todo: implement
-        return null;
+    @DeleteMapping("/orders/{id}/accept")
+    public ResponseEntity<PurchaseOrderDTO> rejectPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
+
+        PurchaseOrderDTO updatedDTO = salesService.rejectPurchaseOrder(purchaseOrder);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
+
+        return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public PurchaseOrderDTO closePurchaseOrder(@PathVariable String id) throws Exception {
-        //todo:implement
-        return null;
+    @DeleteMapping("/orders/{id}")
+    public ResponseEntity<PurchaseOrderDTO> closePurchaseOrder(@PathVariable String id) throws Exception, PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
+
+        PurchaseOrderDTO updatedDTO = salesService.closePurchaseOrder(purchaseOrder);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
+
+        return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
 }

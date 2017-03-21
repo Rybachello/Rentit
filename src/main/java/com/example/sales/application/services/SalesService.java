@@ -1,5 +1,6 @@
 package com.example.sales.application.services;
 
+import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
@@ -40,7 +41,7 @@ public class SalesService {
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
 
-    public PurchaseOrderDTO getPurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException {
+    public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
 
         //find first purchase order
         PlantInventoryEntry plantInventoryEntry = plantInventoryEntryRepository.findOne(dto.getPlant().get_id());
@@ -87,5 +88,53 @@ public class SalesService {
             throw new PurchaseOrderNotFoundException("Purchase order not found");
         }
         return purchaseOrderAssembler.toResource(purchaseOrder);
+    }
+
+    public PurchaseOrderDTO acceptPurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        purchaseOrder.acceptPurchaseOrder();
+
+        purchaseOrderRepository.save(purchaseOrder);
+
+        PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
+
+        return updatedDTO;
+    }
+
+    public PurchaseOrderDTO rejectPurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        purchaseOrder.rejectPuchaseOrder();
+
+        purchaseOrderRepository.save(purchaseOrder);
+
+        PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
+
+        return updatedDTO;
+    }
+
+    public PurchaseOrderDTO closePurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        purchaseOrder.closePurchaseOrder();
+
+        purchaseOrderRepository.save(purchaseOrder);
+
+        PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
+
+        return updatedDTO;
     }
 }

@@ -5,6 +5,7 @@ import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.domain.model.POStatus;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
@@ -51,20 +53,6 @@ public class SalesRestControllerTests {
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-    }
-
-    @Test
-    public void testGetAllPlants() throws Exception {
-
-        MvcResult result = mockMvc.perform(get("/api/sales/plants?name=exc&startDate=2016-09-22&endDate=2016-09-24"))
-                .andExpect(status().isOk())
-                .andExpect(header().string("Location", isEmptyOrNullString()))
-                .andReturn();
-
-        List<PlantInventoryEntryDTO> plants = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<PlantInventoryEntryDTO>>() {
-        });
-
-        assertThat(plants.size()).isEqualTo(1);
     }
 
     @Test
@@ -116,32 +104,110 @@ public class SalesRestControllerTests {
     }
 
     @Test
-    @Sql("plants-dataset.sql")
     public void testPurchaseOrderAcceptance() throws Exception {
         MvcResult result = mockMvc.perform(
-                get("/api/inventory/plants?name=Exc&startDate=2016-03-14&endDate=2016-03-25"))
+                get("/api/inventory/plants?name=exc&startDate=2016-09-22&endDate=2016-09-24"))
                 .andReturn();
         List<PlantInventoryEntryDTO> plants =
                 mapper.readValue(result.getResponse().getContentAsString(),
                         new TypeReference<List<PlantInventoryEntryDTO>>() { });
 
         PurchaseOrderDTO order = new PurchaseOrderDTO();
-        order.setPlant(plants.get(2));
+        order.setPlant(plants.get(0));
         order.setRentalPeriod(BusinessPeriodDTO.of(LocalDate.now(), LocalDate.now()));
 
         result = mockMvc.perform(post("/api/sales/orders")
                 .content(mapper.writeValueAsString(order))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                //todo: find out what to import
-//                .andExpect(header().string("Location", not(isEmptyOrNullString())))
+                .andReturn();
+
+        assertThat(result.getResponse().getHeader("Location")).isNotEmpty();
+
+        order = mapper.readValue(result.getResponse().getContentAsString(), PurchaseOrderDTO.class);
+        assertThat(order.get_xlink("accept")).isNotNull();
+        assertThat(order.getStatus() == POStatus.PENDING);
+
+        result = mockMvc.perform(post(order.get_xlink("accept").getHref()))
+                .andExpect(status().isOk())
                 .andReturn();
 
         order = mapper.readValue(result.getResponse().getContentAsString(), PurchaseOrderDTO.class);
-        //todo: find out what to import
-//        assertThat(order.get_xlink("accept"), is(notNullValue()));
+        assertThat(order.getStatus() == POStatus.OPEN);
+    }
 
-        mockMvc.perform(post(order.get_xlink("accept").getHref()))
+    @Test
+    public void testPurchaseOrderRejection() throws Exception {
+        MvcResult result = mockMvc.perform(
+                get("/api/inventory/plants?name=exc&startDate=2016-09-22&endDate=2016-09-24"))
                 .andReturn();
+        List<PlantInventoryEntryDTO> plants =
+                mapper.readValue(result.getResponse().getContentAsString(),
+                        new TypeReference<List<PlantInventoryEntryDTO>>() { });
+
+        PurchaseOrderDTO order = new PurchaseOrderDTO();
+        order.setPlant(plants.get(0));
+        order.setRentalPeriod(BusinessPeriodDTO.of(LocalDate.now(), LocalDate.now()));
+
+        result = mockMvc.perform(post("/api/sales/orders")
+                .content(mapper.writeValueAsString(order))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        assertThat(result.getResponse().getHeader("Location")).isNotEmpty();
+
+        order = mapper.readValue(result.getResponse().getContentAsString(), PurchaseOrderDTO.class);
+        assertThat(order.get_xlink("reject")).isNotNull();
+        assertThat(order.getStatus() == POStatus.PENDING);
+
+        result = mockMvc.perform(delete(order.get_xlink("reject").getHref()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        order = mapper.readValue(result.getResponse().getContentAsString(), PurchaseOrderDTO.class);
+        assertThat(order.getStatus() == POStatus.REJECTED);
+    }
+
+    @Test
+    public void testPurchaseOrderClosing() throws Exception {
+        MvcResult result = mockMvc.perform(
+                get("/api/inventory/plants?name=exc&startDate=2016-09-22&endDate=2016-09-24"))
+                .andReturn();
+        List<PlantInventoryEntryDTO> plants =
+                mapper.readValue(result.getResponse().getContentAsString(),
+                        new TypeReference<List<PlantInventoryEntryDTO>>() { });
+
+        PurchaseOrderDTO order = new PurchaseOrderDTO();
+        order.setPlant(plants.get(0));
+        order.setRentalPeriod(BusinessPeriodDTO.of(LocalDate.now(), LocalDate.now()));
+
+        result = mockMvc.perform(post("/api/sales/orders")
+                .content(mapper.writeValueAsString(order))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        assertThat(result.getResponse().getHeader("Location")).isNotEmpty();
+
+        order = mapper.readValue(result.getResponse().getContentAsString(), PurchaseOrderDTO.class);
+        assertThat(order.get_xlink("accept")).isNotNull();
+        assertThat(order.getStatus() == POStatus.PENDING);
+
+        result = mockMvc.perform(post(order.get_xlink("accept").getHref()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        order = mapper.readValue(result.getResponse().getContentAsString(), PurchaseOrderDTO.class);
+        assertThat(order.getStatus() == POStatus.OPEN);
+
+        assertThat(order.get_xlink("close")).isNotNull();
+
+        result = mockMvc.perform(delete(order.get_xlink("close").getHref()))
+                .andExpect(status().isOk())
+                .andReturn();
+        order = mapper.readValue(result.getResponse().getContentAsString(), PurchaseOrderDTO.class);
+
+        assertThat(order.getStatus() == POStatus.CLOSED);
     }
 }

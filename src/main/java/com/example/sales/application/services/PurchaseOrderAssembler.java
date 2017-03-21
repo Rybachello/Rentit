@@ -1,10 +1,10 @@
 package com.example.sales.application.services;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
-import com.example.common.domain.model.BusinessPeriod;
+import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
+import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.rest.ExtendedLink;
 import com.example.inventory.application.services.PlantInventoryEntryAssembler;
-import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.PlantReservationRepository;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
@@ -74,6 +74,10 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
 
             }
         } catch (Exception e) {
+        } catch (PurchaseOrderNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvalidPurchaseOrderStatusException e) {
+            e.printStackTrace();
         }
         return newDTO;
     }
