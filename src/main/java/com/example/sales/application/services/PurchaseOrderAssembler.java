@@ -74,7 +74,6 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
 
             }
         } catch (Exception e) {
-
         }
         return newDTO;
     }
