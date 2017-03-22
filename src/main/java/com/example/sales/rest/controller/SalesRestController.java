@@ -63,8 +63,6 @@ public class SalesRestController {
     @PostMapping("/orders")
     public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
         PurchaseOrderDTO newPO = salesService.createPurchaseOrder(partialPODTO);
-        //PurchaseOrderDTO newlyCreatePODTO = ...
-        // TODO: Complete this part
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(newPO.getId().getHref()));
