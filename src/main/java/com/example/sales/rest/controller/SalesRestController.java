@@ -26,6 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/sales")
+@CrossOrigin
 public class SalesRestController {
     @Autowired
     SalesService salesService;
@@ -38,8 +39,13 @@ public class SalesRestController {
 
     @GetMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PurchaseOrderDTO fetchPurchaseOrder(@PathVariable("id") String id) throws PurchaseOrderNotFoundException {
-        return salesService.getPurchaseOrderById(id);
+    public ResponseEntity<PurchaseOrderDTO> fetchPurchaseOrder(@PathVariable("id") String id) throws PurchaseOrderNotFoundException {
+        PurchaseOrderDTO purchaseOrderDTO = salesService.getPurchaseOrderById(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(purchaseOrderDTO.getId().withSelfRel().getHref()));
+
+        return new ResponseEntity<PurchaseOrderDTO>(purchaseOrderDTO, headers, HttpStatus.OK);
     }
 
     @ExceptionHandler(PlantNotFoundException.class)
