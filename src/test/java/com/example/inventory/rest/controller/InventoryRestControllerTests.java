@@ -1,6 +1,6 @@
 package com.example.inventory.rest.controller;
 
-import com.example.RentIt;
+import com.example.RentitApplication;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by stepan on 21/03/2017.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = RentIt.class)
+@SpringBootTest(classes = RentitApplication.class)
 @WebAppConfiguration
 @Sql(scripts = "plants-dataset.sql")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)

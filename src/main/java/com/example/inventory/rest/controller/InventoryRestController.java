@@ -23,7 +23,7 @@ public class InventoryRestController {
     @Autowired
     InventoryService inventoryService;
 
-    @GetMapping("/plants")
+    @GetMapping("/plants/")
     public List<PlantInventoryEntryDTO> findAvailablePlants(
             @RequestParam(name = "name") String plantName,
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

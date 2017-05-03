@@ -1,6 +1,6 @@
 package com.example.sales;
 
-import com.example.RentIt;
+import com.example.RentitApplication;
 import com.example.inventory.domain.model.EquipmentCondition;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
@@ -27,7 +27,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
-@ContextConfiguration(classes = RentIt.class)
+@ContextConfiguration(classes = RentitApplication.class)
 @WebAppConfiguration
 public class CreationOfPurchaseOrderSteps {
 

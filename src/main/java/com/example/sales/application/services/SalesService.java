@@ -6,13 +6,14 @@ import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.domain.validation.BusinessPeriodValidator;
-import com.example.inventory.domain.repository.PlantReservationRepository;
-import com.example.inventory.infrastructure.IdentifierFactory;
-import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
+import com.example.inventory.domain.repository.PlantReservationRepository;
+import com.example.inventory.infrastructure.IdentifierFactory;
+import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.domain.model.Invoice;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.example.sales.domain.validation.PurchaseOrderValidator;
@@ -40,6 +41,8 @@ public class SalesService {
     InventoryService inventoryService;
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
+    @Autowired
+    InvoiceService invoiceService;
 
     public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
 
@@ -132,6 +135,13 @@ public class SalesService {
         purchaseOrder.closePurchaseOrder();
 
         purchaseOrderRepository.save(purchaseOrder);
+
+        Invoice invoice = invoiceService.createInvoice(purchaseOrder);
+        try {
+            invoiceService.sendInvoice(invoice, "rentit228@gmail.com");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
 

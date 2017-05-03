@@ -1,24 +1,18 @@
 package com.example.sales.rest.controller;
 
-import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
-import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.services.SalesService;
-import com.example.sales.domain.model.PurchaseOrder;
-import com.example.sales.domain.web.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -60,7 +54,7 @@ public class SalesRestController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handInvalidPurchaseOrderStatusException(InvalidPurchaseOrderStatusException ex) {}
 
-    @PostMapping("/orders")
+      @PostMapping("/orders")
     public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
         PurchaseOrderDTO newPO = salesService.createPurchaseOrder(partialPODTO);
 
@@ -83,7 +77,7 @@ public class SalesRestController {
         return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
 
-    @DeleteMapping("/orders/{id}/accept")
+    @DeleteMapping("/orders/{id}/reject")
     public ResponseEntity<PurchaseOrderDTO> rejectPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
@@ -100,7 +94,7 @@ public class SalesRestController {
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
         PurchaseOrderDTO updatedDTO = salesService.closePurchaseOrder(purchaseOrder);
-
+        //todo: create and send invoice
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 
