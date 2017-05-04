@@ -2,6 +2,7 @@ package com.example.sales.integration;
 
 import com.example.sales.application.dto.RemittanceDTO;
 import com.example.sales.application.services.InvoiceService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,11 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.core.Pollers;
 import org.springframework.integration.dsl.http.Http;
 import org.springframework.integration.dsl.mail.Mail;
+import org.springframework.stereotype.Service;
+
+import javax.mail.BodyPart;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeMessage;
 
 @Configuration
 public class InvoicingFlow {
@@ -54,6 +60,21 @@ public class InvoicingFlow {
                 .channel("remittance-channel")
                 .get();
     }
+
+    @Service
+    class RemittanceProcessor {
+        public String extractRemittance(MimeMessage msg) throws Exception {
+            Multipart multipart = (Multipart) msg.getContent();
+            for (int i = 0; i < multipart.getCount(); i++) {
+                BodyPart bodyPart = multipart.getBodyPart(i);
+                if (bodyPart.getContentType().contains("json") &&
+                        bodyPart.getFileName().startsWith("remittance"))
+                    return IOUtils.toString(bodyPart.getInputStream(), "UTF-8");
+            }
+            throw new Exception("oops at extractRemmittance");
+        }
+    }
+
     @Bean
     IntegrationFlow router() {
         return IntegrationFlows.from("remittance-channel")
