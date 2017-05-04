@@ -94,7 +94,6 @@ public class SalesRestController {
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
         PurchaseOrderDTO updatedDTO = salesService.closePurchaseOrder(purchaseOrder);
-        //todo: create and send invoice
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 

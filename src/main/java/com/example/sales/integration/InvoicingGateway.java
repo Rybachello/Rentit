@@ -7,6 +7,6 @@ import javax.mail.internet.MimeMessage;
 
 @MessagingGateway
 public interface InvoicingGateway {
-    @Gateway(requestChannel = "sendInvoice-http-channel")
+    @Gateway(requestChannel = "sendInvoiceChannel")
     public void sendInvoice(MimeMessage message);
 }

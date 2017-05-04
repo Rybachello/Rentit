@@ -138,7 +138,7 @@ public class SalesService {
 
         Invoice invoice = invoiceService.createInvoice(purchaseOrder);
         try {
-            invoiceService.sendInvoice(invoice, "rentit228@gmail.com");
+            invoiceService.sendInvoice(invoice, "buildit228@gmail.com");
         } catch (Exception e) {
             e.printStackTrace();
         }
