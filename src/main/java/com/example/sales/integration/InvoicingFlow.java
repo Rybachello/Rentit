@@ -12,11 +12,26 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.core.Pollers;
 import org.springframework.integration.dsl.http.Http;
 import org.springframework.integration.dsl.mail.Mail;
+import org.springframework.integration.dsl.support.Transformers;
 import org.springframework.stereotype.Service;
 
 import javax.mail.BodyPart;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeMessage;
+
+@Service
+class RemittanceProcessor {
+    public String extractRemittance(MimeMessage msg) throws Exception {
+        Multipart multipart = (Multipart) msg.getContent();
+        for (int i = 0; i < multipart.getCount(); i++) {
+            BodyPart bodyPart = multipart.getBodyPart(i);
+            if (bodyPart.getContentType().contains("json") &&
+                    bodyPart.getFileName().startsWith("remittance"))
+                return IOUtils.toString(bodyPart.getInputStream(), "UTF-8");
+        }
+        throw new Exception("oops at extractRemmittance");
+    }
+}
 
 @Configuration
 public class InvoicingFlow {
@@ -54,30 +69,17 @@ public class InvoicingFlow {
         return IntegrationFlows.from(Mail.imapInboundAdapter(
                 String.format("imaps://%s:%s@imap.gmail.com:993/INBOX", gmailUsername, gmailPassword)
                 )
-                        .selectorExpression("subject matches '.*remittance.*'")
+                        .selectorExpression("subject matches '.*Remittance.*'")
                 , e -> e.autoStartup(true).poller(Pollers.fixedDelay(10000)))
-                .transform("@RemittanceProcessor.extractRemittance(payload)")
+                .transform("@remittanceProcessor.extractRemittance(payload)")
                 .channel("remittance-channel")
                 .get();
-    }
-
-    @Service
-    class RemittanceProcessor {
-        public String extractRemittance(MimeMessage msg) throws Exception {
-            Multipart multipart = (Multipart) msg.getContent();
-            for (int i = 0; i < multipart.getCount(); i++) {
-                BodyPart bodyPart = multipart.getBodyPart(i);
-                if (bodyPart.getContentType().contains("json") &&
-                        bodyPart.getFileName().startsWith("remittance"))
-                    return IOUtils.toString(bodyPart.getInputStream(), "UTF-8");
-            }
-            throw new Exception("oops at extractRemmittance");
-        }
     }
 
     @Bean
     IntegrationFlow router() {
         return IntegrationFlows.from("remittance-channel")
+                .transform(Transformers.fromJson(RemittanceDTO.class))
                 .handle(x -> invoiceService.closeInvoice((RemittanceDTO) x.getPayload()))
                 .get();
     }
