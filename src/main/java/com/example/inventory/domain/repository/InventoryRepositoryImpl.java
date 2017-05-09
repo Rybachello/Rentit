@@ -109,4 +109,16 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
                 .setParameter(3, period.getEndDate())
                 .getResultList();
     }
+
+    public List<PlantInventoryEntry> findAllPlants() {
+        return em.createQuery("select distinct p FROM PlantInventoryEntry p, PlantInventoryItem i WHERE i.equipmentCondition = ?1")
+                .setParameter(1, EquipmentCondition.SERVICEABLE)
+                .getResultList();
+    }
+
+    public PlantInventoryEntry getPlantEntryById(String entryId) {
+        return (PlantInventoryEntry)em.createQuery("select p FROM PlantInventoryEntry p WHERE p.id = ?1")
+                .setParameter(1, entryId)
+                .getSingleResult();
+    }
 }

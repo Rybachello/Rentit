@@ -20,5 +20,6 @@ public interface CustomInventoryRepository {
     List<CorrectiveRepairsNumberPerYear> findCorrectiveRepairsNumberForLastFiveYears();
     List<CorrectiveRepairsCostPerYear> findCorrectiveRepairsCostsForLastFiveYears();
     List<PlantInventoryItem> findAvailablePlantItemsInBusinessPeriod(String entryId, BusinessPeriod period);
-
+    List<PlantInventoryEntry> findAllPlants();
+    PlantInventoryEntry getPlantEntryById(String entryId);
 }
