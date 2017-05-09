@@ -1,24 +1,19 @@
 package com.example.sales.rest.controller;
 
-import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
-import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.services.SalesService;
-import com.example.sales.domain.model.PurchaseOrder;
-import com.example.sales.domain.web.dto.CatalogQueryDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -88,6 +83,42 @@ public class SalesRestController {
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
         PurchaseOrderDTO updatedDTO = salesService.rejectPurchaseOrder(purchaseOrder);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
+
+        return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/orders/{id}/dispatch")
+    public ResponseEntity<PurchaseOrderDTO> dispatchPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
+
+        PurchaseOrderDTO updatedDTO = salesService.dispatchPurchaseOrder(purchaseOrder);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
+
+        return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/orders/{id}/deliver")
+    public ResponseEntity<PurchaseOrderDTO> deliverPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
+
+        PurchaseOrderDTO updatedDTO = salesService.deliverPurchaseOrder(purchaseOrder);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
+
+        return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/orders/{id}/return")
+    public ResponseEntity<PurchaseOrderDTO> returnPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
+
+        PurchaseOrderDTO updatedDTO = salesService.returnPurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(updatedDTO.getId().getHref()));

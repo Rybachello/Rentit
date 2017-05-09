@@ -59,7 +59,7 @@ public class PurchaseOrder {
         total = price.multiply(BigDecimal.valueOf(businessPeriod.numberOfWorkingDays()));
     }
 
-    public void rejectPuchaseOrder() throws InvalidPurchaseOrderStatusException {
+    public void rejectPurchaseOrder() throws InvalidPurchaseOrderStatusException {
         if (this.status == POStatus.PENDING) {
             this.status = POStatus.REJECTED;
         } else {
@@ -75,6 +75,30 @@ public class PurchaseOrder {
         }
     }
 
+    public void dispatchPurchaseOrder() throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.OPEN) {
+            this.status = POStatus.DISPATCHED;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be OPEN to dispatch it.");
+        }
+    }
+
+    public void deliverPurchaseOrder() throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.DISPATCHED) {
+            this.status = POStatus.DELIVERED;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be DISPATCHED to deliver it.");
+        }
+    }
+
+    public void returnPurchaseOrder() throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.DELIVERED) {
+            this.status = POStatus.RETURNED;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be DELIVERED to return it.");
+        }
+    }
+
     public void closePurchaseOrder() throws InvalidPurchaseOrderStatusException {
         if (this.status == POStatus.OPEN) {
             this.status = POStatus.CLOSED;
@@ -82,6 +106,5 @@ public class PurchaseOrder {
             throw new InvalidPurchaseOrderStatusException("Purchase Order status must be OPEN to close it.");
         }
     }
-
 
 }

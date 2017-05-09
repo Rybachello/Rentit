@@ -6,13 +6,13 @@ import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.domain.validation.BusinessPeriodValidator;
-import com.example.inventory.domain.repository.PlantReservationRepository;
-import com.example.inventory.infrastructure.IdentifierFactory;
-import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
+import com.example.inventory.domain.repository.PlantReservationRepository;
+import com.example.inventory.infrastructure.IdentifierFactory;
+import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.example.sales.domain.validation.PurchaseOrderValidator;
@@ -63,7 +63,7 @@ public class SalesService {
                 plantReservationRepository.save(plantReservation);
             }
         } catch (PlantNotAvailableException e) {
-            po.rejectPuchaseOrder();
+            po.rejectPurchaseOrder();
             DataBinder binder = new DataBinder(po);
             binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
             binder.validate();
@@ -113,7 +113,7 @@ public class SalesService {
             throw new PurchaseOrderNotFoundException("Purchase order not found");
         }
 
-        purchaseOrder.rejectPuchaseOrder();
+        purchaseOrder.rejectPurchaseOrder();
 
         purchaseOrderRepository.save(purchaseOrder);
 
@@ -130,6 +130,56 @@ public class SalesService {
         }
 
         purchaseOrder.closePurchaseOrder();
+
+        purchaseOrderRepository.save(purchaseOrder);
+
+        PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
+
+        return updatedDTO;
+    }
+
+    public PurchaseOrderDTO dispatchPurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        purchaseOrder.dispatchPurchaseOrder();
+
+        purchaseOrderRepository.save(purchaseOrder);
+
+        PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
+
+        return updatedDTO;
+
+    }
+
+    public PurchaseOrderDTO deliverPurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        purchaseOrder.deliverPurchaseOrder();
+
+        purchaseOrderRepository.save(purchaseOrder);
+
+        PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
+
+        return updatedDTO;
+
+    }
+
+    public PurchaseOrderDTO returnPurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        purchaseOrder.returnPurchaseOrder();
 
         purchaseOrderRepository.save(purchaseOrder);
 
