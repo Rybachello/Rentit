@@ -77,6 +77,15 @@ public class SalesService {
         return poDto;
     }
 
+    public PurchaseOrderDTO updatePurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
+        BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
+        PurchaseOrder po = purchaseOrderRepository.findOne(dto.get_id());
+        PlantReservation plantReservation = inventoryService.updatePlantReservation(po, businessPeriod);
+        purchaseOrderRepository.flush();
+        PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(po);
+        return poDto;
+    }
+
     public List<PurchaseOrderDTO> getAllPurchaseOrders() {
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll();
         return purchaseOrderAssembler.toResources(purchaseOrders);

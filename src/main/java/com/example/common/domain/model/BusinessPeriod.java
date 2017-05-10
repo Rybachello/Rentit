@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit;
 
 @Embeddable
 @Value
-@NoArgsConstructor(force=true, access= AccessLevel.PRIVATE)
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor(staticName = "of")
 public class BusinessPeriod {
     LocalDate startDate;
@@ -19,5 +19,12 @@ public class BusinessPeriod {
 
     public long numberOfWorkingDays() {
         return ChronoUnit.DAYS.between(startDate, endDate) + 1;
+    }
+
+    public boolean intersects(BusinessPeriod other) {
+        return !(other.startDate.isAfter(this.endDate) ||
+                other.endDate.isBefore(this.startDate) ||
+                other.startDate.isEqual(this.endDate) ||
+                other.endDate.isEqual(this.startDate));
     }
 }

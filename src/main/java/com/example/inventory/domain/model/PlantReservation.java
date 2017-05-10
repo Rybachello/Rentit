@@ -31,6 +31,15 @@ public class PlantReservation {
     @OneToMany(mappedBy = "reservation")
     private List<MaintenanceTask> maintenance;
 
+    public void update(PlantInventoryItem newPlant, BusinessPeriod newPeriod){
+        this.plant = newPlant;
+        this.schedule = newPeriod;
+    }
+
+    public void updatePeriod(BusinessPeriod newPeriod){
+        this.schedule = newPeriod;
+    }
+
     public static PlantReservation of(String id, BusinessPeriod rentalPeriod, PlantInventoryItem item, PurchaseOrder po) {
         return PlantReservation.of(id, rentalPeriod, item, po, null);
     }

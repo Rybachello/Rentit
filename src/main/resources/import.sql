@@ -26,12 +26,17 @@ insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_co
 
 INSERT into purchase_order (id,ISSUE_DATE,PAYMENT_SCHEDULE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID) values ('123','2017-03-15','2017-04-15','2017-05-15','2017-04-15','PENDING',1300,'1');
 INSERT into purchase_order (id,ISSUE_DATE,PAYMENT_SCHEDULE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID) values ('124','2017-04-15','2017-05-15','2017-05-25','2017-05-15','PENDING',1325,'2');
+INSERT into purchase_order (id,ISSUE_DATE,PAYMENT_SCHEDULE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID) values ('125','2017-03-15','2017-04-15','1111-11-20','1111-11-11','PENDING',1300,'2');
+INSERT into purchase_order (id,ISSUE_DATE,PAYMENT_SCHEDULE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID) values ('126','2017-04-15','2017-05-15','1111-11-30','1111-11-24','PENDING',1325,'2');
+
 insert into plant_reservation (id, plant_id, start_date, end_date, purchase_order_id) values ('1', '1', '2017-03-22', '2017-03-24', '123');
 insert into plant_reservation (id, plant_id, start_date, end_date) values ('2', '2', '2016-04-01', '2016-12-10'); /* for inventory entry booked in last 6 months */
 insert into plant_reservation (id, plant_id, start_date, end_date) values ('3', '3', '2015-02-01', '2015-12-10');
 insert into plant_reservation (id, plant_id, start_date, end_date) values ('4', '1', '2014-02-01', '2014-12-10');
 insert into plant_reservation (id, plant_id, start_date, end_date) values ('5', '2', '2013-02-02', '2013-12-10');
 insert into plant_reservation (id, plant_id, start_date, end_date) values ('6', '3', '2012-02-01', '2012-12-10');
+insert into plant_reservation (id, plant_id, start_date, end_date, purchase_order_id) values ('7', '2', '1111-11-11', '1111-11-20', '125');
+insert into plant_reservation (id, plant_id, start_date, end_date, purchase_order_id) values ('8', '2', '1111-11-24', '1111-11-30', '126');
 
 insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('1',2017,'1');
 insert into maintenance_plan (id, year_of_action, inventory_item_id) values ('2',2016,'2');

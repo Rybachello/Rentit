@@ -65,7 +65,18 @@ public class SalesRestController {
         PurchaseOrderDTO newPO = salesService.createPurchaseOrder(partialPODTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(newPO.getId().getHref()));
+        //headers.setLocation(URI.create(newPO.getId().getHref()));
+        // The above line won't working until you update PurchaseOrderDTO to extend ResourceSupport
+
+        return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/orders")
+    public ResponseEntity<PurchaseOrderDTO> updatePurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO newPO = salesService.updatePurchaseOrder(partialPODTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        //headers.setLocation(URI.create(newPO.getId().getHref()));
         // The above line won't working until you update PurchaseOrderDTO to extend ResourceSupport
 
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);

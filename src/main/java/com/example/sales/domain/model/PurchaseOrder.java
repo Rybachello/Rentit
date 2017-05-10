@@ -83,5 +83,12 @@ public class PurchaseOrder {
         }
     }
 
-
+    public void updateRentalPeriod(BusinessPeriod period) throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.OPEN || this.status == POStatus.PENDING) {
+            this.status = POStatus.PENDING;
+            this.rentalPeriod = period;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order can be changed only when opened or pending");
+        }
+    }
 }
