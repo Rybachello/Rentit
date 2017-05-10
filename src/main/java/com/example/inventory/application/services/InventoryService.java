@@ -6,10 +6,7 @@ import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.PlantInventoryItem;
-import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.CustomInventoryRepository;
-import com.example.inventory.domain.repository.PlantReservationRepository;
-import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.web.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +22,6 @@ public class InventoryService {
     @Autowired
     CustomInventoryRepository inventoryRepository;
     @Autowired
-    PlantReservationRepository plantReservationRepository;
-    @Autowired
     PlantInventoryEntryAssembler plantInventoryEntryAssembler;
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
@@ -39,7 +34,7 @@ public class InventoryService {
                         query.getRentalPeriod().getStartDate()));
     }
 
-    public PlantReservation createPlantReservation(String plantId, BusinessPeriod rentalPeriod, PurchaseOrder po) throws PlantNotAvailableException {
+    public PurchaseOrder createPlantReservation(String plantId, BusinessPeriod rentalPeriod, PurchaseOrder po) throws PlantNotAvailableException {
         List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(plantId, rentalPeriod);
         if (itemList.size() == 0) {
             throw new PlantNotAvailableException("Requested plant is unavailable");
@@ -47,13 +42,11 @@ public class InventoryService {
         //find first
         PlantInventoryItem item = itemList.get(0);
         //create new plantReservation
-        PlantReservation plantReservation = PlantReservation.of(IdentifierFactory.nextID(), rentalPeriod, item, po);
-        return plantReservation;
+        po.confirm(rentalPeriod, item);
+        return po;
     }
 
-    public PlantReservation updatePlantReservation(PurchaseOrder po, BusinessPeriod newPeriod) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
-        PlantReservation reservation = po.getReservations().get(0);
-
+    public PurchaseOrder updatePlantReservation(PurchaseOrder po, BusinessPeriod newPeriod) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
         // if we need to extend the period and therefore keep the same plant item
         if (po.getRentalPeriod().intersects(newPeriod)) {
             boolean ok = true;
@@ -63,7 +56,7 @@ public class InventoryService {
                 List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(
                         po.getPlant().getId(),
                         BusinessPeriod.of(newPeriod.getStartDate(), po.getRentalPeriod().getStartDate()));
-                ok = ok && itemList.stream().filter(i -> i.getId() == reservation.getPlant().getId()).count() > 0;
+                ok = ok && itemList.stream().filter(i -> i.getId() == po.getPlant().getId()).count() > 0;
             }
 
             // if new period ends later
@@ -71,11 +64,10 @@ public class InventoryService {
                 List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(
                         po.getPlant().getId(),
                         BusinessPeriod.of(po.getRentalPeriod().getEndDate(), newPeriod.getEndDate()));
-                ok = ok && itemList.stream().filter(i -> i.getId() == reservation.getPlant().getId()).count() > 0;
+                ok = ok && itemList.stream().filter(i -> i.getId() == po.getPlant().getId()).count() > 0;
             }
 
             if (ok){
-                reservation.updatePeriod(newPeriod);
                 po.updateRentalPeriod(newPeriod);
             }
 
@@ -86,12 +78,11 @@ public class InventoryService {
             if (itemList.size() == 0) {
                 throw new PlantNotAvailableException("Requested plant is unavailable");
             } else {
-                reservation.update(itemList.get(0), newPeriod);
-                po.updateRentalPeriod(newPeriod);
+                po.confirm(newPeriod, itemList.get(0));
             }
         }
 
-        return reservation;
+        return po;
     }
 
     public List<PlantInventoryEntryDTO> allPlants() {

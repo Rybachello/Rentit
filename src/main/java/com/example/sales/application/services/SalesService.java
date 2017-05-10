@@ -8,9 +8,7 @@ import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.domain.validation.BusinessPeriodValidator;
 import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.domain.model.PlantInventoryEntry;
-import com.example.inventory.domain.model.PlantReservation;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
-import com.example.inventory.domain.repository.PlantReservationRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.domain.model.PurchaseOrder;
@@ -31,8 +29,6 @@ public class SalesService {
     @Autowired
     PlantInventoryEntryRepository plantInventoryEntryRepository;
     @Autowired
-    PlantReservationRepository plantReservationRepository;
-    @Autowired
     PurchaseOrderAssembler purchaseOrderAssembler;
     @Autowired
     PurchaseOrderRepository purchaseOrderRepository;
@@ -48,19 +44,18 @@ public class SalesService {
         //convert to dto
         BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
         //create the purchase order with PENDING STATUS
-        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod, plantInventoryEntry);
+        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod, null, plantInventoryEntry);
 
 
         try {
-            PlantReservation plantReservation = inventoryService.createPlantReservation(dto.getPlant().get_id(), businessPeriod, po);
-            po.confirmReservation(plantReservation, plantInventoryEntry.getPrice());
+            inventoryService.createPlantReservation(dto.getPlant().get_id(), businessPeriod, po);
+            po.confirmReservation(plantInventoryEntry.getPrice());
             //save to the database
             DataBinder binder = new DataBinder(po);
             binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
             binder.validate();
             if (!binder.getBindingResult().hasErrors()) {
                 purchaseOrderRepository.save(po);
-                plantReservationRepository.save(plantReservation);
             }
         } catch (PlantNotAvailableException e) {
             po.rejectPurchaseOrder();
@@ -80,7 +75,7 @@ public class SalesService {
     public PurchaseOrderDTO updatePurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
         BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
         PurchaseOrder po = purchaseOrderRepository.findOne(dto.get_id());
-        PlantReservation plantReservation = inventoryService.updatePlantReservation(po, businessPeriod);
+        po = inventoryService.updatePlantReservation(po, businessPeriod);
         purchaseOrderRepository.flush();
         PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(po);
         return poDto;
@@ -140,7 +135,7 @@ public class SalesService {
 
         purchaseOrder.closePurchaseOrder();
 
-        purchaseOrderRepository.save(purchaseOrder);
+        purchaseOrderRepository.flush();
 
         PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
 

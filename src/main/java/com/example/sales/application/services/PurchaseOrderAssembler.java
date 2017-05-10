@@ -5,7 +5,6 @@ import com.example.common.application.exceptions.InvalidPurchaseOrderStatusExcep
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.rest.ExtendedLink;
 import com.example.inventory.application.services.PlantInventoryEntryAssembler;
-import com.example.inventory.domain.repository.PlantReservationRepository;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.sales.domain.model.PurchaseOrder;
@@ -27,8 +26,6 @@ import static org.springframework.http.HttpMethod.POST;
 @Service
 public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrder, PurchaseOrderDTO> {
     @Autowired
-    PlantReservationRepository plantReservationRepository;
-    @Autowired
     PlantInventoryEntryAssembler plantInventoryEntryAssembler;
 
     public PurchaseOrderAssembler() {
@@ -44,7 +41,7 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
         LocalDate endDate = purchaseOrder.getRentalPeriod().getEndDate();
         BusinessPeriodDTO businessPeriod = BusinessPeriodDTO.of(startDate, endDate);
 
-        PlantInventoryEntry plant = purchaseOrder.getPlant();
+        PlantInventoryEntry plant = purchaseOrder.getPlant().getPlantInfo();
 
         newDTO.setStatus(purchaseOrder.getStatus());
         newDTO.setTotal(purchaseOrder.getTotal());

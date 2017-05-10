@@ -6,7 +6,6 @@ import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.inventory.domain.repository.PlantInventoryItemRepository;
-import com.example.inventory.domain.repository.PlantReservationRepository;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
@@ -41,8 +40,6 @@ public class CreationOfPurchaseOrderSteps {
     PlantInventoryEntryRepository plantInventoryEntryRepository;
     @Autowired
     PlantInventoryItemRepository plantInventoryItemRepository;
-    @Autowired
-    PlantReservationRepository plantReservationRepository;
 
     @Autowired
     PurchaseOrderRepository purchaseOrderRepository;
@@ -54,7 +51,6 @@ public class CreationOfPurchaseOrderSteps {
 
     @After  // Use `After` from Cucumber library
     public void tearOff() {
-        plantReservationRepository.deleteAll();
         purchaseOrderRepository.deleteAll();
         plantInventoryItemRepository.deleteAll();
         plantInventoryEntryRepository.deleteAll();
