@@ -69,6 +69,23 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
                             linkTo(methodOn(SalesRestController.class)
                                     .closePurchaseOrder(newDTO.get_id())).toString(),
                             "close", DELETE));
+                    newDTO.add(new ExtendedLink(
+                            linkTo(methodOn(SalesRestController.class)
+                                    .dispatchPurchaseOrder(newDTO.get_id())).toString(),
+                            "dispatch", POST));
+                    break;
+                case DISPATCHED:
+                    newDTO.add(new ExtendedLink(
+                            linkTo(methodOn(SalesRestController.class)
+                                    .deliverPurchaseOrder(newDTO.get_id())).toString(),
+                            "deliver", POST));
+                    break;
+                case DELIVERED:
+                    newDTO.add(new ExtendedLink(
+                            linkTo(methodOn(SalesRestController.class)
+                                    .returnPurchaseOrder(newDTO.get_id())).toString(),
+                            "return", POST));
+                    break;
                 default:
                     break;
 
