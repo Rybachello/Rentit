@@ -10,6 +10,7 @@ import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
+import com.example.sales.application.dto.PlantDeliveryDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
@@ -31,6 +32,8 @@ public class SalesService {
     @Autowired
     PurchaseOrderAssembler purchaseOrderAssembler;
     @Autowired
+    PlantDeliveryAssembler plantDeliveryAssembler;
+    @Autowired
     PurchaseOrderRepository purchaseOrderRepository;
     @Autowired
     InventoryService inventoryService;
@@ -44,7 +47,7 @@ public class SalesService {
         //convert to dto
         BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
         //create the purchase order with PENDING STATUS
-        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod, null, plantInventoryEntry);
+        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod,null, plantInventoryEntry,dto.getConstructionSite());
 
 
         try {
@@ -143,6 +146,7 @@ public class SalesService {
     }
 
     public PurchaseOrderDTO closePurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
 
         if (purchaseOrder == null) {
@@ -206,5 +210,11 @@ public class SalesService {
         PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
 
         return updatedDTO;
+    }
+
+    public List<PlantDeliveryDTO> getAllDeliveryPlants(LocalDate date) {
+        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAllPurchaseOrdersByStartDate(date);
+        return plantDeliveryAssembler.toResources(purchaseOrders);
+
     }
 }

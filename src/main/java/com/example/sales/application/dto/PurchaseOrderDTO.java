@@ -1,11 +1,9 @@
 package com.example.sales.application.dto;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
-import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.rest.ResourceSupport;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.sales.domain.model.POStatus;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -19,20 +17,18 @@ import java.time.temporal.ChronoUnit;
 public class PurchaseOrderDTO extends ResourceSupport {
     public PurchaseOrderDTO(){}
 
-    public PurchaseOrderDTO(String id, String name, POStatus status, LocalDate startDate, LocalDate endDate, BigDecimal price, String description){
+    public PurchaseOrderDTO(String id, POStatus status, LocalDate startDate, LocalDate endDate, BigDecimal price, String constructionSite){
         this._id = id;
-        this.name = name;
         this.status = status==null?POStatus.PENDING:status;
-        this.description = description;
         this.rentalPeriod = BusinessPeriodDTO.of(startDate, endDate);
+        this.constructionSite = constructionSite;
         this.total = BigDecimal.valueOf(ChronoUnit.DAYS.between(startDate, endDate) + 1).multiply(price);
     }
 
     private String _id;
-    private String name;
     private POStatus status;
     private BusinessPeriodDTO rentalPeriod;
     private BigDecimal total;
-    private String description;
+    private String constructionSite;
     private PlantInventoryEntryDTO plant;
 }

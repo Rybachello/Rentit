@@ -26,7 +26,7 @@ public class InventoryRestController {
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
-        if (plantName==null)
+        if (plantName == null)
             return inventoryService.allPlants();
 
         CatalogQueryDTO catalogQueryDTO = CatalogQueryDTO.of(plantName, BusinessPeriodDTO.of(startDate, endDate));
@@ -42,4 +42,5 @@ public class InventoryRestController {
     public PlantInventoryEntryDTO findPlantEntry(@PathVariable String id) {
         return inventoryService.getEntryById(id);
     }
+
 }

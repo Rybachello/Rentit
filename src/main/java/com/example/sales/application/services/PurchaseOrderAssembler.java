@@ -49,6 +49,8 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
         newDTO.setRentalPeriod(businessPeriod);
         newDTO.setPlant(plantInventoryEntryAssembler.toResource(plant));
 
+        newDTO.setConstructionSite(purchaseOrder.getConstructionSite());
+
         try {
             switch (newDTO.getStatus()) {
                 case PENDING:

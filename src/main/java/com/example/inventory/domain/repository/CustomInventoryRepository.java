@@ -18,4 +18,5 @@ public interface CustomInventoryRepository {
     List<PlantInventoryItem> findAvailablePlantItemsInBusinessPeriod(String entryId, BusinessPeriod period);
     List<PlantInventoryEntry> findAllPlants();
     PlantInventoryEntry getPlantEntryById(String entryId);
+
 }

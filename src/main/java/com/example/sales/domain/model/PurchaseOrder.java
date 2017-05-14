@@ -4,12 +4,13 @@ import com.example.common.application.exceptions.InvalidPurchaseOrderStatusExcep
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Created by Vasiliy on 2017.02.20.
@@ -38,7 +39,10 @@ public class PurchaseOrder {
     @Enumerated(EnumType.STRING)
     POStatus status;
 
-    public static PurchaseOrder of(String id, LocalDate issueDate, BusinessPeriod businessPeriod, PlantInventoryItem plant, PlantInventoryEntry entry)
+    //site where we need to deliver
+    String constructionSite;
+
+    public static PurchaseOrder of(String id, LocalDate issueDate, BusinessPeriod businessPeriod, PlantInventoryItem plant, PlantInventoryEntry entry,String constructionSite)
     {
         PurchaseOrder po = new PurchaseOrder();
         po.id = id;
@@ -46,6 +50,7 @@ public class PurchaseOrder {
         po.rentalPeriod = businessPeriod;
         po.plant = plant;
         po.status = POStatus.PENDING;
+        po.constructionSite = constructionSite;
         return po;
     }
 
