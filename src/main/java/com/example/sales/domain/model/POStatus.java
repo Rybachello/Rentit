@@ -6,6 +6,7 @@ package com.example.sales.domain.model;
 public enum POStatus {
     PENDING,
     REJECTED,
+    REJECTED_BY_CUSTOMER,
     OPEN,
     DISPATCHED,
     RETURNED,

@@ -126,6 +126,22 @@ public class SalesService {
         return updatedDTO;
     }
 
+    public PurchaseOrderDTO rejectPOByCustomer(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        purchaseOrder.rejectByCustomer();
+
+        purchaseOrderRepository.save(purchaseOrder);
+
+        PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
+
+        return updatedDTO;
+    }
+
     public PurchaseOrderDTO closePurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
 

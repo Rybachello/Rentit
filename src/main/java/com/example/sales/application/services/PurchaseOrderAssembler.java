@@ -76,6 +76,10 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
                             linkTo(methodOn(SalesRestController.class)
                                     .deliverPurchaseOrder(newDTO.get_id())).toString(),
                             "deliver", POST));
+                    newDTO.add(new ExtendedLink(
+                            linkTo(methodOn(SalesRestController.class)
+                                    .rejectPOByCustomer(newDTO.get_id())).toString(),
+                            "rejectByCustomer", POST));
                     break;
                 case DELIVERED:
                     newDTO.add(new ExtendedLink(

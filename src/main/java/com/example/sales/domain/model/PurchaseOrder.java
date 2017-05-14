@@ -61,6 +61,14 @@ public class PurchaseOrder {
         }
     }
 
+    public void rejectByCustomer() throws InvalidPurchaseOrderStatusException {
+        if(this.status == POStatus.DISPATCHED) {
+            this.status = POStatus.REJECTED_BY_CUSTOMER;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be PENDING to reject it");
+        }
+    }
+
     public void acceptPurchaseOrder() throws InvalidPurchaseOrderStatusException {
         if (this.status == POStatus.PENDING) {
             this.status = POStatus.OPEN;

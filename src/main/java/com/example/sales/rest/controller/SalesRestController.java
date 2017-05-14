@@ -7,6 +7,7 @@ import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.services.SalesService;
 
+import com.example.sales.domain.model.PurchaseOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -94,6 +95,18 @@ public class SalesRestController {
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
         PurchaseOrderDTO updatedDTO = salesService.rejectPurchaseOrder(purchaseOrder);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
+
+        return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/orders/{id}/rejectByCustomer")
+    public ResponseEntity<PurchaseOrderDTO> rejectPOByCustomer(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
+
+        PurchaseOrderDTO updatedDTO = salesService.rejectPOByCustomer(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(updatedDTO.getId().getHref()));
