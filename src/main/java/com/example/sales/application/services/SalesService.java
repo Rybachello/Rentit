@@ -1,6 +1,7 @@
 package com.example.sales.application.services;
 
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
+import com.example.common.application.exceptions.InvoiceNotFoundException;
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
@@ -19,6 +20,7 @@ import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.InvoiceRepository;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.example.sales.domain.validation.PurchaseOrderValidator;
+import com.example.sales.rest.controller.RemittanceRestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -294,5 +296,13 @@ public class SalesService {
         }
 
         invoicingGateway.sendInvoice(rootMessage);
+    }
+
+    public void acceptRemittance(RemittanceRestController.RemittanceAdviceDTO remittance) throws InvoiceNotFoundException {
+        Invoice invoice = invoiceRepository.findOne(remittance.getInvoiceId());
+        if (invoice == null) {
+            throw new InvoiceNotFoundException("Invoice not found");
+        }
+        invoice.setPaid();
     }
 }
