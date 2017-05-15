@@ -10,15 +10,30 @@ import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
+import com.example.sales.application.dto.InvoiceDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.domain.model.Customer;
+import com.example.sales.application.gateways.InvoicingGateway;
+import com.example.sales.domain.model.Invoice;
 import com.example.sales.domain.model.PurchaseOrder;
+import com.example.sales.domain.repository.InvoiceRepository;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.example.sales.domain.validation.PurchaseOrderValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.DataBinder;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,6 +52,18 @@ public class SalesService {
     InventoryService inventoryService;
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
+    @Autowired
+    InvoicingGateway invoicingGateway;
+    @Autowired
+    InvoiceAssembler invoiceAssembler;
+    @Autowired
+    InvoiceRepository invoiceRepository;
+    @Autowired
+    @Qualifier("objectMapper")
+    ObjectMapper mapper;
+
+    @Value("${gmail.username}")
+    String gmailUsername;
 
     public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto, Customer customer) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
 
@@ -219,12 +246,53 @@ public class SalesService {
 
         PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
 
+        Invoice invoice = this.createInvoice(purchaseOrder);
+
+        this.sendInvoice(invoice);
+
         return updatedDTO;
+    }
+
+    private Invoice createInvoice(PurchaseOrder purchaseOrder) {
+        Invoice invoice = new Invoice(IdentifierFactory.nextID(), false, purchaseOrder.getIssueDate().plusMonths(1), null, purchaseOrder.getTotal(), purchaseOrder);
+        invoiceRepository.save(invoice);
+
+        return invoice;
     }
 
     public List<PurchaseOrderDTO> getAllDeliveryPlants(LocalDate date) {
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAllPurchaseOrdersByStartDate(date);
         return purchaseOrderAssembler.toResources(purchaseOrders);
 
+    }
+
+    public void sendInvoice(Invoice invoice) {
+        JavaMailSender mailSender = new JavaMailSenderImpl();
+        InvoiceDTO invoiceDTO = invoiceAssembler.toResource(invoice);
+
+        String invoiceJSON = null;
+        try {
+            invoiceJSON = mapper.writeValueAsString(invoiceDTO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        MimeMessage rootMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = null;
+
+        try {
+            helper = new MimeMessageHelper(rootMessage, true);
+            helper.setFrom(gmailUsername + "@gmail.com");
+            helper.setTo(invoice.getPurchaseOrder().getCustomer().getEmail());
+            helper.setSubject("Invoice for purchase order " + invoice.getPurchaseOrder().getId());
+            helper.setText("Dear customer, \n\n Please find attached the invoice corresponding to your purchase order. \n\n Kindly yours, \n\n RentIt team!");
+            helper.addAttachment("invoice.json", new ByteArrayDataSource(invoiceJSON, "application/json"));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        invoicingGateway.sendInvoice(rootMessage);
     }
 }
