@@ -10,7 +10,7 @@ import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.repository.CustomInventoryRepository;
 import com.example.sales.domain.model.PurchaseOrder;
-import com.example.sales.domain.web.dto.CatalogQueryDTO;
+import com.example.inventory.application.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

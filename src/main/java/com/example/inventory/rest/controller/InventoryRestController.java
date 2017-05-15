@@ -4,7 +4,7 @@ import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.application.exceptions.InventoryEntryNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.services.InventoryService;
-import com.example.sales.domain.web.dto.CatalogQueryDTO;
+import com.example.inventory.application.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
