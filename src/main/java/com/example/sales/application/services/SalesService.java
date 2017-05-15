@@ -11,6 +11,7 @@ import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.domain.model.Customer;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.example.sales.domain.validation.PurchaseOrderValidator;
@@ -37,14 +38,14 @@ public class SalesService {
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
 
-    public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
+    public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto, Customer customer) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
 
         //find first purchase order
         PlantInventoryEntry plantInventoryEntry = plantInventoryEntryRepository.findOne(dto.getPlant().get_id());
         //convert to dto
         BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
         //create the purchase order with PENDING STATUS
-        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod,null, plantInventoryEntry,dto.getConstructionSite());
+        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod,null, plantInventoryEntry,dto.getConstructionSite(), customer);
 
 
         try {
@@ -54,6 +55,7 @@ public class SalesService {
             DataBinder binder = new DataBinder(po);
             binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
             binder.validate();
+
             if (!binder.getBindingResult().hasErrors()) {
                 purchaseOrderRepository.save(po);
             }

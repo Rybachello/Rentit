@@ -43,10 +43,10 @@ public class DashboardController	{
        model.addAttribute("po", new PurchaseOrderDTO());
        return "dashboard/catalog/query-result";
     }
-    @RequestMapping("/orders")
-    public String createPO(PurchaseOrderDTO toDTO, Model model) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
-        PurchaseOrderDTO po = salesService.createPurchaseOrder(toDTO);
-        model.addAttribute("purchaseOrderDetails", po);
-        return	"dashboard/catalog/purchase-order-details";
-    }
+//    @RequestMapping("/orders")
+//    public String createPO(PurchaseOrderDTO toDTO, Model model) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
+//        PurchaseOrderDTO po = salesService.createPurchaseOrder(toDTO);
+//        model.addAttribute("purchaseOrderDetails", po);
+//        return	"dashboard/catalog/purchase-order-details";
+//    }
 }

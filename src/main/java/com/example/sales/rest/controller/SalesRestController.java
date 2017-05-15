@@ -1,11 +1,11 @@
 package com.example.sales.rest.controller;
 
-import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
-import com.example.common.application.exceptions.PlantNotAvailableException;
-import com.example.common.application.exceptions.PlantNotFoundException;
-import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
+import com.example.common.application.exceptions.*;
 import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.application.services.CustomerService;
 import com.example.sales.application.services.SalesService;
+import com.example.sales.domain.model.Customer;
+import com.example.sales.application.dto.CustomerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +25,8 @@ import java.util.List;
 public class SalesRestController {
     @Autowired
     SalesService salesService;
+    @Autowired
+    CustomerService customerService;
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
@@ -57,15 +59,33 @@ public class SalesRestController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handInvalidPurchaseOrderStatusException(InvalidPurchaseOrderStatusException ex) {
     }
+    @ExceptionHandler(CustomerNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleCustomerNotFoundException(CustomerNotFoundException ex){
+
+    }
 
     @PostMapping("/orders")
-    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
-        PurchaseOrderDTO newPO = salesService.createPurchaseOrder(partialPODTO);
+    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO, @RequestHeader String token) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException, CustomerNotFoundException {
+
+        Customer customer = customerService.findByToken(token);
+
+        PurchaseOrderDTO newPO = salesService.createPurchaseOrder(partialPODTO, customer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(newPO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/customer")
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestParam(name = "email", required = false) String email) {
+        CustomerDTO newCustomer = customerService.createCustomer(email);
+
+        HttpHeaders headers = new HttpHeaders();
+     //   headers.setLocation(URI.create(newCustomer.getId().getHref()));
+
+        return new ResponseEntity<CustomerDTO>(newCustomer,headers,HttpStatus.CREATED);
     }
 
     @PutMapping("/orders")
@@ -166,4 +186,5 @@ public class SalesRestController {
     public List<PurchaseOrderDTO> getDeliveryPlants(@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) throws Exception {
         return salesService.getAllDeliveryPlants(startDate);
     }
+
 }

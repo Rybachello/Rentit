@@ -25,6 +25,9 @@ public class PurchaseOrder {
     LocalDate issueDate;
 
     @ManyToOne
+    Customer customer;
+
+    @ManyToOne
     PlantInventoryItem plant;
 
     @ManyToOne
@@ -42,7 +45,7 @@ public class PurchaseOrder {
     //site where we need to deliver
     String constructionSite;
 
-    public static PurchaseOrder of(String id, LocalDate issueDate, BusinessPeriod businessPeriod, PlantInventoryItem plant, PlantInventoryEntry entry,String constructionSite)
+    public static PurchaseOrder of(String id, LocalDate issueDate, BusinessPeriod businessPeriod, PlantInventoryItem plant, PlantInventoryEntry entry,String constructionSite, Customer customer)
     {
         PurchaseOrder po = new PurchaseOrder();
         po.id = id;
@@ -51,6 +54,7 @@ public class PurchaseOrder {
         po.plant = plant;
         po.status = POStatus.PENDING;
         po.constructionSite = constructionSite;
+        po.customer = customer;
         return po;
     }
 
