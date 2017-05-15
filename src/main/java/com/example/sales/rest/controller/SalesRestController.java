@@ -4,7 +4,6 @@ import com.example.common.application.exceptions.InvalidPurchaseOrderStatusExcep
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
-import com.example.sales.application.dto.PlantDeliveryDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.services.SalesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +165,7 @@ public class SalesRestController {
     }
 
     @GetMapping("/deliveries")
-    public List<PlantDeliveryDTO> getDeliveryPlants(@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) throws Exception {
+    public List<PurchaseOrderDTO> getDeliveryPlants(@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) throws Exception {
         return salesService.getAllDeliveryPlants(startDate);
     }
 }
