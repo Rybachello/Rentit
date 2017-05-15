@@ -74,18 +74,28 @@ public class SalesService {
         return poDto;
     }
 
-    public PurchaseOrderDTO updatePurchaseOrder(PurchaseOrderDTO dto) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
+    public PurchaseOrderDTO updatePurchaseOrder(PurchaseOrderDTO dto, Customer customer) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
         BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
-        PurchaseOrder po = purchaseOrderRepository.findOne(dto.get_id());
+        PurchaseOrder po = purchaseOrderRepository.findByIdAndCustomer(dto.get_id(), customer);
         po = inventoryService.updatePlantReservation(po, businessPeriod);
         purchaseOrderRepository.flush();
         PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(po);
         return poDto;
     }
 
+
     public List<PurchaseOrderDTO> getAllPurchaseOrders() {
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll();
         return purchaseOrderAssembler.toResources(purchaseOrders);
+    }
+
+    public PurchaseOrderDTO getPurchaseOrderById(String id, Customer customer) throws PurchaseOrderNotFoundException {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findByIdAndCustomer(id,customer);
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        return purchaseOrderAssembler.toResource(purchaseOrder);
     }
 
     public PurchaseOrderDTO getPurchaseOrderById(String id) throws PurchaseOrderNotFoundException {
@@ -93,6 +103,7 @@ public class SalesService {
         if (purchaseOrder == null) {
             throw new PurchaseOrderNotFoundException("Purchase order not found");
         }
+
         return purchaseOrderAssembler.toResource(purchaseOrder);
     }
 

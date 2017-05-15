@@ -36,8 +36,10 @@ public class SalesRestController {
 
     @GetMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PurchaseOrderDTO fetchPurchaseOrder(@PathVariable("id") String id) throws PurchaseOrderNotFoundException {
-        return salesService.getPurchaseOrderById(id);
+    public PurchaseOrderDTO fetchPurchaseOrder(@PathVariable("id") String id, @RequestHeader String token) throws PurchaseOrderNotFoundException, CustomerNotFoundException {
+        Customer customer = customerService.findByToken(token);
+
+        return salesService.getPurchaseOrderById(id, customer);
     }
 
     @ExceptionHandler(PlantNotFoundException.class)
@@ -89,8 +91,10 @@ public class SalesRestController {
     }
 
     @PutMapping("/orders")
-    public ResponseEntity<PurchaseOrderDTO> updatePurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
-        PurchaseOrderDTO newPO = salesService.updatePurchaseOrder(partialPODTO);
+    public ResponseEntity<PurchaseOrderDTO> updatePurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO, @RequestHeader String token) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException, CustomerNotFoundException {
+        Customer customer = customerService.findByToken(token);
+
+        PurchaseOrderDTO newPO = salesService.updatePurchaseOrder(partialPODTO, customer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(newPO.getId().getHref()));
@@ -123,8 +127,10 @@ public class SalesRestController {
     }
 
     @PostMapping("/orders/{id}/rejectByCustomer")
-    public ResponseEntity<PurchaseOrderDTO> rejectPOByCustomer(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
-        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
+    public ResponseEntity<PurchaseOrderDTO> rejectPOByCustomer(@PathVariable String id, @RequestHeader String token) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException, CustomerNotFoundException {
+        Customer customer = customerService.findByToken(token);
+
+        PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id, customer);
 
         PurchaseOrderDTO updatedDTO = salesService.rejectPOByCustomer(purchaseOrder);
 
@@ -147,7 +153,8 @@ public class SalesRestController {
     }
 
     @PostMapping("/orders/{id}/deliver")
-    public ResponseEntity<PurchaseOrderDTO> deliverPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+    public ResponseEntity<PurchaseOrderDTO> deliverPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException, CustomerNotFoundException {
+
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
         PurchaseOrderDTO updatedDTO = salesService.deliverPurchaseOrder(purchaseOrder);

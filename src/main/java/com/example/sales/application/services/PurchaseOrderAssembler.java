@@ -1,6 +1,7 @@
 package com.example.sales.application.services;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
+import com.example.common.application.exceptions.CustomerNotFoundException;
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.rest.ExtendedLink;
@@ -56,7 +57,7 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
         try {
             newDTO.add(new ExtendedLink(
                     linkTo(methodOn(SalesRestController.class)
-                            .fetchPurchaseOrder(newDTO.get_id())).toString(),
+                            .fetchPurchaseOrder(newDTO.get_id(),null)).toString(),
                     "self", GET));
 
             switch (newDTO.getStatus()) {
@@ -87,7 +88,7 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
                             "deliver", POST));
                     newDTO.add(new ExtendedLink(
                             linkTo(methodOn(SalesRestController.class)
-                                    .rejectPOByCustomer(newDTO.get_id())).toString(),
+                                    .rejectPOByCustomer(newDTO.get_id(),null)).toString(),
                             "rejectByCustomer", POST));
                     break;
                 case DELIVERED:
@@ -104,6 +105,9 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
         } catch (PurchaseOrderNotFoundException e) {
             e.printStackTrace();
         } catch (InvalidPurchaseOrderStatusException e) {
+            e.printStackTrace();
+        }
+        catch (CustomerNotFoundException e) {
             e.printStackTrace();
         }
         return newDTO;
