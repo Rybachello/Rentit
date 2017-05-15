@@ -63,8 +63,7 @@ public class SalesRestController {
         PurchaseOrderDTO newPO = salesService.createPurchaseOrder(partialPODTO);
 
         HttpHeaders headers = new HttpHeaders();
-        //headers.setLocation(URI.create(newPO.getId().getHref()));
-        // The above line won't working until you update PurchaseOrderDTO to extend ResourceSupport
+        headers.setLocation(URI.create(newPO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
     }
@@ -74,8 +73,7 @@ public class SalesRestController {
         PurchaseOrderDTO newPO = salesService.updatePurchaseOrder(partialPODTO);
 
         HttpHeaders headers = new HttpHeaders();
-        //headers.setLocation(URI.create(newPO.getId().getHref()));
-        // The above line won't working until you update PurchaseOrderDTO to extend ResourceSupport
+        headers.setLocation(URI.create(newPO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
     }

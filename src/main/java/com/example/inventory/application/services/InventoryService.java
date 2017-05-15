@@ -1,10 +1,12 @@
 package com.example.inventory.application.services;
 
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
+import com.example.common.application.exceptions.InventoryEntryNotFoundException;
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
+import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.repository.CustomInventoryRepository;
 import com.example.sales.domain.model.PurchaseOrder;
@@ -89,8 +91,13 @@ public class InventoryService {
         return plantInventoryEntryAssembler.toResources(inventoryRepository.findAllPlants());
     }
 
-    public PlantInventoryEntryDTO getEntryById(String entryId) {
-        return plantInventoryEntryAssembler.toResource(inventoryRepository.getPlantEntryById(entryId));
+    public PlantInventoryEntryDTO getEntryById(String entryId) throws InventoryEntryNotFoundException {
+        PlantInventoryEntry entry = inventoryRepository.getPlantEntryById(entryId);
+
+        if (entry == null) {
+            throw new InventoryEntryNotFoundException("Inventory entry not found");
+        }
+        return plantInventoryEntryAssembler.toResource(entry);
     }
 
 }

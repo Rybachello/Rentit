@@ -1,10 +1,16 @@
 package com.example.inventory.application.services;
 
+import com.example.common.application.exceptions.InventoryEntryNotFoundException;
+import com.example.common.rest.ExtendedLink;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.rest.controller.InventoryRestController;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * Created by minhi_000 on 08.03.2017.
@@ -23,6 +29,14 @@ public class PlantInventoryEntryAssembler extends ResourceAssemblerSupport<Plant
         dto.setDescription(plant.getDescription());
         dto.setName(plant.getName());
         dto.setPrice(plant.getPrice());
+
+        try {
+            dto.add(new ExtendedLink(linkTo(methodOn(InventoryRestController.class).findPlantEntry(dto.get_id())).toString(),
+                    "self", HttpMethod.GET));
+        } catch (InventoryEntryNotFoundException e) {
+            e.printStackTrace();
+        }
+
         return dto;
     }
 }

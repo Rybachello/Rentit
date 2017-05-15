@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 /**
@@ -53,6 +54,11 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
         newDTO.setConstructionSite(purchaseOrder.getConstructionSite());
 
         try {
+            newDTO.add(new ExtendedLink(
+                    linkTo(methodOn(SalesRestController.class)
+                            .fetchPurchaseOrder(newDTO.get_id())).toString(),
+                    "self", GET));
+
             switch (newDTO.getStatus()) {
                 case PENDING:
                     newDTO.add(new ExtendedLink(

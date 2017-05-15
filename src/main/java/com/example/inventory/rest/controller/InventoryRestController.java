@@ -1,11 +1,13 @@
 package com.example.inventory.rest.controller;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
+import com.example.common.application.exceptions.InventoryEntryNotFoundException;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.application.services.InventoryService;
 import com.example.sales.domain.web.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -33,8 +35,12 @@ public class InventoryRestController {
         return inventoryService.createListOfAvailablePlants(catalogQueryDTO);
     }
 
+    @ExceptionHandler(InventoryEntryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleInventoryEntryNotFoundException(InventoryEntryNotFoundException ex) {}
+
     @GetMapping("/plants/{id}")
-    public PlantInventoryEntryDTO findPlantEntry(@PathVariable String id) {
+    public PlantInventoryEntryDTO findPlantEntry(@PathVariable String id) throws InventoryEntryNotFoundException {
         return inventoryService.getEntryById(id);
     }
 
