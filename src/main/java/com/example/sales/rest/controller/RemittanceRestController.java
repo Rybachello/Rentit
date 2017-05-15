@@ -1,6 +1,8 @@
 package com.example.sales.rest.controller;
 
 import com.example.common.application.exceptions.InvoiceNotFoundException;
+import com.example.common.rest.ResourceSupport;
+import com.example.sales.application.dto.RemittanceAdviceDTO;
 import com.example.sales.application.services.SalesService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,20 +19,13 @@ public class RemittanceRestController {
     @Autowired
     SalesService salesService;
 
-    @Data
-    @AllArgsConstructor
-    public class RemittanceAdviceDTO {
-        String InvoiceId;
-        String Id;
-    }
-
     @ExceptionHandler(InvoiceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleInvoiceNotFoundException(InvoiceNotFoundException ex) {
     }
 
     @PostMapping("remittance")
-    public void receiveRemittance(@RequestParam RemittanceAdviceDTO remittance) throws InvoiceNotFoundException {
+    public void receiveRemittance(@RequestBody RemittanceAdviceDTO remittance) throws InvoiceNotFoundException {
         salesService.acceptRemittance(remittance);
     }
 }

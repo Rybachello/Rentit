@@ -13,6 +13,7 @@ import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
 import com.example.sales.application.dto.InvoiceDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
+import com.example.sales.application.dto.RemittanceAdviceDTO;
 import com.example.sales.domain.model.Customer;
 import com.example.sales.application.gateways.InvoicingGateway;
 import com.example.sales.domain.model.Invoice;
@@ -298,11 +299,13 @@ public class SalesService {
         invoicingGateway.sendInvoice(rootMessage);
     }
 
-    public void acceptRemittance(RemittanceRestController.RemittanceAdviceDTO remittance) throws InvoiceNotFoundException {
+    public void acceptRemittance(RemittanceAdviceDTO remittance) throws InvoiceNotFoundException {
         Invoice invoice = invoiceRepository.findOne(remittance.getInvoiceId());
         if (invoice == null) {
             throw new InvoiceNotFoundException("Invoice not found");
         }
         invoice.setPaid();
+        invoiceRepository.flush();
+    }
     }
 }
