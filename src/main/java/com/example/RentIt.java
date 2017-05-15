@@ -16,9 +16,11 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.mail.Mail;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
+@EnableScheduling
 public class RentIt {
 
     @Value("${gmail.username}")

@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.DataBinder;
 
@@ -307,5 +308,13 @@ public class SalesService {
         invoice.setPaid();
         invoiceRepository.flush();
     }
+
+    @Scheduled(cron="0 0 4 * * FRI")
+    public void sendReminders() {
+        List<Invoice> invoices = invoiceRepository.findByPaid(false);
+
+        for(Invoice i : invoices) {
+            this.sendInvoice(i);
+        }
     }
 }
