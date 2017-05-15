@@ -22,8 +22,7 @@ public class PlantDeliveryAssembler extends ResourceAssemblerSupport<PurchaseOrd
     public PlantDeliveryDTO toResource(PurchaseOrder purchaseOrder) {
 
         PlantInventoryItem plantInventoryItem = purchaseOrder.getPlant();
-        //todo: purchaseorder.getEntry? нерозумію як передати ентрі
-        PlantInventoryItemDTO plantInventoryItemDTO = PlantInventoryItemDTO.of(plantInventoryItem.getId(),plantInventoryItem.getSerialNumber(),plantInventoryItem.getEquipmentCondition(),purchaseOrder.getEntry());
+        PlantInventoryItemDTO plantInventoryItemDTO = PlantInventoryItemDTO.of(plantInventoryItem.getId(),plantInventoryItem.getSerialNumber(),plantInventoryItem.getEquipmentCondition());
 
         BusinessPeriod businessPeriod = purchaseOrder.getRentalPeriod();
         BusinessPeriodDTO businessPeriodDTO = BusinessPeriodDTO.of(businessPeriod.getStartDate(), businessPeriod.getEndDate());
@@ -31,7 +30,6 @@ public class PlantDeliveryAssembler extends ResourceAssemblerSupport<PurchaseOrd
         //todo: contact details we need take from customer
         PlantDeliveryDTO plantDeliveryDTO = PlantDeliveryDTO.of(plantInventoryItemDTO, businessPeriodDTO, purchaseOrder.getConstructionSite(), null);
 
-        //todo: find out if we need xlinks?
         return plantDeliveryDTO;
     }
 }

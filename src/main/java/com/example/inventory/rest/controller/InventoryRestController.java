@@ -33,11 +33,6 @@ public class InventoryRestController {
         return inventoryService.createListOfAvailablePlants(catalogQueryDTO);
     }
 
-//    @GetMapping("/plants")
-//    public List<PlantInventoryEntryDTO> findAvailablePlants() {
-//        return inventoryService.allPlants();
-//    }
-
     @GetMapping("/plants/{id}")
     public PlantInventoryEntryDTO findPlantEntry(@PathVariable String id) {
         return inventoryService.getEntryById(id);

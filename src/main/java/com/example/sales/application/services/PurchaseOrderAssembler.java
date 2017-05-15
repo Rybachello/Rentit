@@ -26,6 +26,7 @@ import static org.springframework.http.HttpMethod.POST;
 @Service
 public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrder, PurchaseOrderDTO> {
     @Autowired
+    private
     PlantInventoryEntryAssembler plantInventoryEntryAssembler;
 
     public PurchaseOrderAssembler() {
