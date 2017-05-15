@@ -2,6 +2,7 @@ package com.example.inventory.application.services;
 
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
+import com.example.inventory.rest.controller.InventoryRestController;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlantInventoryEntryAssembler extends ResourceAssemblerSupport<PlantInventoryEntry, PlantInventoryEntryDTO> {
     public PlantInventoryEntryAssembler() {
-        super(PlantInventoryEntry.class, PlantInventoryEntryDTO.class);
+        super(InventoryRestController.class, PlantInventoryEntryDTO.class);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
     PlantInventoryEntryAssembler plantInventoryEntryAssembler;
 
     public PurchaseOrderAssembler() {
-        super(PurchaseOrder.class, PurchaseOrderDTO.class);
+        super(SalesRestController.class, PurchaseOrderDTO.class);
     }
 
     @Override
