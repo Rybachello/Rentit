@@ -57,17 +57,9 @@ public class SalesService {
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
     @Autowired
-    InvoicingGateway invoicingGateway;
-    @Autowired
-    InvoiceAssembler invoiceAssembler;
-    @Autowired
     InvoiceRepository invoiceRepository;
     @Autowired
-    @Qualifier("objectMapper")
-    ObjectMapper mapper;
-
-    @Value("${gmail.username}")
-    String gmailUsername;
+    InvoiceService invoiceService;
 
     public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto, Customer customer) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
 
@@ -113,7 +105,6 @@ public class SalesService {
         PurchaseOrderDTO poDto = purchaseOrderAssembler.toResource(po);
         return poDto;
     }
-
 
     public List<PurchaseOrderDTO> getAllPurchaseOrders() {
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll();
@@ -250,71 +241,16 @@ public class SalesService {
 
         PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
 
-        Invoice invoice = this.createInvoice(purchaseOrder);
+        Invoice invoice = invoiceService.createInvoiceForPurchaseOrder(purchaseOrder);
 
-        this.sendInvoice(invoice);
+        invoiceService.sendInvoice(invoice);
 
         return updatedDTO;
-    }
-
-    private Invoice createInvoice(PurchaseOrder purchaseOrder) {
-        Invoice invoice = new Invoice(IdentifierFactory.nextID(), false, purchaseOrder.getIssueDate().plusMonths(1), null, purchaseOrder.getTotal(), purchaseOrder);
-        invoiceRepository.save(invoice);
-
-        return invoice;
     }
 
     public List<PurchaseOrderDTO> getAllDeliveryPlants(LocalDate date) {
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAllPurchaseOrdersByStartDate(date);
         return purchaseOrderAssembler.toResources(purchaseOrders);
 
-    }
-
-    public void sendInvoice(Invoice invoice) {
-        JavaMailSender mailSender = new JavaMailSenderImpl();
-        InvoiceDTO invoiceDTO = invoiceAssembler.toResource(invoice);
-
-        String invoiceJSON = null;
-        try {
-            invoiceJSON = mapper.writeValueAsString(invoiceDTO);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        MimeMessage rootMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = null;
-
-        try {
-            helper = new MimeMessageHelper(rootMessage, true);
-            helper.setFrom(gmailUsername + "@gmail.com");
-            helper.setTo(invoice.getPurchaseOrder().getCustomer().getEmail());
-            helper.setSubject("Invoice for purchase order " + invoice.getPurchaseOrder().getId());
-            helper.setText("Dear customer, \n\n Please find attached the invoice corresponding to your purchase order. \n\n Kindly yours, \n\n RentIt team!");
-            helper.addAttachment("invoice.json", new ByteArrayDataSource(invoiceJSON, "application/json"));
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        invoicingGateway.sendInvoice(rootMessage);
-    }
-
-    public void acceptRemittance(RemittanceAdviceDTO remittance) throws InvoiceNotFoundException {
-        Invoice invoice = invoiceRepository.findOne(remittance.getInvoiceId());
-        if (invoice == null) {
-            throw new InvoiceNotFoundException("Invoice not found");
-        }
-        invoice.setPaid();
-        invoiceRepository.flush();
-    }
-
-    @Scheduled(cron="0 0 4 * * FRI")
-    public void sendReminders() {
-        List<Invoice> invoices = invoiceRepository.findByPaid(false);
-
-        for(Invoice i : invoices) {
-            this.sendInvoice(i);
-        }
     }
 }

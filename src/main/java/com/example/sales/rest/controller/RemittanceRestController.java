@@ -3,6 +3,7 @@ package com.example.sales.rest.controller;
 import com.example.common.application.exceptions.InvoiceNotFoundException;
 import com.example.common.rest.ResourceSupport;
 import com.example.sales.application.dto.RemittanceAdviceDTO;
+import com.example.sales.application.services.InvoiceService;
 import com.example.sales.application.services.SalesService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/remittances")
 public class RemittanceRestController {
     @Autowired
-    SalesService salesService;
+    InvoiceService invoiceService;
 
     @ExceptionHandler(InvoiceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -26,6 +27,6 @@ public class RemittanceRestController {
 
     @PostMapping("remittance")
     public void receiveRemittance(@RequestBody RemittanceAdviceDTO remittance) throws InvoiceNotFoundException {
-        salesService.acceptRemittance(remittance);
+        invoiceService.acceptRemittance(remittance);
     }
 }

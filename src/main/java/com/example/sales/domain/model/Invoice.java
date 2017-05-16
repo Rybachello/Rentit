@@ -31,8 +31,4 @@ public class Invoice {
     PurchaseOrder purchaseOrder;
 
     public Invoice(){}
-
-    public void setPaid() {
-        this.paid = true;
-    }
 }
