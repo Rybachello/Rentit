@@ -37,7 +37,8 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
 
     @Override
     public PurchaseOrderDTO toResource(PurchaseOrder purchaseOrder) {
-        PurchaseOrderDTO newDTO = createResourceWithId(purchaseOrder.getId(), purchaseOrder);
+
+        PurchaseOrderDTO newDTO = new PurchaseOrderDTO();
         newDTO.set_id(purchaseOrder.getId());
 
         LocalDate startDate = purchaseOrder.getRentalPeriod().getStartDate();

@@ -127,7 +127,6 @@ public class SalesRestController {
         PurchaseOrderDTO updatedDTO = salesService.acceptPurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
@@ -139,7 +138,6 @@ public class SalesRestController {
         PurchaseOrderDTO updatedDTO = salesService.rejectPurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
@@ -153,7 +151,6 @@ public class SalesRestController {
         PurchaseOrderDTO updatedDTO = salesService.rejectPOByCustomer(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
@@ -165,7 +162,6 @@ public class SalesRestController {
         PurchaseOrderDTO updatedDTO = salesService.dispatchPurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
@@ -178,7 +174,6 @@ public class SalesRestController {
         PurchaseOrderDTO updatedDTO = salesService.deliverPurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
@@ -190,7 +185,6 @@ public class SalesRestController {
         PurchaseOrderDTO updatedDTO = salesService.returnPurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
@@ -202,7 +196,6 @@ public class SalesRestController {
         PurchaseOrderDTO updatedDTO = salesService.closePurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(updatedDTO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(updatedDTO, headers, HttpStatus.OK);
     }
