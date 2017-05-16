@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends JpaRepository<Customer, String>{
     @Query("Select customer from Customer customer where customer.token = ?1")
     Customer findByToken(String token);
+    Customer findByEmail(String email);
 }

@@ -61,14 +61,14 @@ public class SalesRestController {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ErrorDTO> handPlantNotAvailableException(PlantNotAvailableException ex) {
         ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
-        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidPurchaseOrderStatusException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorDTO> handInvalidPurchaseOrderStatusException(InvalidPurchaseOrderStatusException ex) {
         ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
-        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
@@ -76,6 +76,13 @@ public class SalesRestController {
     public ResponseEntity<ErrorDTO> handleCustomerNotFoundException(CustomerNotFoundException ex) {
         ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
         return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CustomerExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ErrorDTO> handPlantNotFoundException(CustomerExistException ex) {
+        ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.CONFLICT);
     }
 
     @PostMapping("/orders")
@@ -92,7 +99,7 @@ public class SalesRestController {
     }
 
     @PostMapping("/customer")
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestParam(name = "email", required = false) String email) {
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestParam(name = "email") String email) throws CustomerExistException{
         CustomerDTO newCustomer = customerService.createCustomer(email);
 
         HttpHeaders headers = new HttpHeaders();
