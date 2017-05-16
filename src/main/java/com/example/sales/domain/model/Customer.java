@@ -22,6 +22,6 @@ public class Customer {
 
     String email;
 
-    @OneToMany
-     List<PurchaseOrder> po;
+    @OneToMany(mappedBy="customer")
+    List<PurchaseOrder> po;
 }
