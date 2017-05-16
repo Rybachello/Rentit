@@ -74,7 +74,7 @@ public class PurchaseOrder {
         if(this.status == POStatus.DISPATCHED) {
             this.status = POStatus.REJECTED_BY_CUSTOMER;
         } else {
-            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be PENDING to reject it");
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be DISPATCHED to reject it");
         }
     }
 
