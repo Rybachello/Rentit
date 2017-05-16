@@ -1,7 +1,6 @@
-package com.example.sales.domain.web.dto;
+package com.example.inventory.application.dto;
 
 import com.example.common.application.dto.BusinessPeriodDTO;
-import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.rest.ResourceSupport;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,5 @@
 package com.example.inventory.domain.model;
 
-import com.example.maintenance.domain.model.MaintenanceTask;
 import lombok.*;
 
 import javax.persistence.*;

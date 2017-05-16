@@ -6,16 +6,28 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.IntegrationFlows;
+import org.springframework.integration.dsl.mail.Mail;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
+@EnableScheduling
 public class RentIt {
+
+    @Value("${gmail.username}")
+    String gmailUsername;
+
+    @Value("${gmail.password}")
+    String gmailPassword;
 
     @Configuration
     static class ObjectMapperCustomizer {
@@ -37,5 +49,16 @@ public class RentIt {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(RentIt.class, args);
+    }
+
+    @Bean
+    IntegrationFlow sendInvoiceFlow() {
+        return IntegrationFlows.from("sendInvoiceChannel")
+                .handle(Mail.outboundAdapter("smtp.gmail.com")
+                        .port(465)
+                        .protocol("smtps")
+                        .credentials(gmailUsername, gmailPassword)
+                        .javaMailProperties(p -> p.put("mail.debug", "false")))
+                .get();
     }
 }

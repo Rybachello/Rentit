@@ -2,14 +2,11 @@ package com.example.sales.domain.validation;
 
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.common.domain.validation.BusinessPeriodValidator;
-import com.example.inventory.domain.model.PlantReservation;
 import com.example.sales.domain.model.POStatus;
 import com.example.sales.domain.model.PurchaseOrder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-
-import java.math.BigDecimal;
 
 /**
  * Created by Rybachello on 3/11/2017.
@@ -42,13 +39,8 @@ public class PurchaseOrderValidator implements Validator {
             errors.reject("id", "Purchase Order id cannot be null");
 
         if (order.getStatus() == POStatus.CLOSED || order.getStatus() == POStatus.OPEN) {
-            if (order.getReservations()==null || order.getReservations().size()==0)
-                errors.reject("reservations", "OPEN/CLOSED PO must have a valid plant reservation");
-            else {
-                PlantReservation reservation = order.getReservations().get(0);
-                if (order.getRentalPeriod() != reservation.getSchedule())
-                    errors.reject("reservations", "The period of the reservation must be consistent with the rental period");
-            }
+            if (order.getRentalPeriod()==null)
+                errors.reject("rentalPeriod", "OPEN/CLOSED PO must have a valid rentalPeriod");
 
             if (order.getTotal().signum() < 0){
                 errors.reject("total", "A PO must have a valid total cost");
