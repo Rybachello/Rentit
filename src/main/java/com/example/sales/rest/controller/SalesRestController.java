@@ -74,10 +74,10 @@ public class SalesRestController {
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ErrorDTO> handleCustomerNotFoundException(CustomerNotFoundException ex) {
         ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
-        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(CustomerExistException.class)
@@ -169,7 +169,7 @@ public class SalesRestController {
     }
 
     @PostMapping("/orders/{id}/deliver")
-    public ResponseEntity<PurchaseOrderDTO> deliverPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException, CustomerNotFoundException {
+    public ResponseEntity<PurchaseOrderDTO> deliverPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException{
 
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
@@ -203,7 +203,7 @@ public class SalesRestController {
     }
 
     @GetMapping("/deliveries")
-    public List<PurchaseOrderDTO> getDeliveryPlants(@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) throws Exception {
+    public List<PurchaseOrderDTO> getDeliveryPlants(@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) {
         return salesService.getAllDeliveryPlants(startDate);
     }
 
