@@ -1,13 +1,16 @@
 package com.example.inventory.domain.repository;
 
 
+import com.example.common.application.exceptions.InventoryEntryNotFoundException;
 import com.example.common.domain.model.BusinessPeriod;
-import com.example.inventory.domain.model.*;
-import com.example.sales.domain.model.PurchaseOrder;
+import com.example.inventory.domain.model.AvailablePlantReport;
+import com.example.inventory.domain.model.EquipmentCondition;
+import com.example.inventory.domain.model.PlantInventoryEntry;
+import com.example.inventory.domain.model.PlantInventoryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,16 +26,16 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
                 "FROM PlantInventoryEntry e, PurchaseOrder r, PlantInventoryItem i " +
                 "WHERE (e.name) LIKE ?1 AND (r.rentalPeriod.endDate < ?2 OR r.rentalPeriod.startDate > ?4) AND i.equipmentCondition = ?3 " +
                 "GROUP BY e.name,e.description", AvailablePlantReport.class)
-                .setParameter(1, "%"+name+"%")
+                .setParameter(1, "%" + name + "%")
                 .setParameter(2, startDate)
                 .setParameter(4, endDate)
                 .setParameter(3, EquipmentCondition.SERVICEABLE)
                 .getResultList();
     }
 
-    public List<PlantInventoryEntry> findInfoAvailablePlants(String name, LocalDate startDate, LocalDate endDate){
+    public List<PlantInventoryEntry> findInfoAvailablePlants(String name, LocalDate startDate, LocalDate endDate) {
         return em.createQuery("select distinct p FROM PlantInventoryEntry p, PlantInventoryItem i WHERE i.plantInfo.id = p.id and (p.name) LIKE ?1 AND i.equipmentCondition = ?4 AND i.id not in (select r.plant.id from PurchaseOrder r where r.rentalPeriod.startDate < ?3 and r.rentalPeriod.endDate > ?2)")
-                .setParameter(1,"%"+name+"%")
+                .setParameter(1, "%" + name + "%")
                 .setParameter(2, startDate)
                 .setParameter(3, endDate)
                 .setParameter(4, EquipmentCondition.SERVICEABLE)
@@ -44,6 +47,7 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
                 "select distinct p from PlantInventoryItem p, PurchaseOrder r where (r.plant.id = p.id and r.rentalPeriod.startDate < sysdate-30*6 and r.rentalPeriod.endDate < sysdate-30*6) or (p.id not in (select q.plant.id from PurchaseOrder q))")
                 .getResultList();
     }
+
     public boolean isAPlantAvailableStrict(PlantInventoryEntry entry, BusinessPeriod period) {
         Long count = (Long) em.createQuery(
                 "select count(pi) from PlantInventoryItem pi where (pi.plantInfo.id = ?1 and pi.equipmentCondition = com.example.inventory.domain.model.EquipmentCondition.SERVICEABLE and pi.id not in (select pr.plant.id from PurchaseOrder pr where pr.rentalPeriod.startDate < ?3 and pr.rentalPeriod.endDate > ?2))")
@@ -74,9 +78,15 @@ public class InventoryRepositoryImpl implements CustomInventoryRepository {
                 .getResultList();
     }
 
-    public PlantInventoryEntry getPlantEntryById(String entryId) {
-        return (PlantInventoryEntry)em.createQuery("select p FROM PlantInventoryEntry p WHERE p.id = ?1")
-                .setParameter(1, entryId)
-                .getSingleResult();
+    public PlantInventoryEntry getPlantEntryById(String entryId) throws InventoryEntryNotFoundException {
+
+        PlantInventoryEntry entry;
+        try {
+             entry= (PlantInventoryEntry) em.createQuery("select p FROM PlantInventoryEntry p WHERE p.id = ?1")
+                    .setParameter(1, entryId).getSingleResult();
+        } catch (NoResultException e) {
+            throw new InventoryEntryNotFoundException("Inventory entry not found");
+        }
+        return entry;
     }
 }

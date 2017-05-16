@@ -5,12 +5,12 @@ import com.example.common.application.exceptions.InventoryEntryNotFoundException
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
+import com.example.inventory.application.dto.CatalogQueryDTO;
 import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.repository.CustomInventoryRepository;
 import com.example.sales.domain.model.PurchaseOrder;
-import com.example.inventory.application.dto.CatalogQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +69,7 @@ public class InventoryService {
                 ok = ok && itemList.stream().filter(i -> i.getId() == po.getPlant().getId()).count() > 0;
             }
 
-            if (ok){
+            if (ok) {
                 po.updateRentalPeriod(newPeriod);
             }
 
@@ -92,6 +92,7 @@ public class InventoryService {
     }
 
     public PlantInventoryEntryDTO getEntryById(String entryId) throws InventoryEntryNotFoundException {
+
         PlantInventoryEntry entry = inventoryRepository.getPlantEntryById(entryId);
 
         if (entry == null) {

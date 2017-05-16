@@ -24,7 +24,7 @@ public class PlantInventoryEntryAssembler extends ResourceAssemblerSupport<Plant
 
     @Override
     public PlantInventoryEntryDTO toResource(PlantInventoryEntry plant){
-        PlantInventoryEntryDTO dto = createResourceWithId(plant.getId(), plant);
+        PlantInventoryEntryDTO dto = new PlantInventoryEntryDTO();
         dto.set_id(plant.getId());
         dto.setDescription(plant.getDescription());
         dto.setName(plant.getName());

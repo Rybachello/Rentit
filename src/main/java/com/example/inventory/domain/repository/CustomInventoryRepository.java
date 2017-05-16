@@ -1,5 +1,6 @@
 package com.example.inventory.domain.repository;
 
+import com.example.common.application.exceptions.InventoryEntryNotFoundException;
 import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.domain.model.AvailablePlantReport;
 import com.example.inventory.domain.model.PlantInventoryEntry;
@@ -17,6 +18,6 @@ public interface CustomInventoryRepository {
     List<PlantInventoryEntry> findInfoAvailablePlants(String name, LocalDate startDate, LocalDate endDate);
     List<PlantInventoryItem> findAvailablePlantItemsInBusinessPeriod(String entryId, BusinessPeriod period);
     List<PlantInventoryEntry> findAllPlants();
-    PlantInventoryEntry getPlantEntryById(String entryId);
+    PlantInventoryEntry getPlantEntryById(String entryId) throws InventoryEntryNotFoundException;
 
 }
