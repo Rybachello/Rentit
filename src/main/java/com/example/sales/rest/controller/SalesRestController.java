@@ -1,11 +1,12 @@
 package com.example.sales.rest.controller;
 
+import com.example.common.application.dto.ErrorDTO;
 import com.example.common.application.exceptions.*;
+import com.example.sales.application.dto.CustomerDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.services.CustomerService;
 import com.example.sales.application.services.SalesService;
 import com.example.sales.domain.model.Customer;
-import com.example.sales.application.dto.CustomerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -44,27 +45,37 @@ public class SalesRestController {
 
     @ExceptionHandler(PlantNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handPlantNotFoundException(PlantNotFoundException ex) {
+    public ResponseEntity<ErrorDTO> handPlantNotFoundException(PlantNotFoundException ex) {
+        ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(PurchaseOrderNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handPurchaseOrderNotFoundException(PurchaseOrderNotFoundException ex) {
+    public ResponseEntity<ErrorDTO> handPurchaseOrderNotFoundException(PurchaseOrderNotFoundException ex) {
+        ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(PlantNotAvailableException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public void handPlantNotAvailableException(PlantNotAvailableException ex) {
+    public ResponseEntity<ErrorDTO> handPlantNotAvailableException(PlantNotAvailableException ex) {
+        ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InvalidPurchaseOrderStatusException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handInvalidPurchaseOrderStatusException(InvalidPurchaseOrderStatusException ex) {
+    public ResponseEntity<ErrorDTO> handInvalidPurchaseOrderStatusException(InvalidPurchaseOrderStatusException ex) {
+        ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(CustomerNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handleCustomerNotFoundException(CustomerNotFoundException ex){
-
+    public ResponseEntity<ErrorDTO> handleCustomerNotFoundException(CustomerNotFoundException ex) {
+        ErrorDTO errorDTO = ErrorDTO.of(ex.getMessage());
+        return new ResponseEntity<ErrorDTO>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/orders")
@@ -85,9 +96,9 @@ public class SalesRestController {
         CustomerDTO newCustomer = customerService.createCustomer(email);
 
         HttpHeaders headers = new HttpHeaders();
-     //   headers.setLocation(URI.create(newCustomer.getId().getHref()));
+        //   headers.setLocation(URI.create(newCustomer.getId().getHref()));
 
-        return new ResponseEntity<CustomerDTO>(newCustomer,headers,HttpStatus.CREATED);
+        return new ResponseEntity<CustomerDTO>(newCustomer, headers, HttpStatus.CREATED);
     }
 
     @PutMapping("/orders")
