@@ -1,7 +1,6 @@
 package com.example.sales.application.services;
 
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
-import com.example.common.application.exceptions.InvoiceNotFoundException;
 import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
@@ -11,33 +10,17 @@ import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.repository.PlantInventoryEntryRepository;
 import com.example.inventory.infrastructure.IdentifierFactory;
-import com.example.sales.application.dto.InvoiceDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
-import com.example.sales.application.dto.RemittanceAdviceDTO;
 import com.example.sales.domain.model.Customer;
-import com.example.sales.application.gateways.InvoicingGateway;
 import com.example.sales.domain.model.Invoice;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.InvoiceRepository;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import com.example.sales.domain.validation.PurchaseOrderValidator;
-import com.example.sales.rest.controller.RemittanceRestController;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.DataBinder;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -106,8 +89,8 @@ public class SalesService {
         return poDto;
     }
 
-    public List<PurchaseOrderDTO> getAllPurchaseOrders() {
-        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll();
+    public List<PurchaseOrderDTO> getAllPurchaseOrders(String token) {
+        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAllByCustomerToken(token);
         return purchaseOrderAssembler.toResources(purchaseOrders);
     }
 

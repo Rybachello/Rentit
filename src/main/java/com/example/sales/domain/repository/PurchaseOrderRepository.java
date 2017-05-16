@@ -14,8 +14,11 @@ import java.util.List;
  */
 @Repository
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, String> {
-    @Query("select order from PurchaseOrder order where order.rentalPeriod.startDate = ?1 and order.status = 'OPEN'") //todo: how fix this? status = POStatus.OPEN
+    @Query("select order from PurchaseOrder order where order.rentalPeriod.startDate = ?1 and order.status = 'OPEN'")
     List<PurchaseOrder> findAllPurchaseOrdersByStartDate(LocalDate date);
 
     PurchaseOrder findByIdAndCustomer(String id, Customer customer);
+
+    @Query("select order from PurchaseOrder order where order.customer.token = ?1")
+    List<PurchaseOrder> findAllByCustomerToken(String token);
 }

@@ -31,8 +31,8 @@ public class SalesRestController {
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
-    public List<PurchaseOrderDTO> fetchAllPurchaseOrders() {
-        return salesService.getAllPurchaseOrders();
+    public List<PurchaseOrderDTO> fetchAllPurchaseOrders(@RequestHeader String token) {
+        return salesService.getAllPurchaseOrders(token);
     }
 
     @GetMapping("/orders/{id}")
