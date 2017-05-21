@@ -51,11 +51,11 @@ public class SalesService {
         //convert to dto
         BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
         //create the purchase order with PENDING STATUS
-        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod,null, plantInventoryEntry,dto.getConstructionSite(), customer);
+        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod,null, plantInventoryEntry, dto.getConstructionSite(), customer);
 
 
         try {
-            inventoryService.createPlantReservation(dto.getPlant().get_id(), businessPeriod, po);
+            inventoryService.createPlantReservation(po);
             po.confirmReservation(plantInventoryEntry.getPrice());
             //save to the database
             DataBinder binder = new DataBinder(po);

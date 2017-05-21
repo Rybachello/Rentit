@@ -27,6 +27,8 @@ public class InventoryService {
     PlantInventoryEntryAssembler plantInventoryEntryAssembler;
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
+    @Autowired
+    MaintenanceService maintenanceService;
 
     public List<PlantInventoryEntryDTO> createListOfAvailablePlants(CatalogQueryDTO query) {
         return plantInventoryEntryAssembler.toResources(
@@ -36,15 +38,26 @@ public class InventoryService {
                         query.getRentalPeriod().getStartDate()));
     }
 
-    public PurchaseOrder createPlantReservation(String plantId, BusinessPeriod rentalPeriod, PurchaseOrder po) throws PlantNotAvailableException {
-        List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(plantId, rentalPeriod);
+    public  PlantInventoryItem getAvailable(List<PlantInventoryItem> itemList, BusinessPeriod rentalPeriod) throws PlantNotAvailableException {
+        for (PlantInventoryItem item : itemList){
+            if (!isMaintenanceExists(item)) {
+                return item;
+            }
+        }
+
+        throw new PlantNotAvailableException("Requested plant is unavailable");
+    }
+
+    public PurchaseOrder createPlantReservation(PurchaseOrder po) throws PlantNotAvailableException {
+        List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(
+                po.getEntry().getId(), po.getRentalPeriod());
         if (itemList.size() == 0) {
             throw new PlantNotAvailableException("Requested plant is unavailable");
         }
         //find first
-        PlantInventoryItem item = itemList.get(0);
+        PlantInventoryItem item = maintenanceService.getAvailable(itemList, po.getRentalPeriod());
         //create new plantReservation
-        po.confirm(rentalPeriod, item);
+        po.confirm(po.getRentalPeriod(), item);
         return po;
     }
 
