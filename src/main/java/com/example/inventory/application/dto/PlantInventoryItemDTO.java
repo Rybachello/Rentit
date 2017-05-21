@@ -1,6 +1,6 @@
 package com.example.inventory.application.dto;
 
-import com.example.inventory.domain.model.EquipmentCondition;
+import com.example.common.application.dto.BusinessPeriodDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +15,7 @@ import org.springframework.hateoas.ResourceSupport;
 public class PlantInventoryItemDTO extends ResourceSupport {
 
     String _id;
-    String serialNumber;
-    EquipmentCondition equipmentCondition;
+    BusinessPeriodDTO maintenancePeriod;
+    //String serialNumber;
+    //EquipmentCondition equipmentCondition; //todo:do we need
 }

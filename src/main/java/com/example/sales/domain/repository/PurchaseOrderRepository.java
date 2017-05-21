@@ -21,4 +21,6 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, St
 
     @Query("select order from PurchaseOrder order where order.customer.token = ?1")
     List<PurchaseOrder> findAllByCustomerToken(String token);
+    @Query("select order from PurchaseOrder order where order.id = ?1 and order.rentalPeriod.startDate >= ?2 and order.rentalPeriod.endDate<=?3")
+    List<PurchaseOrder> findAllPurchaseOrdersByIdandPeriod(String id, LocalDate startDate, LocalDate endDate);
 }
