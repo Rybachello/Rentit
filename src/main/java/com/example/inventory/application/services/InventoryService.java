@@ -10,6 +10,7 @@ import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.repository.CustomInventoryRepository;
+import com.example.maintenance.application.services.MaintenanceService;
 import com.example.sales.domain.model.PurchaseOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,16 +37,6 @@ public class InventoryService {
                         query.getName(),
                         query.getRentalPeriod().getStartDate(),
                         query.getRentalPeriod().getStartDate()));
-    }
-
-    public  PlantInventoryItem getAvailable(List<PlantInventoryItem> itemList, BusinessPeriod rentalPeriod) throws PlantNotAvailableException {
-        for (PlantInventoryItem item : itemList){
-            if (!isMaintenanceExists(item)) {
-                return item;
-            }
-        }
-
-        throw new PlantNotAvailableException("Requested plant is unavailable");
     }
 
     public PurchaseOrder createPlantReservation(PurchaseOrder po) throws PlantNotAvailableException {

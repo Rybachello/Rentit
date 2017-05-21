@@ -17,5 +17,5 @@ public class PlantInventoryItemDTO extends ResourceSupport {
     String _id;
     BusinessPeriodDTO maintenancePeriod;
     //String serialNumber;
-    //EquipmentCondition equipmentCondition; //todo:do we need
+    //EquipmentCondition equipmentCondition; //todo:do we need this?
 }

@@ -1,13 +1,19 @@
 package com.example.maintenance.application.services;
 
+import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
-import com.example.common.application.exceptions.PlantNotFoundException;
+import com.example.common.application.exceptions.PlantNotAvailableException;
+import com.example.common.domain.model.BusinessPeriod;
 import com.example.inventory.application.dto.PlantInventoryItemDTO;
 import com.example.inventory.application.services.InventoryService;
+import com.example.inventory.domain.model.PlantInventoryItem;
+import com.example.maintenance.application.dto.MaintenanceDTO;
+import com.example.maintenance.utils.Constants;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -23,23 +29,50 @@ public class MaintenanceService {
     @Autowired
     InventoryService inventoryService;
 
-    public void replacePlantInventoryItem(PlantInventoryItemDTO dto) throws InvalidPurchaseOrderStatusException {
-        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAllPurchaseOrdersByIdandPeriod(dto.get_id(), dto.getMaintenancePeriod().getStartDate(), dto.getMaintenancePeriod().getEndDate());
+    @Autowired
+    RestTemplate restTemplate;
 
-        for (PurchaseOrder po: purchaseOrders ) {
+
+    public void createMaintenance(MaintenanceDTO dto) {
+        Boolean result = restTemplate.postForObject(Constants.MAINTENANCE_URL + "/api/maintenances/tasks", dto, Boolean.class);
+        //todo: what to return
+    }
+
+    public void replacePlantInventoryItem(PlantInventoryItemDTO dto) throws InvalidPurchaseOrderStatusException {
+        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAllPurchaseOrdersByIdAndPeriod(dto.get_id(), dto.getMaintenancePeriod().getStartDate(), dto.getMaintenancePeriod().getEndDate());
+
+        for (PurchaseOrder po : purchaseOrders) {
             try {
-                 PurchaseOrder purchaseOrder =  inventoryService.createPlantReservation(po);
-            }
-            catch (PlantNotFoundException e)
-            {
+                PurchaseOrder purchaseOrder = inventoryService.createPlantReservation(po);
+            } catch (PlantNotAvailableException e) {
                 po.closePurchaseOrder();
-                purchaseOrderRepository.flush();
                 //todo: need notify customer
                 System.out.println("Need notify customer");
             }
-
-
         }
 
+        purchaseOrderRepository.flush();
     }
+
+    public PlantInventoryItem getAvailable(List<PlantInventoryItem> itemList, BusinessPeriod rentalPeriod) throws PlantNotAvailableException {
+        for (PlantInventoryItem item : itemList) {
+            if (!isMaintenanceExists(item, rentalPeriod)) {
+                return item;
+            }
+        }
+
+        throw new PlantNotAvailableException("Requested plant is unavailable");
+    }
+
+    private Boolean isMaintenanceExists(PlantInventoryItem item, BusinessPeriod rentalPeriod) {
+
+        MaintenanceDTO dto = new MaintenanceDTO();
+        dto.setPlantId(item.getId());
+        dto.setMaintenancePeriod(BusinessPeriodDTO.of(rentalPeriod.getStartDate(), rentalPeriod.getEndDate()));
+
+        return restTemplate.postForObject(Constants.MAINTENANCE_URL + "/api/maintenances/tasks/check", dto, Boolean.class);
+
+    }
+
+
 }
