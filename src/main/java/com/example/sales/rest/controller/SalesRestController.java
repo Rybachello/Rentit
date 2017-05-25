@@ -88,14 +88,14 @@ public class SalesRestController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO, @RequestHeader String token) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException, CustomerNotFoundException {
+    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO partialPODTO, @RequestHeader String token) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException, CustomerNotFoundException, PlantNotFoundException {
 
         Customer customer = customerService.findByToken(token);
 
         PurchaseOrderDTO newPO = salesService.createPurchaseOrder(partialPODTO, customer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(newPO.getId().getHref()));
+//        headers.setLocation(URI.create(newPO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
     }
@@ -117,7 +117,7 @@ public class SalesRestController {
         PurchaseOrderDTO newPO = salesService.updatePurchaseOrder(partialPODTO, customer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(newPO.getId().getHref()));
+//        headers.setLocation(URI.create(newPO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
     }

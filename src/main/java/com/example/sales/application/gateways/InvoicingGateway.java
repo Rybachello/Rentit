@@ -10,6 +10,8 @@ import javax.mail.internet.MimeMessage;
  */
 @MessagingGateway
 public interface InvoicingGateway {
-    @Gateway(requestChannel="sendInvoiceChannel")
+    @Gateway(requestChannel="sendEmailChannel")
     void sendInvoice(MimeMessage msg);
+    @Gateway(requestChannel="sendEmailChannel")
+    void sendNotification(MimeMessage msg);
 }

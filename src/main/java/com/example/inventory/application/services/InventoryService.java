@@ -10,6 +10,7 @@ import com.example.inventory.application.dto.PlantInventoryEntryDTO;
 import com.example.inventory.domain.model.PlantInventoryEntry;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.inventory.domain.repository.CustomInventoryRepository;
+import com.example.maintenance.application.services.MaintenanceService;
 import com.example.sales.domain.model.PurchaseOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class InventoryService {
     PlantInventoryEntryAssembler plantInventoryEntryAssembler;
     @Autowired
     BusinessPeriodDisassembler businessPeriodDisassembler;
+    @Autowired
+    MaintenanceService maintenanceService;
 
     public List<PlantInventoryEntryDTO> createListOfAvailablePlants(CatalogQueryDTO query) {
         return plantInventoryEntryAssembler.toResources(
@@ -36,15 +39,16 @@ public class InventoryService {
                         query.getRentalPeriod().getStartDate()));
     }
 
-    public PurchaseOrder createPlantReservation(String plantId, BusinessPeriod rentalPeriod, PurchaseOrder po) throws PlantNotAvailableException {
-        List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(plantId, rentalPeriod);
+    public PurchaseOrder createPlantReservation(PurchaseOrder po) throws PlantNotAvailableException {
+        List<PlantInventoryItem> itemList = inventoryRepository.findAvailablePlantItemsInBusinessPeriod(
+                po.getEntry().getId(), po.getRentalPeriod());
         if (itemList.size() == 0) {
             throw new PlantNotAvailableException("Requested plant is unavailable");
         }
         //find first
-        PlantInventoryItem item = itemList.get(0);
+        PlantInventoryItem item = maintenanceService.getAvailable(itemList, po.getRentalPeriod());
         //create new plantReservation
-        po.confirm(rentalPeriod, item);
+        po.confirm(po.getRentalPeriod(), item);
         return po;
     }
 
