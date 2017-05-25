@@ -64,7 +64,8 @@ public class SalesService {
             po.confirmReservation(plantInventoryEntry.getPrice());
             //save to the database
             DataBinder binder = new DataBinder(po);
-            binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
+            // TODO: uncomment next line;
+            //binder.addValidators(new PurchaseOrderValidator(new BusinessPeriodValidator()));
             binder.validate();
 
             if (!binder.getBindingResult().hasErrors()) {
@@ -174,6 +175,23 @@ public class SalesService {
         }
 
         purchaseOrder.closePurchaseOrder();
+
+        purchaseOrderRepository.flush();
+
+        PurchaseOrderDTO updatedDTO = purchaseOrderAssembler.toResource(purchaseOrder);
+
+        return updatedDTO;
+    }
+
+    public PurchaseOrderDTO cancelPurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findOne(purchaseOrderDTO.get_id());
+
+        if (purchaseOrder == null) {
+            throw new PurchaseOrderNotFoundException("Purchase order not found");
+        }
+
+        purchaseOrder.cancelPurchaseOrder();
 
         purchaseOrderRepository.flush();
 

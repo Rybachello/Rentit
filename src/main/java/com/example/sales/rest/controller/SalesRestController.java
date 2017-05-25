@@ -193,7 +193,7 @@ public class SalesRestController {
     public ResponseEntity<PurchaseOrderDTO> cancelPurchaseOrder(@PathVariable String id) throws Exception, PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
-        PurchaseOrderDTO updatedDTO = salesService.closePurchaseOrder(purchaseOrder);
+        PurchaseOrderDTO updatedDTO = salesService.cancelPurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
 

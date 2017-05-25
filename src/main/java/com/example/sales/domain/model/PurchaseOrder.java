@@ -111,6 +111,14 @@ public class PurchaseOrder {
         }
     }
 
+    public void cancelPurchaseOrder() throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.OPEN ||this.status == POStatus.PENDING) {
+            this.status = POStatus.CLOSED;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be OPEN to close it.");
+        }
+    }
+
     public void closePurchaseOrder() throws InvalidPurchaseOrderStatusException {
         if (this.status == POStatus.OPEN) {
             this.status = POStatus.CLOSED;
