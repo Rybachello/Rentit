@@ -52,6 +52,7 @@ public class PurchaseOrder {
         po.issueDate = issueDate;
         po.rentalPeriod = businessPeriod;
         po.plant = plant;
+        po.entry = entry;
         po.status = POStatus.PENDING;
         po.constructionSite = constructionSite;
         po.entry = entry;
