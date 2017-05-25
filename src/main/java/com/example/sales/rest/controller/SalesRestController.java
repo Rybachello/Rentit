@@ -190,10 +190,10 @@ public class SalesRestController {
     }
 
     @DeleteMapping("/orders/{id}")
-    public ResponseEntity<PurchaseOrderDTO> closePurchaseOrder(@PathVariable String id) throws Exception, PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
+    public ResponseEntity<PurchaseOrderDTO> cancelPurchaseOrder(@PathVariable String id) throws Exception, PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
-        PurchaseOrderDTO updatedDTO = salesService.closePurchaseOrder(purchaseOrder);
+        PurchaseOrderDTO updatedDTO = salesService.cancelPurchaseOrder(purchaseOrder);
 
         HttpHeaders headers = new HttpHeaders();
 
