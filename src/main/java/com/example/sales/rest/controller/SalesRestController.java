@@ -115,7 +115,7 @@ public class SalesRestController {
         PurchaseOrderDTO newPO = salesService.updatePurchaseOrder(partialPODTO, customer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(newPO.getId().getHref()));
+//        headers.setLocation(URI.create(newPO.getId().getHref()));
 
         return new ResponseEntity<PurchaseOrderDTO>(newPO, headers, HttpStatus.CREATED);
     }
