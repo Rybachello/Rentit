@@ -24,10 +24,9 @@ public class MaintenanceRestController {
 
     @PostMapping("/maintenance")
     @ResponseStatus(HttpStatus.OK)
-    public String createMaintenance(@RequestBody MaintenanceDTO dto)
+    public void createMaintenance(@RequestBody MaintenanceDTO dto)
     {
         maintenanceService.createMaintenance(dto);
-        return null;
     }
 
     @PostMapping("/maintenance/plants")

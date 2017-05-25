@@ -46,9 +46,8 @@ public class MaintenanceService {
     String gmailUsername;
 
 
-    public void createMaintenance(MaintenanceDTO dto) {
-        Boolean result = restTemplate.postForObject(Constants.MAINTENANCE_URL + "/api/maintenances/tasks", dto, Boolean.class);
-        //todo: what to return
+    public Boolean createMaintenance(MaintenanceDTO dto) {
+        return restTemplate.postForObject(Constants.MAINTENANCE_URL + "/api/maintenances/tasks", dto, Boolean.class);
     }
 
     public void replacePlantInventoryItem(PlantInventoryItemDTO dto) throws InvalidPurchaseOrderStatusException {
