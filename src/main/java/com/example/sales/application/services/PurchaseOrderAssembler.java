@@ -75,7 +75,7 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
                 case OPEN:
                     newDTO.add(new ExtendedLink(
                             linkTo(methodOn(SalesRestController.class)
-                                    .closePurchaseOrder(newDTO.get_id())).toString(),
+                                    .cancelPurchaseOrder(newDTO.get_id())).toString(),
                             "close", DELETE));
                     newDTO.add(new ExtendedLink(
                             linkTo(methodOn(SalesRestController.class)
