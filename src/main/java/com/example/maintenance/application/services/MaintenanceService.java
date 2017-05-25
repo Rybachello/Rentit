@@ -9,12 +9,19 @@ import com.example.inventory.application.services.InventoryService;
 import com.example.inventory.domain.model.PlantInventoryItem;
 import com.example.maintenance.application.dto.MaintenanceDTO;
 import com.example.maintenance.utils.Constants;
+import com.example.sales.application.gateways.InvoicingGateway;
 import com.example.sales.domain.model.PurchaseOrder;
 import com.example.sales.domain.repository.PurchaseOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.List;
 
 /**
@@ -32,10 +39,15 @@ public class MaintenanceService {
     @Autowired
     RestTemplate restTemplate;
 
+    @Autowired
+    InvoicingGateway invoicingGateway;
 
-    public void createMaintenance(MaintenanceDTO dto) {
-        Boolean result = restTemplate.postForObject(Constants.MAINTENANCE_URL + "/api/maintenances/tasks", dto, Boolean.class);
-        //todo: what to return
+    @Value("${gmail.username}")
+    String gmailUsername;
+
+
+    public Boolean createMaintenance(MaintenanceDTO dto) {
+        return restTemplate.postForObject(Constants.MAINTENANCE_URL + "/api/maintenances/tasks", dto, Boolean.class);
     }
 
     public void replacePlantInventoryItem(PlantInventoryItemDTO dto) throws InvalidPurchaseOrderStatusException {
@@ -43,16 +55,18 @@ public class MaintenanceService {
 
         for (PurchaseOrder po : purchaseOrders) {
             try {
-                PurchaseOrder purchaseOrder = inventoryService.createPlantReservation(po);
+                inventoryService.createPlantReservation(po);
             } catch (PlantNotAvailableException e) {
                 po.closePurchaseOrder();
-                //todo: need notify customer
-                System.out.println("Need notify customer");
+                po.resetPlanInventoryItem();
+                sendNotAvailablePlantNotification(po.getCustomer().getEmail());
             }
         }
 
         purchaseOrderRepository.flush();
     }
+
+
 
     public PlantInventoryItem getAvailable(List<PlantInventoryItem> itemList, BusinessPeriod rentalPeriod) throws PlantNotAvailableException {
         for (PlantInventoryItem item : itemList) {
@@ -71,6 +85,25 @@ public class MaintenanceService {
         dto.setMaintenancePeriod(BusinessPeriodDTO.of(rentalPeriod.getStartDate(), rentalPeriod.getEndDate()));
 
         return restTemplate.postForObject(Constants.MAINTENANCE_URL + "/api/maintenances/tasks/check", dto, Boolean.class);
+
+    }
+
+    private void sendNotAvailablePlantNotification(String email) {
+
+        JavaMailSender mailSender = new JavaMailSenderImpl();
+
+        MimeMessage rootMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = null;
+
+        try {
+            helper = new MimeMessageHelper(rootMessage, true);
+            helper.setFrom(gmailUsername + "@gmail.com");
+            helper.setTo(email);
+            helper.setText("Dear customer, \n\n We are sorry to inform you that your order is closed due to broken plant item and we cannot find any replacement \n\n Kindly yours, \n\n RentIt team!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        invoicingGateway.sendNotification(rootMessage);
 
     }
 

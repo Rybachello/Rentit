@@ -54,6 +54,7 @@ public class PurchaseOrder {
         po.plant = plant;
         po.status = POStatus.PENDING;
         po.constructionSite = constructionSite;
+        po.entry = entry;
         po.customer = customer;
         return po;
     }
@@ -130,5 +131,9 @@ public class PurchaseOrder {
     public void confirm(BusinessPeriod rentalPeriod, PlantInventoryItem item) {
         this.rentalPeriod = rentalPeriod;
         this.plant = item;
+    }
+
+    public void resetPlanInventoryItem() {
+        this.plant = null;
     }
 }
