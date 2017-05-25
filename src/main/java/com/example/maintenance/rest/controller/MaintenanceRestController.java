@@ -30,7 +30,7 @@ public class MaintenanceRestController {
         return null;
     }
 
-    @PostMapping("/maintenance/plants") //todo: rename?
+    @PostMapping("/maintenance/plants")
     @ResponseStatus(HttpStatus.OK)
     public Boolean replacePlantInventoryItem(@RequestBody PlantInventoryItemDTO dto) throws InvalidPurchaseOrderStatusException {
         maintenanceService.replacePlantInventoryItem(dto);

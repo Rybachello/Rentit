@@ -68,7 +68,7 @@ public class RentIt {
 
     @Bean
     IntegrationFlow sendInvoiceFlow() {
-        return IntegrationFlows.from("sendInvoiceChannel")
+        return IntegrationFlows.from("sendEmailChannel")
                 .handle(Mail.outboundAdapter("smtp.gmail.com")
                         .port(465)
                         .protocol("smtps")
@@ -76,6 +76,4 @@ public class RentIt {
                         .javaMailProperties(p -> p.put("mail.debug", "false")))
                 .get();
     }
-
-
 }

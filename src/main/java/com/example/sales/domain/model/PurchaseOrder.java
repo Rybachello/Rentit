@@ -131,4 +131,8 @@ public class PurchaseOrder {
         this.rentalPeriod = rentalPeriod;
         this.plant = item;
     }
+
+    public void resetPlanInventoryItem() {
+        this.plant = null;
+    }
 }
