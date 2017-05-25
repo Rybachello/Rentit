@@ -54,6 +54,7 @@ public class PurchaseOrder {
         po.plant = plant;
         po.status = POStatus.PENDING;
         po.constructionSite = constructionSite;
+        po.entry = entry;
         po.customer = customer;
         return po;
     }

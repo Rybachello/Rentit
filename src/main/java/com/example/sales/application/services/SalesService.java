@@ -2,6 +2,7 @@ package com.example.sales.application.services;
 
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
 import com.example.common.application.exceptions.PlantNotAvailableException;
+import com.example.common.application.exceptions.PlantNotFoundException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.application.services.BusinessPeriodDisassembler;
 import com.example.common.domain.model.BusinessPeriod;
@@ -44,14 +45,18 @@ public class SalesService {
     @Autowired
     InvoiceService invoiceService;
 
-    public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto, Customer customer) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException {
+    public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto, Customer customer) throws PlantNotAvailableException, InvalidPurchaseOrderStatusException, PlantNotFoundException {
 
         //find first purchase order
         PlantInventoryEntry plantInventoryEntry = plantInventoryEntryRepository.findOne(dto.getPlant().get_id());
+        if(plantInventoryEntry == null) {
+            throw new PlantNotFoundException(dto.getPlant().get_id());
+        }
+
         //convert to dto
         BusinessPeriod businessPeriod = businessPeriodDisassembler.toResources(dto.getRentalPeriod());
         //create the purchase order with PENDING STATUS
-        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod,null, plantInventoryEntry, dto.getConstructionSite(), customer);
+        PurchaseOrder po = PurchaseOrder.of(IdentifierFactory.nextID(), LocalDate.now(), businessPeriod, null, plantInventoryEntry, dto.getConstructionSite(), customer);
 
 
         try {
@@ -95,7 +100,7 @@ public class SalesService {
     }
 
     public PurchaseOrderDTO getPurchaseOrderById(String id, Customer customer) throws PurchaseOrderNotFoundException {
-        PurchaseOrder purchaseOrder = purchaseOrderRepository.findByIdAndCustomer(id,customer);
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findByIdAndCustomer(id, customer);
         if (purchaseOrder == null) {
             throw new PurchaseOrderNotFoundException("Purchase order not found");
         }
