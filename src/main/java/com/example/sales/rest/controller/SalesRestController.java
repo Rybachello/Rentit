@@ -22,6 +22,7 @@ import java.util.List;
  * Created by Rybachello on 3/11/2017.
  */
 @RestController
+@CrossOrigin()
 @RequestMapping("/api/sales")
 public class SalesRestController {
     @Autowired
