@@ -24,15 +24,13 @@ public class MaintenanceRestController {
 
     @PostMapping("/maintenance")
     @ResponseStatus(HttpStatus.OK)
-    public void createMaintenance(@RequestBody MaintenanceDTO dto)
-    {
+    public void createMaintenance(@RequestBody MaintenanceDTO dto) {
         maintenanceService.createMaintenance(dto);
     }
 
     @PostMapping("/maintenance/plants")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean replacePlantInventoryItem(@RequestBody PlantInventoryItemDTO dto) throws InvalidPurchaseOrderStatusException {
+    public void replacePlantInventoryItem(@RequestBody PlantInventoryItemDTO dto) throws InvalidPurchaseOrderStatusException {
         maintenanceService.replacePlantInventoryItem(dto);
-        return true;
     }
 }

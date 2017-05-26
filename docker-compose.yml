@@ -1,0 +1,12 @@
+version: "3"
+services:
+  inventory:
+    image: stopa/rentit:v3
+    ports:
+      - "80:8090"
+  maintenance:
+    image: stopa/rentit_maintenance:v1
+  front:
+    image: stopa/rentit_front:v1
+    ports:
+      - "443:80"

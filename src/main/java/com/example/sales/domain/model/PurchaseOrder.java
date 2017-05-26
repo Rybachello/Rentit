@@ -52,6 +52,7 @@ public class PurchaseOrder {
         po.issueDate = issueDate;
         po.rentalPeriod = businessPeriod;
         po.plant = plant;
+        po.entry = entry;
         po.status = POStatus.PENDING;
         po.constructionSite = constructionSite;
         po.entry = entry;
@@ -108,6 +109,14 @@ public class PurchaseOrder {
             this.status = POStatus.RETURNED;
         } else {
             throw new InvalidPurchaseOrderStatusException("Purchase Order status must be DELIVERED to return it.");
+        }
+    }
+
+    public void cancelPurchaseOrder() throws InvalidPurchaseOrderStatusException {
+        if (this.status == POStatus.OPEN ||this.status == POStatus.PENDING) {
+            this.status = POStatus.CLOSED;
+        } else {
+            throw new InvalidPurchaseOrderStatusException("Purchase Order status must be OPEN to close it.");
         }
     }
 

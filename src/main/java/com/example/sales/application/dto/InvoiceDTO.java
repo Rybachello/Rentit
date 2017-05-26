@@ -17,4 +17,5 @@ public class InvoiceDTO extends ResourceSupport {
     String orderId;
     LocalDate dueDate;
     BigDecimal amount;
+    boolean paid;
 }

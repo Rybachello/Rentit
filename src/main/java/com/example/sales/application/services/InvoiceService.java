@@ -102,4 +102,10 @@ public class InvoiceService {
             this.sendInvoice(i);
         }
     }
+
+    public List<InvoiceDTO> getAllInvoices() {
+        List<Invoice> invoices = invoiceRepository.findAll();
+
+        return invoiceAssembler.toResources(invoices);
+    }
 }

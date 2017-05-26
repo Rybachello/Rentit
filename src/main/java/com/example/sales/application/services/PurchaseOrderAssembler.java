@@ -3,6 +3,7 @@ package com.example.sales.application.services;
 import com.example.common.application.dto.BusinessPeriodDTO;
 import com.example.common.application.exceptions.CustomerNotFoundException;
 import com.example.common.application.exceptions.InvalidPurchaseOrderStatusException;
+import com.example.common.application.exceptions.PlantNotAvailableException;
 import com.example.common.application.exceptions.PurchaseOrderNotFoundException;
 import com.example.common.rest.ExtendedLink;
 import com.example.inventory.application.services.PlantInventoryEntryAssembler;
@@ -18,9 +19,7 @@ import java.time.LocalDate;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 /**
  * Created by minhi_000 on 09.03.2017.
@@ -58,7 +57,7 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
         try {
             newDTO.add(new ExtendedLink(
                     linkTo(methodOn(SalesRestController.class)
-                            .fetchPurchaseOrder(newDTO.get_id(),null)).toString(),
+                            .fetchPurchaseOrder(newDTO.get_id(), null)).toString(),
                     "self", GET));
 
             switch (newDTO.getStatus()) {
@@ -71,16 +70,24 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
                             linkTo(methodOn(SalesRestController.class)
                                     .rejectPurchaseOrder(newDTO.get_id())).toString(),
                             "reject", DELETE));
+                    newDTO.add(new ExtendedLink(
+                            linkTo(methodOn(SalesRestController.class)
+                                    .updatePurchaseOrder(newDTO,newDTO.get_id())).toString(),
+                            "update", PUT));
                     break;
                 case OPEN:
                     newDTO.add(new ExtendedLink(
                             linkTo(methodOn(SalesRestController.class)
-                                    .closePurchaseOrder(newDTO.get_id())).toString(),
+                                    .cancelPurchaseOrder(newDTO.get_id())).toString(),
                             "close", DELETE));
                     newDTO.add(new ExtendedLink(
                             linkTo(methodOn(SalesRestController.class)
                                     .dispatchPurchaseOrder(newDTO.get_id())).toString(),
                             "dispatch", POST));
+                    newDTO.add(new ExtendedLink(
+                            linkTo(methodOn(SalesRestController.class)
+                                    .updatePurchaseOrder(newDTO,newDTO.get_id())).toString(),
+                            "update", PUT));
                     break;
                 case DISPATCHED:
                     newDTO.add(new ExtendedLink(
@@ -89,7 +96,7 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
                             "deliver", POST));
                     newDTO.add(new ExtendedLink(
                             linkTo(methodOn(SalesRestController.class)
-                                    .rejectPOByCustomer(newDTO.get_id(),null)).toString(),
+                                    .rejectPOByCustomer(newDTO.get_id(), null)).toString(),
                             "rejectByCustomer", POST));
                     break;
                 case DELIVERED:
@@ -107,8 +114,10 @@ public class PurchaseOrderAssembler extends ResourceAssemblerSupport<PurchaseOrd
             e.printStackTrace();
         } catch (InvalidPurchaseOrderStatusException e) {
             e.printStackTrace();
+        } catch (CustomerNotFoundException e) {
+            e.printStackTrace();
         }
-        catch (CustomerNotFoundException e) {
+        catch (PlantNotAvailableException e) {
             e.printStackTrace();
         }
         return newDTO;
