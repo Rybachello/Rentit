@@ -3,8 +3,10 @@ package com.example.sales.rest.controller;
 import com.example.common.application.dto.ErrorDTO;
 import com.example.common.application.exceptions.*;
 import com.example.sales.application.dto.CustomerDTO;
+import com.example.sales.application.dto.InvoiceDTO;
 import com.example.sales.application.dto.PurchaseOrderDTO;
 import com.example.sales.application.services.CustomerService;
+import com.example.sales.application.services.InvoiceService;
 import com.example.sales.application.services.SalesService;
 import com.example.sales.domain.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class SalesRestController {
     SalesService salesService;
     @Autowired
     CustomerService customerService;
+    @Autowired
+    InvoiceService invoiceService;
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
@@ -204,6 +208,11 @@ public class SalesRestController {
     @GetMapping("/deliveries")
     public List<PurchaseOrderDTO> getDeliveryPlants(@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) {
         return salesService.getAllDeliveryPlants(startDate);
+    }
+
+    @GetMapping("/invoices")
+    public List<InvoiceDTO> getInvoices() {
+        return invoiceService.getAllInvoices();
     }
 
 }

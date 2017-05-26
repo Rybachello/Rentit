@@ -28,6 +28,7 @@ public class InvoiceAssembler extends ResourceAssemblerSupport<Invoice, InvoiceD
         invoiceDTO.setOrderId(invoice.getPurchaseOrder().getId());
         invoiceDTO.setDueDate(invoice.getDueDate());
         invoiceDTO.setAmount(invoice.getAmount());
+        invoiceDTO.setPaid(invoice.isPaid());
 
         return invoiceDTO;
     }

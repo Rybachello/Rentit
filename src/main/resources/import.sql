@@ -19,11 +19,12 @@ insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_co
 insert into plant_inventory_item (id, plant_info_id, serial_number, equipment_condition) values ('3', '3', 'A03', 'UNSERVICEABLEREPAIRABLE');
 
 insert into customer (id, token, email) values('1', 'token', 'buildit228@gmail.com');
-INSERT into invoice (id,paid,due_date,paid_Date,amount,purchase_Order_id) VALUES ('134',FALSE,'2017-05-19','2017-06-19',2000,NULL );
+insert into customer (id, token, email) values('2', 'kopylash', 'builtit2017@gmail.com');
 
 INSERT into purchase_order (id,ISSUE_DATE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID, ENTRY_ID, CUSTOMER_ID) values ('123','2017-04-15','2017-05-15','2017-04-15','OPEN',1300,'1','1','1');
 INSERT into purchase_order (id,ISSUE_DATE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID, ENTRY_ID, CUSTOMER_ID) values ('124','2017-05-15','2017-05-25','2017-05-15','OPEN',1325,'2','2','1');
 INSERT into purchase_order (id,ISSUE_DATE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID, ENTRY_ID, CUSTOMER_ID) values ('125','2017-04-15','1111-11-20','1111-11-11','OPEN',1300,'2','2','1');
 INSERT into purchase_order (id,ISSUE_DATE,END_DATE,START_DATE,STATUS,TOTAL,PLANT_ID, ENTRY_ID, CUSTOMER_ID) values ('126','2017-05-15','1111-11-30','1111-11-24','PENDING',1325,'2','2','1');
+INSERT into invoice (id,paid,due_date,paid_Date,amount,purchase_Order_id) VALUES ('134',FALSE,'2017-05-19','2017-06-19',2000,'123' );
 
 
