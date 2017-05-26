@@ -104,7 +104,7 @@ public class SalesRestController {
     }
 
     @PostMapping("/customer")
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestParam(name = "email") String email) throws CustomerExistException{
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestParam(name = "email") String email) throws CustomerExistException {
         CustomerDTO newCustomer = customerService.createCustomer(email);
 
         HttpHeaders headers = new HttpHeaders();
@@ -172,7 +172,7 @@ public class SalesRestController {
     }
 
     @PostMapping("/orders/{id}/deliver")
-    public ResponseEntity<PurchaseOrderDTO> deliverPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException{
+    public ResponseEntity<PurchaseOrderDTO> deliverPurchaseOrder(@PathVariable String id) throws PurchaseOrderNotFoundException, InvalidPurchaseOrderStatusException {
 
         PurchaseOrderDTO purchaseOrder = salesService.getPurchaseOrderById(id);
 
