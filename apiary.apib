@@ -1,0 +1,865 @@
+FORMAT: 1A
+HOST: http://localhost:8090
+
+# Rentit
+Team 13 members:
+- Stepan Bolotnikov
+- Mykola Rybak
+- Artem Zaitsev
+- Vasiliy Skydanienko
+
+Most API endpoints - create/update/reject PO, retrieve PO list and single PO - require you to authenticate yourself with a user token, so first you need to create a customer.
+When a customer is created, a user token is returned.
+For all future, requests, supply this token in a request header called "token".
+## Customer [/api/sales/customer]
+### Create Customer [POST /api/sales/customer{?email}]
++ Parameters
+    + email: pew@pew.com (required,string) ... Customers email
+
++ Response 201 (application/json)
+
+        {
+  "_id": "8f1a8a2a-9eac-4824-973c-0f27c694b250",
+  "token": "7d484de3-97fe-4426-9751-dd16a7bae792",
+  "email": "pew@pew.com",
+  "_xlinks": []
+        }
+
++ Response 409 (application/json)
+    
+    {
+        "error": "Customer already exists"
+    }
+
+## Plant Catalog [/api/inventory/plants]
+### Retrieve Plants [GET /api/inventory/plants/{?name,startDate,endDate}] 
++ Parameters
+    + name (optional,string) ... Name of the plant
+    + startDate (optional,date) ... Starting date for rental
+    + endDate (optional,date) ... End date for rental
+
++ Response 200 (application/json)
+
+    [
+        {
+            "_id": "1",
+            "name": "Mini excavator",
+            "description": "1.5 Tonne Mini excavator",
+            "price": 150,
+            "_xlinks": [
+                {
+                    "href": "http://localhost:8090/api/inventory/plants/1",
+                    "method": "GET",
+                    "_rel": "self"
+                }
+            ]
+        }
+    ]
+
+### Retrieve one plant by id [GET /api/inventory/plants/{id}]
++ Parameters
+    
+    + Id: 1 (required,string) ... Id of the plant
+
++ Response (application/json)
+    
+        {
+            "_id": "1",
+            "name": "Mini excavator",
+            "description": "1.5 Tonne Mini excavator",
+            "price": 150,
+            "_xlinks": [
+                {
+                    "href": "http://localhost:8090/api/inventory/plants/1",
+                    "method": "GET",
+                    "_rel": "self"
+                }
+            ]
+        }
+
+## Remmitances [/api/remittances/remittance]
+### Receive Remittance [POST]
++ Request  (application/json)
+
+    + Body
+    
+        {
+            "invoiceId": "123"
+        }
+        
++ Response 200 (application/json)
+
++ Response 404 (application/json)
+
+        {
+        "error":"Invoice not found"
+        }
+
+## Purchase Order [/api/sales/orders]
+### Get all Purchase Orders[GET]
++ Request (application/json)
+    + Headers
+        Content-Type: application/json
+        token: token
+
++ Response 200 (application/json)
+
+    [
+        {
+            "_id": "123",
+            "status": "PENDING",
+            "rentalPeriod": {
+                "startDate": "2017-04-15",
+                "endDate": "2017-05-15",
+                "_xlinks": []
+            },
+            "total": 1300,
+            "constructionSite": "tartu.com.ua",
+            "plant": {
+                "_id": "1",
+                "name": "Mini excavator",
+                "description": "1.5 Tonne Mini excavator",
+                "price": 150,
+                "_xlinks": [
+                    {
+                        "href": "http://localhost:8090/api/inventory/plants/1",
+                        "method": "GET",
+                        "_rel": "self"
+                    }
+                ]
+            },
+            },
+            "_xlinks": [
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123",
+                    "method": "GET",
+                    "_rel": "self"
+                },
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123/accept",
+                    "method": "POST",
+                    "_rel": "accept"
+                },    
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123/accept",
+                    "method": "DELETE",
+                    "_rel": "reject"
+                }
+            ]
+        }
+    ]
+  
+### Create Purchase Order [POST]
++ Request (application/json)
+    + Headers
+    
+        Content-Type: application/json
+        token: token
+   
+   + Body
+
+        {
+            "plant":
+            {
+                "_id":"2"
+            },
+        "rentalPeriod": 
+            {
+                "startDate": "2017-09-22",
+                "endDate": "2017-09-24"
+            },
+            "constructionSite":"hohloblock"
+            }
+
++ Response 201 (application/json)
+    + Headers
+            Location: http://localhost:8090/api/sales/orders/0d3db3bc-34f8-490c-9595-d73e7920d8af
+    + Body
+
+        {
+  "_id": "2f4222de-807a-41b1-a396-d5bb3dc6a029",
+  "status": "PENDING",
+  "rentalPeriod": {
+    "startDate": "2017-09-22",
+    "endDate": "2017-09-24",
+    "_xlinks": []
+  },
+  "total": 450,
+  "constructionSite": "hohloblock",
+  "plant": {
+    "_id": "1",
+    "name": "Mini excavator",
+    "description": "1.5 Tonne Mini excavator",
+    "price": 150,
+    "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/inventory/plants/1",
+        "method": "GET",
+        "_rel": "self"
+      }
+    ]
+  },
+  "_xlinks": [
+    {
+      "href": "http://localhost:8090/api/sales/orders/2f4222de-807a-41b1-a396-d5bb3dc6a029",
+      "method": "GET",
+      "_rel": "self"
+    },
+    {
+      "href": "http://localhost:8090/api/sales/orders/2f4222de-807a-41b1-a396-d5bb3dc6a029/accept",
+      "method": "POST",
+      "_rel": "accept"
+    },
+    {
+      "href": "http://localhost:8090/api/sales/orders/2f4222de-807a-41b1-a396-d5bb3dc6a029/accept",
+      "method": "DELETE",
+      "_rel": "reject"
+    }
+  ]
+        }
+        
++ Response 409 (application/json)
+    {
+    "error": "Requested plant is unavailable"
+    }
+
++ Response 401 (application/json)
+    {
+    "error": "customer not found"
+    }
+
++ Response 404 (application/json)
+    {
+        "error":"Plant not found! (Plant id: 2")
+    }
+
+### Update Purchase Order [PUT]
++ Request (application/json)
+
+    + Headers
+        token: token
+   
+   + Body
+
+        {
+            "_id": "123",
+            "name": "PO name",
+            "status": "PENDING",
+            "rentalPeriod": {
+                "startDate": "2017-04-15",
+                "endDate": "2017-05-15",
+                "_xlinks": []
+            },
+            "total": 1300,
+            "description": "po description ",
+            "plant": {
+                "_id": "1",
+                "name": "Mini excavator",
+                "description": "1.5 Tonne Mini excavator",
+                "price": 150,
+                "_xlinks": []
+            },
+                "_xlinks": [
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123/accept",
+                    "method": "POST",
+                    "_rel": "accept"
+                },
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123/accept",
+                    "method": "DELETE",
+                    "_rel": "reject"
+                }
+            ]
+        }
+
++ Response 409 (application/json)
+    {
+    "error": "Requested plant is unavaliable"
+    }
+
++ Response 401 (application/json)
+    {
+    "error": "customer not found"
+    }
+
++ Response 400 (application/json)
+    {
+    "error":"Purchase Order can be changed only when opened or pending"
+    }
+
++ Response 201 (application/json)
+    
+    + Body
+            {
+                "_id": "123",
+                "status": "PENDING",
+                "rentalPeriod": {
+                    "startDate": "2017-04-15",
+                    "endDate": "2017-05-15",
+                    "_xlinks": []
+            },
+            "total": 1300,
+            "constructionSite": "tartu.com.ua",
+            "plant": {
+                "_id": "1",
+                "name": "Mini excavator",
+                "description": "1.5 Tonne Mini excavator",
+                "price": 150,
+            },
+            "_xlinks": [
+                {
+                    "href": "http://localhost:8090/api/inventory/plants/1",
+                    "method": "GET",
+                    "_rel": "self"
+                }
+            ]
+            },
+              "_xlinks": [
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123",
+                    "method": "GET",
+                    "_rel": "self"
+                },
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123/accept",
+                    "method": "POST",
+                    "_rel": "accept"
+                },
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123/accept",
+                    "method": "DELETE",
+                    "_rel": "reject"
+                }
+            ]
+        }
+
+### Get one purchase order by id [GET /api/sales/orders/{id}]
++ Parameters
+    + id: 123 (required,string) ... Id of the purchase order
+
++ Request (application/json)
+    + Headers
+        Content-Type: application/json
+        token: token
+
++ Response 200 (application/json)
+
+        {
+            "_id": "123",
+            "status": "PENDING",
+            "rentalPeriod": {
+                "startDate": "2017-04-15",
+                "endDate": "2017-05-15",
+                "_xlinks": []
+            },
+            "total": 1300,
+            "constructionSite": "tartu.com.ua",
+            "plant": {
+                "_id": "1",
+                "name": "Mini excavator",
+                "description": "1.5 Tonne Mini excavator",
+                "price": 150,
+                "_xlinks": [
+                    {
+                        "href": "http://localhost:8090/api/inventory/plants/1",
+                        "method": "GET",
+                        "_rel": "self"
+                    }
+                ]
+            },
+            "_xlinks": [
+                {
+                    "href": "http://localhost:8090/api/sales/orders/123",
+                    "method": "GET",
+                    "_rel": "self"
+                },
+                {
+                "href": "http://localhost:8090/api/sales/orders/123/accept",
+                "method": "POST",
+                "_rel": "accept"
+                },
+                {
+                "href": "http://localhost:8090/api/sales/orders/123/accept",
+                "method": "DELETE",
+                "_rel": "reject"
+            }
+        ]
+    }
+    
++ Response 401 (application/json)
+    {
+    "error": "customer not found"
+    }
+    
++ Response 404 (application/json)
+    {
+    "error": "Purchase order not found"
+    }
+
+### Accept Purchase Order [POST /api/sales/orders/{id}/accept]
++ Parameters 
+    + id: 123 (required,string) ... Id of the purchase order to be accepted
+    
++ Response 200 (application/json)
+
+        {
+  "_id": "123",
+  "status": "OPEN",
+  "rentalPeriod": {
+    "startDate": "2017-04-15",
+    "endDate": "2017-05-15",
+    "_xlinks": []
+  },
+  "total": 1300,
+  "constructionSite": "tartu.com.ua",
+  "plant": {
+    "_id": "1",
+    "name": "Mini excavator",
+    "description": "1.5 Tonne Mini excavator",
+    "price": 150,
+    "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/inventory/plants/1",
+        "method": "GET",
+        "_rel": "self"
+      }
+    ]
+  },
+  "_xlinks": [
+    {
+      "href": "http://localhost:8090/api/sales/orders/123",
+      "method": "GET",
+      "_rel": "self"
+    },
+    {
+      "href": "http://localhost:8090/api/sales/orders/123",
+      "method": "DELETE",
+      "_rel": "close"
+    },
+    {
+      "href": "http://localhost:8090/api/sales/orders/123/dispatch",
+      "method": "POST",
+      "_rel": "dispatch"
+    }
+  ]
+        }
+
++ Response 404 (application/json)
+    {
+        "error":"Purchase order not found"
+    }
+    
++ Response 400 (application/json)
+    {
+        "error":"Purchase Order status must be PENDING to accept it."
+    }
+
+
+### Reject purchase order [DELETE /api/sales/orders/{id}/accept]
++ Parameters 
+    + id: 123 (required,string) ... Id of the purchase order to be accepted
+    
++ Request (application/json)
+    + Headers
+        Content-Type: application/json
+        token: token
+    
++ Response 200 (application/json)
+
+        {
+  "_id": "124",
+  "status": "REJECTED",
+  "rentalPeriod": {
+    "startDate": "2017-05-15",
+    "endDate": "2017-05-25",
+    "_xlinks": []
+  },
+  "total": 1325,
+  "constructionSite": "Tartu",
+  "plant": {
+    "_id": "2",
+    "name": "Mini excavator",
+    "description": "3 Tonne Mini excavator",
+    "price": 200,
+    "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/inventory/plants/2",
+        "method": "GET",
+        "_rel": "self"
+      }
+    ]
+  },
+  "_xlinks": [
+    {
+      "href": "http://localhost:8090/api/sales/orders/124",
+      "method": "GET",
+      "_rel": "self"
+    }
+  ]
+        }
+
++ Response 404 (application/json)
+    {
+        "error":"Purchase order not found"
+    }
+    
++ Response 400 (application/json)
+    {
+        "error":"Purchase Order status must be PENDING to reject it."
+    }
+
+### Reject by customer [POST /api/sales/orders/{id}/rejectByCustomer]
++ Parameters 
+    + id: 123 (required,string) ... Id of the purchase order to be accepted
+
++ Request (application/json)
+    + Headers
+        Content-Type: application/json
+        token: token
+
++ Response 200 (application/json)
+
+        {
+  "_id": "123",
+  "status": "REJECTED_BY_CUSTOMER",
+  "rentalPeriod": {
+    "startDate": "2017-04-15",
+    "endDate": "2017-05-15",
+    "_xlinks": []
+  },
+  "total": 1300,
+  "constructionSite": "Tartu",
+  "plant": {
+    "_id": "1",
+    "name": "Mini excavator",
+    "description": "1.5 Tonne Mini excavator",
+    "price": 150,
+    "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/inventory/plants/1",
+        "method": "GET",
+        "_rel": "self"
+      }
+    ]
+  },
+    "_xlinks": [
+    {
+      "href": "http://localhost:8090/api/sales/orders/123",
+      "method": "GET",
+      "_rel": "self"
+    }
+  ]
+        }
+
++ Response 404 (application/json)
+    {
+        "error":"Purchase order not found"
+    }
+
++ Response 401 (application/json)
+    {
+        "error":"Customer order not found"
+    }
+
++ Response 400 (application/json)
+    {
+        "error":"Purchase Order status must be DISPATCHED to reject it."
+    }
+
+### Dispatch Purchase order [POST /api/sales/orders/{id}/dispatch]
+
++ Parameters 
+    + id: 123 (required,string) ... Id of the purchase order to be accepted
+    
++ Response 200 (application/json)
+
+        {
+  "_id": "123",
+  "status": "DISPATCHED",
+  "rentalPeriod": {
+    "startDate": "2017-04-15",
+    "endDate": "2017-05-15",
+    "_xlinks": []
+  },
+  "total": 1300,
+  "constructionSite": "Tartu",
+  "plant": {
+    "_id": "1",
+    "name": "Mini excavator",
+    "description": "1.5 Tonne Mini excavator",
+    "price": 150,
+    "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/inventory/plants/1",
+        "method": "GET",
+        "_rel": "self"
+      }
+    ]
+  },
+  "_xlinks": [
+    {
+      "href": "http://localhost:8090/api/sales/orders/123",
+      "method": "GET",
+      "_rel": "self"
+    },
+    {
+      "href": "http://localhost:8090/api/sales/orders/123/deliver",
+      "method": "POST",
+      "_rel": "deliver"
+    },
+    {
+      "href": "http://localhost:8090/api/sales/orders/123/rejectByCustomer",
+      "method": "POST",
+      "_rel": "rejectByCustomer"
+    }
+  ]
+        }
+        
++ Response 404 (application/json)
+    {
+        "error":"Purchase order not found"
+    }
+    
++ Response 400 (application/json)
+    {
+        "error":"Purchase Order status must be OPEN to dispatch it."
+    }
+
+### Deliver purchase order [POST /api/sales//orders/{id}/deliver]
++ Parameters 
+    + id: 124 (required,string) ... Id of the purchase order to be accepted
+
++ Response 200 (application/json)
+
+        {
+  "_id": "124",
+  "status": "DELIVERED",
+  "rentalPeriod": {
+    "startDate": "2017-05-15",
+    "endDate": "2017-05-25",
+    "_xlinks": []
+  },
+  "total": 1325,
+  "constructionSite": "Tartu",
+  "plant": {
+    "_id": "2",
+    "name": "Mini excavator",
+    "description": "3 Tonne Mini excavator",
+    "price": 200,
+    "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/inventory/plants/2",
+        "method": "GET",
+        "_rel": "self"
+      }
+    ]
+  },
+  "_xlinks": [
+    {
+      "href": "http://localhost:8090/api/sales/orders/124",
+      "method": "GET",
+      "_rel": "self"
+    },
+    {
+      "href": "http://localhost:8090/api/sales/orders/124/return",
+      "method": "POST",
+      "_rel": "return"
+    }
+  ]
+        }
+
++ Response 404 (application/json)
+    {
+        "error":"Purchase order not found"
+    }
+
++ Response 400 (application/json)
+    {
+        "error":"Purchase Order status must be DISPATCHED to deliver it."
+    }
+
+### Return Purchase Order [POST /api/sales/orders/{id}/return]
++ Parameters 
+    + id: 124 (required,string) ... Id of the purchase order to be accepted
+
++ Response 200 (application/json)
+
+        {
+  "_id": "124",
+  "status": "RETURNED",
+  "rentalPeriod": {
+    "startDate": "2017-05-15",
+    "endDate": "2017-05-25",
+    "_xlinks": []
+  },
+  "total": 1325,
+  "constructionSite": "Tartu",
+  "plant": {
+    "_id": "2",
+    "name": "Mini excavator",
+    "description": "3 Tonne Mini excavator",
+    "price": 200,
+    "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/inventory/plants/2",
+        "method": "GET",
+        "_rel": "self"
+      }
+    ]
+  },
+  "_xlinks": [
+    {
+      "href": "http://localhost:8090/api/sales/orders/124",
+      "method": "GET",
+      "_rel": "self"
+    }
+  ]
+        }
+        
++ Response 404 (application/json)
+    {
+        "error":"Purchase order not found"
+    }
+
++ Response 400 (application/json)
+    {
+        "error":"Purchase Order status must be DELIVERED to return it."
+    }
+
+### Close Purchase order [DELETE /api/sales/orders/{id}]
++ Parameters 
+    + id: 124 (required,string) ... Id of the purchase order to be accepted
+
++ Response 200 (application)
+
+        {
+  "_id": "124",
+  "status": "CLOSED",
+  "rentalPeriod": {
+    "startDate": "2017-05-15",
+    "endDate": "2017-05-25",
+    "_xlinks": []
+  },
+  "total": 1325,
+  "constructionSite": "Tartu",
+  "plant": {
+    "_id": "2",
+    "name": "Mini excavator",
+    "description": "3 Tonne Mini excavator",
+    "price": 200,
+    "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/inventory/plants/2",
+        "method": "GET",
+        "_rel": "self"
+      }
+    ]
+  },
+  "_xlinks": [
+    {
+      "href": "http://localhost:8090/api/sales/orders/124",
+      "method": "GET",
+      "_rel": "self"
+    }
+  ]
+        }
+
++ Response 404 (application/json)
+    {
+        "error":"Purchase order not found"
+    }
+
++ Response 400 (application/json)
+    {
+        "error":"Purchase Order status must be DISPATCHED to close it."
+    }
+
+## Deliveries [/api/sales/deliveries]
+### Get Delivery plants [GET /api/sales/deliveries/{?startDate}]
+
++ Parameters
+    + startDate (optional,date) ... Start date to look in opened purchase orders
+
++ Response 200 (application/json)
+
+        [
+  {
+    "_id": "123",
+    "status": "OPEN",
+    "rentalPeriod": {
+      "startDate": "2017-04-15",
+      "endDate": "2017-05-15",
+      "_xlinks": []
+    },
+    "total": 1300,
+    "constructionSite": "Tartu",
+    "plant": {
+      "_id": "1",
+      "name": "Mini excavator",
+      "description": "1.5 Tonne Mini excavator",
+      "price": 150,
+      "_xlinks": [
+        {
+          "href": "http://localhost:8090/api/inventory/plants/1",
+          "method": "GET",
+          "_rel": "self"
+        }
+      ]
+        },
+        "_xlinks": [
+      {
+        "href": "http://localhost:8090/api/sales/orders/123",
+        "method": "GET",
+        "_rel": "self"
+      },
+      {
+        "href": "http://localhost:8090/api/sales/orders/123",
+        "method": "DELETE",
+        "_rel": "close"
+      },
+      {
+        "href": "http://localhost:8090/api/sales/orders/123/dispatch",
+        "method": "POST",
+        "_rel": "dispatch"
+      }
+    ]
+  }
+        ]
+
+## Maintenance [/api/inventory/maintenance]
+### Create Maintenance [POST]
+
++ Request (application/json)
+
+    + Body
+    
+        {
+    "plantId": "1",
+    "maintenancePeriod": {
+        "startDate": "2017-04-15",
+        "endDate": "2017-04-16"
+    },
+    "description": "testing",
+    "typeOfWork": "PREVENTIVE"
+        }
+        
++ Response 200
+
+### Replace Plant Inventory Item [POST /api/inventory/maintenance/plants]
+
++ Request (application/json)\
+    
+    + Body
+
+        {
+    "_id":"1",
+    "maintenancePeriod": {
+        "startDate":"2017-04-15",
+        "endDate":"2017-04-16"
+    }
+        }
+        
++ Response 200
+
+true
